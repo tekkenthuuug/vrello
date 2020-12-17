@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ColumnContainer,
   ColumnName,
   ColumnItems,
-  AddButton,
+  AddBtn,
 } from './board-column.styles';
 import { MdAdd } from 'react-icons/md';
 import Column from 'Components/column-card/column-card';
+import CardCreator from 'Components/card-creator/card-creator';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 const BoardColumn = ({ columnKey, columnData, onItemMove }) => {
+  const [isAdding, setIsAdding] = useState(false);
+  const containerRef = React.createRef();
+
   const handleDrop = e => {
     const initialColumnId = e.dataTransfer.getData('from');
     const itemId = e.dataTransfer.getData('id');
@@ -22,6 +27,10 @@ const BoardColumn = ({ columnKey, columnData, onItemMove }) => {
     e.preventDefault();
   };
 
+  useOnClickOutside(containerRef, () => {
+    setIsAdding(false);
+  });
+
   return (
     <ColumnContainer onDrop={handleDrop} onDragOver={handleDragOver}>
       <ColumnName>{columnData.name}</ColumnName>
@@ -34,10 +43,21 @@ const BoardColumn = ({ columnKey, columnData, onItemMove }) => {
             draggable={true}
           />
         ))}
-        <AddButton>
-          <MdAdd />
-          Add card
-        </AddButton>
+        {isAdding ? (
+          <CardCreator
+            ref={containerRef}
+            onClose={() => setIsAdding(false)}
+            onSubmit={item => {
+              console.log(item);
+              setIsAdding(false);
+            }}
+          />
+        ) : (
+          <AddBtn onClick={() => setIsAdding(true)}>
+            <MdAdd />
+            Add card
+          </AddBtn>
+        )}
       </ColumnItems>
     </ColumnContainer>
   );

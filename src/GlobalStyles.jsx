@@ -9,9 +9,11 @@ const GlobalStyles = createGlobalStyle`
 body {
   font-family: 'Nunito', sans-serif;
 }
-button {
+button, textarea {
   outline: none;
   border: none;
+}
+button {
   cursor: pointer;
 }
 `;

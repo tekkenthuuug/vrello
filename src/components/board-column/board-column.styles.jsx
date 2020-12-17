@@ -21,7 +21,7 @@ export const ColumnItems = styled.div`
   padding: 0 8px;
 `;
 
-export const AddButton = styled.button`
+export const AddBtn = styled.button`
   width: 100%;
   border-radius: 6px;
   height: 48px;

@@ -29,13 +29,21 @@ export const initialState = {
 
 export const boardReducer = (state = initialState, { payload, type }) => {
   switch (type) {
-    case 'MOVE':
+    case 'MOVE': {
       const { from, to, itemId } = payload;
       return {
         ...state,
         data: reorderItemsMap(state.data, from, to, itemId),
       };
-    default:
+    }
+    case 'ADD': {
+      const { to, item } = payload;
+      const newState = { ...state };
+      newState.data[to].items.push(item);
+      return newState;
+    }
+    default: {
       return state;
+    }
   }
 };

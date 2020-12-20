@@ -10,7 +10,7 @@ import Column from 'Components/column-card/column-card';
 import CardCreator from 'Components/card-creator/card-creator';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 
-const BoardColumn = ({ columnKey, columnData, onItemMove }) => {
+const BoardColumn = ({ columnKey, columnData, onItemMove, onItemAdd }) => {
   const [isAdding, setIsAdding] = useState(false);
   const containerRef = React.createRef();
 
@@ -35,7 +35,7 @@ const BoardColumn = ({ columnKey, columnData, onItemMove }) => {
     <ColumnContainer onDrop={handleDrop} onDragOver={handleDragOver}>
       <ColumnName>{columnData.name}</ColumnName>
       <ColumnItems>
-        {columnData.items.map(item => (
+        {columnData.items.map((item, i) => (
           <Column
             key={item.id}
             data={item}
@@ -48,7 +48,7 @@ const BoardColumn = ({ columnKey, columnData, onItemMove }) => {
             ref={containerRef}
             onClose={() => setIsAdding(false)}
             onSubmit={item => {
-              console.log(item);
+              onItemAdd(columnKey, item);
               setIsAdding(false);
             }}
           />

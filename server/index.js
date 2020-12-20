@@ -38,9 +38,55 @@ const io = socketIo(server);
 
 // Routes
 // app.use(creditCardRouter);
+const boardData = {
+  id: 0,
+  name: 'Board',
+  data: {
+    0: {
+      name: 'Not unique',
+      items: [
+        { id: 0, description: 'Text1' },
+        { id: 1, description: 'Text2' },
+      ],
+    },
+    1: {
+      name: 'Not unique',
+      items: [
+        { id: 2, description: 'Text3' },
+        { id: 3, description: 'Text4' },
+      ],
+    },
+    2: {
+      name: 'Not unique',
+      items: [
+        { id: 4, description: 'Text5' },
+        { id: 5, description: 'Text6' },
+      ],
+    },
+  },
+};
 
 io.on('connection', socket => {
-  console.log('New client connected...', socket);
+  console.log('New client connected...', socket.id);
+
+  socket.emit('connected', boardData);
+
+  socket.on('join', room => {
+    socket.join(room);
+  });
+
+  socket.on('board-change', data => {
+    // TODO: handle updating DB
+    switch (data.action.type) {
+      case 'ADD': {
+        // temp
+        data.action.payload.item.id = Date.now();
+      }
+    }
+
+    // send to users in this room
+    io.to(data.room).emit('board-change', data.action);
+  });
 });
 
 const port = process.env.PORT || 5000;

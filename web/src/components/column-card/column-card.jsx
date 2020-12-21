@@ -1,9 +1,18 @@
 import React, { memo } from 'react';
-import { CardContainer, Description } from './column-card.styles';
+import {
+  CardContainer,
+  Description,
+  DeleteIcon,
+  DeleteContainer,
+  Controls,
+  Color,
+} from './column-card.styles';
 
-const ColumnCard = ({ data, initialColumn, ...otherProps }) => {
+const ColumnCard = ({ data, columnId, onDeleteClick, ...otherProps }) => {
   const handleDragStart = e => {
-    e.dataTransfer.setData('from', initialColumn);
+    e.stopPropagation();
+
+    e.dataTransfer.setData('from', columnId);
     e.dataTransfer.setData('id', data.id);
 
     setTimeout(() => {
@@ -12,6 +21,8 @@ const ColumnCard = ({ data, initialColumn, ...otherProps }) => {
   };
 
   const handleDragEnd = e => {
+    e.stopPropagation();
+
     e.target.style.display = 'block';
   };
 
@@ -21,6 +32,12 @@ const ColumnCard = ({ data, initialColumn, ...otherProps }) => {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
+      <Controls>
+        <Color />
+        <DeleteContainer onClick={() => onDeleteClick(columnId, data.id)}>
+          <DeleteIcon />
+        </DeleteContainer>
+      </Controls>
       <Description>{data.description}</Description>
     </CardContainer>
   );

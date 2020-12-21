@@ -9,9 +9,10 @@ const GlobalStyles = createGlobalStyle`
 body {
   font-family: 'Nunito', sans-serif;
 }
-button, textarea {
+button, textarea, input {
   outline: none;
   border: none;
+  font-family: inherit;
 }
 button {
   cursor: pointer;

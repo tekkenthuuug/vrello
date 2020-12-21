@@ -4,6 +4,8 @@ import { MdClose } from 'react-icons/md';
 export const CardCreatorContainer = styled.form`
   display: flex;
   flex-direction: column;
+
+  height: fit-content;
 `;
 
 export const TextAreaContainer = styled.div`
@@ -34,6 +36,10 @@ export const DescriptionTextArea = styled.textarea`
     background: #c2c1c1;
     border-radius: 2px;
   }
+`;
+
+export const DescriptionInput = styled.input`
+  width: 100%;
 `;
 
 export const Buttons = styled.div`

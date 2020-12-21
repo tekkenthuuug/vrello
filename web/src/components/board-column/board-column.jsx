@@ -4,61 +4,85 @@ import {
   ColumnName,
   ColumnItems,
   AddBtn,
+  ColumnContent,
 } from './board-column.styles';
 import { MdAdd } from 'react-icons/md';
-import Column from 'Components/column-card/column-card';
-import CardCreator from 'Components/card-creator/card-creator';
+import ColumnCard from 'Components/column-card/column-card';
+import ElementCreator from 'Components/element-creator/element-creator';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 
-const BoardColumn = ({ columnKey, columnData, onItemMove, onItemAdd }) => {
-  const [isAdding, setIsAdding] = useState(false);
-  const containerRef = React.createRef();
+const BoardColumn = ({
+  columnId,
+  columnData,
+  onItemMove,
+  onItemAdd,
+  onItemDelete,
+  onColumnDragOver,
+}) => {
+  const [isAddingCard, setIsAddingCard] = useState(false);
+  const elementCreatorRef = React.createRef();
 
-  const handleDrop = e => {
+  const handleItemDrop = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
     const initialColumnId = e.dataTransfer.getData('from');
     const itemId = e.dataTransfer.getData('id');
 
-    onItemMove(initialColumnId, columnKey, itemId);
-
-    e.preventDefault();
+    onItemMove(initialColumnId, columnId, itemId);
   };
 
   const handleDragOver = e => {
     e.preventDefault();
   };
 
-  useOnClickOutside(containerRef, () => {
-    setIsAdding(false);
+  useOnClickOutside(elementCreatorRef, () => {
+    setIsAddingCard(false);
   });
 
+  const handleColumnDragStart = e => {
+    e.dataTransfer.setData('id', columnId);
+  };
+
   return (
-    <ColumnContainer onDrop={handleDrop} onDragOver={handleDragOver}>
+    <ColumnContainer
+      onDragStart={handleColumnDragStart}
+      onDragOver={e => onColumnDragOver(e, columnId)}
+      draggable
+    >
       <ColumnName>{columnData.name}</ColumnName>
-      <ColumnItems>
-        {columnData.items.map((item, i) => (
-          <Column
-            key={item.id}
-            data={item}
-            initialColumn={columnKey}
-            draggable={true}
-          />
-        ))}
-        {isAdding ? (
-          <CardCreator
-            ref={containerRef}
-            onClose={() => setIsAdding(false)}
-            onSubmit={item => {
-              onItemAdd(columnKey, item);
-              setIsAdding(false);
+      <ColumnContent>
+        <ColumnItems onDrop={handleItemDrop} onDragOver={handleDragOver}>
+          {columnData.items.map(item => (
+            <ColumnCard
+              key={item.id}
+              data={item}
+              columnId={columnId}
+              onDeleteClick={onItemDelete}
+              draggable
+            />
+          ))}
+        </ColumnItems>
+        {isAddingCard ? (
+          <ElementCreator
+            asTextArea
+            name='description'
+            placeholder='Type card description here'
+            buttonText='Add card'
+            ref={elementCreatorRef}
+            onClose={() => setIsAddingCard(false)}
+            onSubmit={description => {
+              onItemAdd(columnId, description);
+              setIsAddingCard(false);
             }}
           />
         ) : (
-          <AddBtn onClick={() => setIsAdding(true)}>
+          <AddBtn onClick={() => setIsAddingCard(true)}>
             <MdAdd />
             Add card
           </AddBtn>
         )}
-      </ColumnItems>
+      </ColumnContent>
     </ColumnContainer>
   );
 };

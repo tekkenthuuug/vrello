@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import ElementCreator from '../../components/element-creator/element-creator';
 
 export const BoardContainer = styled.div`
   background-color: ${props => props.customBg};
@@ -12,6 +13,13 @@ export const ColumnsContainer = styled.div`
   & > * {
     margin-left: 12px;
   }
+`;
+
+export const StyledElementCreator = styled(ElementCreator)`
+  background-color: #ebecf0;
+  width: 256px;
+  padding: 8px;
+  border-radius: 8px;
 `;
 
 export const AddBtn = styled.button`

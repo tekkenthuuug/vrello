@@ -39,31 +39,34 @@ const io = socketIo(server);
 // Routes
 // app.use(creditCardRouter);
 const boardData = {
-  id: 0,
+  id: '0',
   name: 'Board',
-  data: {
-    0: {
-      name: 'Not unique',
+  data: [
+    {
+      id: '0',
+      name: 'Column 1',
       items: [
-        { id: 0, description: 'Text1' },
-        { id: 1, description: 'Text2' },
+        { id: '0', description: 'Text1' },
+        { id: '1', description: 'Text2' },
       ],
     },
-    1: {
-      name: 'Not unique',
+    {
+      id: '1',
+      name: 'Column 2',
       items: [
-        { id: 2, description: 'Text3' },
-        { id: 3, description: 'Text4' },
+        { id: '2', description: 'Text3' },
+        { id: '3', description: 'Text4' },
       ],
     },
-    2: {
-      name: 'Not unique',
+    {
+      id: '2',
+      name: 'Column 3',
       items: [
-        { id: 4, description: 'Text5' },
-        { id: 5, description: 'Text6' },
+        { id: '4', description: 'Text5' },
+        { id: '5', description: 'Text6' },
       ],
     },
-  },
+  ],
 };
 
 io.on('connection', socket => {
@@ -78,9 +81,14 @@ io.on('connection', socket => {
   socket.on('board-change', data => {
     // TODO: handle updating DB
     switch (data.action.type) {
-      case 'ADD': {
+      case 'ADD_CARD':
+      case 'ADD_COLUMN': {
         // temp
-        data.action.payload.item.id = Date.now();
+        data.action.payload.item.id = Date.now() + '';
+      }
+      case 'ADD_COLUMN': {
+        // temp
+        data.action.payload.item.items = [];
       }
     }
 

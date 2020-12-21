@@ -1,6 +1,5 @@
 import reorderItems from './reorderItems';
-import insertIntoArray from './insertIntoArray';
-import findColumnIndexById from './findColumnIndexById';
+import reorderColumns from './reorderColumns';
 
 export const initialState = {
   id: null,
@@ -23,32 +22,17 @@ export const boardReducer = (state = initialState, { payload, type }) => {
     }
     case 'MOVE_COLUMN': {
       const { columnId, targetColumnId } = payload;
-      const newState = { ...state };
 
-      let columnToMoveIndex = findColumnIndexById(newState.data, columnId);
-
-      let targetColumnIndex = findColumnIndexById(
-        newState.data,
-        targetColumnId
-      );
-
-      if (targetColumnIndex === columnToMoveIndex) {
-        return newState;
-      }
-
-      newState.data = insertIntoArray(
-        newState.data,
-        newState.data.splice(columnToMoveIndex, 1)[0],
-        targetColumnIndex
-      );
-
-      return newState;
+      return {
+        ...state,
+        data: reorderColumns(state.data, columnId, targetColumnId),
+      };
     }
     case 'ADD_CARD': {
       const { to, item } = payload;
       const newState = { ...state };
 
-      newState.data.find(el => el.id === to).items.push(item);
+      newState.data.find(column => column.id === to).items.push(item);
 
       return newState;
     }

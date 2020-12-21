@@ -1,44 +1,22 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
-import socketIOClient from 'socket.io-client';
 import BoardColumn from 'Components/board-column/board-column';
 import BoardHeader from 'Components/board-header/board-header';
+import React, { useState, useCallback } from 'react';
+import { MdAdd } from 'react-icons/md';
+import useLiveBoard from '../../hooks/useLiveBoard';
 import {
-  ColumnsContainer,
-  BoardContainer,
   AddBtn,
+  BoardContainer,
+  ColumnsContainer,
   StyledElementCreator,
 } from './board.styles';
-import { boardReducer, initialState } from 'Utils/boardReducer';
-import { MdAdd } from 'react-icons/md';
 
 const Board = () => {
   const [isAddingColumn, setIsAddingColumn] = useState(false);
   const [dragOverColumnId, setDragOverColumnId] = useState(null);
 
-  const socket = useRef(null);
+  const { state, dispatch, emitBoardChange } = useLiveBoard();
 
-  const [{ data, name, isLoading, id }, dispatch] = useReducer(
-    boardReducer,
-    initialState
-  );
-
-  useEffect(() => {
-    socket.current = socketIOClient('http://localhost:5000', {
-      transports: ['websocket'],
-    });
-
-    socket.current.on('connected', boardData => {
-      dispatch({ type: 'INIT', payload: boardData });
-
-      socket.current.emit('join', boardData.id);
-    });
-
-    socket.current.on('board-change', action => {
-      // handle changes received from server
-
-      dispatch(action);
-    });
-  }, []);
+  const { data, name, isLoading } = state;
 
   const handleItemMove = (from, to, itemId) => {
     const action = { type: 'MOVE', payload: { from, to, itemId } };
@@ -47,10 +25,7 @@ const Board = () => {
     dispatch(action);
 
     // send changes to server
-    socket.current.emit('board-change', {
-      room: id,
-      action,
-    });
+    emitBoardChange(action);
   };
 
   const handleItemAdd = (columnId, description) => {
@@ -64,10 +39,7 @@ const Board = () => {
     };
 
     // send changes to server
-    socket.current.emit('board-change', {
-      room: id,
-      action,
-    });
+    emitBoardChange(action);
   };
 
   const handleColumnAdd = name => {
@@ -81,10 +53,7 @@ const Board = () => {
     };
 
     // send changes to server
-    socket.current.emit('board-change', {
-      room: id,
-      action,
-    });
+    emitBoardChange(action);
 
     setIsAddingColumn(false);
   };
@@ -94,13 +63,10 @@ const Board = () => {
 
     dispatch(action);
 
-    socket.current.emit('board-change', {
-      room: id,
-      action,
-    });
+    emitBoardChange(action);
   };
 
-  const handleColumnDrop = e => {
+  const handleColumnMove = e => {
     e.preventDefault();
 
     const columnId = e.dataTransfer.getData('id');
@@ -114,10 +80,7 @@ const Board = () => {
       payload: { columnId, targetColumnId: dragOverColumnId },
     };
 
-    socket.current.emit('board-change', {
-      room: id,
-      action,
-    });
+    emitBoardChange(action);
 
     setDragOverColumnId(null);
   };
@@ -135,13 +98,12 @@ const Board = () => {
         <>
           <BoardHeader name={name} customBg='rgb(0, 121, 191)' />
           <ColumnsContainer
-            onDrop={handleColumnDrop}
+            onDrop={handleColumnMove}
             onDragOver={e => e.preventDefault()}
           >
             {data.map(columnData => (
               <BoardColumn
                 key={columnData.id}
-                columnId={columnData.id}
                 columnData={columnData}
                 onItemMove={handleItemMove}
                 onItemAdd={handleItemAdd}

@@ -1,7 +1,7 @@
-const reorderItems = (itemsArray, from, to, itemId) => {
-  const newItemsArray = [...itemsArray];
+const reorderItems = (columnsArray, from, to, itemId) => {
+  const newColumnsArray = [...columnsArray];
 
-  const fromColumn = newItemsArray.find(el => el.id === from);
+  const fromColumn = newColumnsArray.find(el => el.id === from);
 
   for (let i = 0; i < fromColumn.items.length; i++) {
     const currentItem = fromColumn.items[i];
@@ -13,7 +13,7 @@ const reorderItems = (itemsArray, from, to, itemId) => {
 
       // no 'to' means delete
       if (to) {
-        const toColumn = newItemsArray.find(el => el.id === to);
+        const toColumn = newColumnsArray.find(el => el.id === to);
 
         toColumn.items.push(itemToMove);
       }
@@ -22,7 +22,7 @@ const reorderItems = (itemsArray, from, to, itemId) => {
     }
   }
 
-  return newItemsArray;
+  return newColumnsArray;
 };
 
 export default reorderItems;

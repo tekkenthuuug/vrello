@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import {
   ColumnContainer,
   ColumnName,
@@ -12,7 +12,6 @@ import ElementCreator from 'Components/element-creator/element-creator';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 const BoardColumn = ({
-  columnId,
   columnData,
   onItemMove,
   onItemAdd,
@@ -29,7 +28,7 @@ const BoardColumn = ({
     const initialColumnId = e.dataTransfer.getData('from');
     const itemId = e.dataTransfer.getData('id');
 
-    onItemMove(initialColumnId, columnId, itemId);
+    onItemMove(initialColumnId, columnData.id, itemId);
   };
 
   const handleDragOver = e => {
@@ -41,13 +40,13 @@ const BoardColumn = ({
   });
 
   const handleColumnDragStart = e => {
-    e.dataTransfer.setData('id', columnId);
+    e.dataTransfer.setData('id', columnData.id);
   };
 
   return (
     <ColumnContainer
       onDragStart={handleColumnDragStart}
-      onDragOver={e => onColumnDragOver(e, columnId)}
+      onDragOver={e => onColumnDragOver(e, columnData.id)}
       draggable
     >
       <ColumnName>{columnData.name}</ColumnName>
@@ -57,7 +56,7 @@ const BoardColumn = ({
             <ColumnCard
               key={item.id}
               data={item}
-              columnId={columnId}
+              columnId={columnData.id}
               onDeleteClick={onItemDelete}
               draggable
             />
@@ -72,7 +71,7 @@ const BoardColumn = ({
             ref={elementCreatorRef}
             onClose={() => setIsAddingCard(false)}
             onSubmit={description => {
-              onItemAdd(columnId, description);
+              onItemAdd(columnData.id, description);
               setIsAddingCard(false);
             }}
           />
@@ -87,4 +86,4 @@ const BoardColumn = ({
   );
 };
 
-export default BoardColumn;
+export default memo(BoardColumn);

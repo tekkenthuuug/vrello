@@ -19,7 +19,7 @@ const Board = () => {
   const { data, name, isLoading } = state;
 
   const handleItemMove = (from, to, itemId) => {
-    const action = { type: 'MOVE', payload: { from, to, itemId } };
+    const action = { type: 'MOVE_CARD', payload: { from, to, itemId } };
 
     // apply changes locally
     dispatch(action);
@@ -49,7 +49,7 @@ const Board = () => {
 
     const action = {
       type: 'ADD_COLUMN',
-      payload: { item: { name } },
+      payload: { column: { name } },
     };
 
     // send changes to server
@@ -59,7 +59,7 @@ const Board = () => {
   };
 
   const handleItemDelete = (from, itemId) => {
-    const action = { type: 'MOVE', payload: { from, to: null, itemId } };
+    const action = { type: 'MOVE_CARD', payload: { from, to: null, itemId } };
 
     dispatch(action);
 

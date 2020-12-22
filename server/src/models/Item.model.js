@@ -1,18 +1,12 @@
 const mongoose = require('mongoose');
 const normalizeTransform = require('../utils/normalizeTransform');
 
-const BoardSchema = new mongoose.Schema(
+const ItemSchema = new mongoose.Schema(
   {
-    name: {
+    description: {
       type: String,
       required: true,
     },
-    data: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Column',
-      },
-    ],
   },
   {
     toJSON: {
@@ -21,4 +15,4 @@ const BoardSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Board', BoardSchema);
+module.exports = mongoose.model('Item', ItemSchema);

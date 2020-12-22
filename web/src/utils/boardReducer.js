@@ -13,7 +13,7 @@ export const boardReducer = (state = initialState, { payload, type }) => {
     case 'INIT': {
       return { ...state, ...payload, isLoading: false };
     }
-    case 'MOVE': {
+    case 'MOVE_CARD': {
       const { from, to, itemId } = payload;
       return {
         ...state,
@@ -37,9 +37,9 @@ export const boardReducer = (state = initialState, { payload, type }) => {
       return newState;
     }
     case 'ADD_COLUMN': {
-      const { item } = payload;
+      const { column } = payload;
       const newState = { ...state };
-      newState.data.push(item);
+      newState.data.push(column);
       return newState;
     }
     default: {

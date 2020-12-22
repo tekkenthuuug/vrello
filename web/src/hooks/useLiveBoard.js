@@ -27,7 +27,7 @@ const useLiveBoard = () => {
   const emitBoardChange = useCallback(
     action => {
       socket.current.emit('board-change', {
-        room: state.id,
+        boardId: state.id,
         action,
       });
     },

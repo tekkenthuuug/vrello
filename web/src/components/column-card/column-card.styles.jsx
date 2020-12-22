@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { MdDelete } from 'react-icons/md';
+import styled from 'styled-components';
 
 export const DeleteIcon = styled(MdDelete)`
   color: rgba(255, 0, 0, 0.4);

@@ -17,6 +17,14 @@ button, textarea, input {
 button {
   cursor: pointer;
 }
+a {
+  text-decoration: none;
+  color: #0052CC;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 `;
 
 export default GlobalStyles;

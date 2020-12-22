@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 import {
   CardContainer,
-  Description,
-  DeleteIcon,
-  DeleteContainer,
-  Controls,
   Color,
+  Controls,
+  DeleteContainer,
+  DeleteIcon,
+  Description,
 } from './column-card.styles';
 
 const ColumnCard = ({ data, columnId, onDeleteClick, ...otherProps }) => {

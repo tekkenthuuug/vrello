@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { MdClose } from 'react-icons/md';
+import styled from 'styled-components';
 
 export const CardCreatorContainer = styled.form`
   display: flex;

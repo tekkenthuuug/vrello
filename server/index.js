@@ -12,25 +12,19 @@ const Item = require('./src/models/Item.model');
 
 const handleBoardChangeEvent = require('./src/utils/handleBoardChangeEvent');
 
-// const creditCardRouter = require("./src/controllers/creditCard.controller");
+const port = process.env.PORT || 5000;
 
-// Creating an express app
 const app = express();
 
-// Parsing post request body
 app.use(express.json());
 
-// CORS
 app.use(cors());
 app.use(helmet());
 
-// Logging
 app.use(morgan('combined'));
 
-// Server
 const server = http.createServer(app);
 
-// Socket.io
 const io = socketIo(server);
 
 const addBoard = async () => {
@@ -107,12 +101,7 @@ const addBoard = async () => {
   // addBoard();
 })();
 
-// Routes
-// app.use(creditCardRouter);
-
 io.on('connection', socket => {
-  console.log('New client connected...', socket.id);
-
   Board.findOne({})
     .populate({
       path: 'data',
@@ -130,8 +119,6 @@ io.on('connection', socket => {
 
   socket.on('board-change', handleBoardChangeEvent(io));
 });
-
-const port = process.env.PORT || 5000;
 
 server.listen(port, () => {
   console.log(`Listening on port: ${port}`);

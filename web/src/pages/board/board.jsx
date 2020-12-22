@@ -1,6 +1,6 @@
 import BoardColumn from 'Components/board-column/board-column';
 import BoardHeader from 'Components/board-header/board-header';
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import useLiveBoard from '../../hooks/useLiveBoard';
 import {

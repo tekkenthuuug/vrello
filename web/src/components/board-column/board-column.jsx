@@ -1,15 +1,15 @@
-import React, { useState, memo } from 'react';
-import {
-  ColumnContainer,
-  ColumnName,
-  ColumnItems,
-  AddBtn,
-  ColumnContent,
-} from './board-column.styles';
-import { MdAdd } from 'react-icons/md';
 import ColumnCard from 'Components/column-card/column-card';
 import ElementCreator from 'Components/element-creator/element-creator';
+import React, { memo, useState } from 'react';
+import { MdAdd } from 'react-icons/md';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
+import {
+  AddBtn,
+  ColumnContainer,
+  ColumnContent,
+  ColumnItems,
+  ColumnName,
+} from './board-column.styles';
 
 const BoardColumn = ({
   columnData,

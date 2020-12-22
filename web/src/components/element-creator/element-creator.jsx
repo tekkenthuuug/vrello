@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
   AddCardBtn,
-  CardCreatorContainer,
-  DescriptionTextArea,
-  TextAreaContainer,
   Buttons,
+  CardCreatorContainer,
   CloseIcon,
   DescriptionInput,
+  DescriptionTextArea,
+  TextAreaContainer,
 } from './element-creator.styles';
 
 /* eslint react/display-name: 0 */

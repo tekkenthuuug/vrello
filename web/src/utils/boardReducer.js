@@ -1,5 +1,5 @@
-import reorderItems from './reorderItems';
 import reorderColumns from './reorderColumns';
+import reorderItems from './reorderItems';
 
 export const initialState = {
   id: null,

@@ -53,6 +53,8 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
           { _id: to },
           { $push: { items: itemId } }
         ).exec();
+      } else {
+        await Item.deleteOne({ _id: itemId });
       }
 
       break;
@@ -60,15 +62,15 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     case 'MOVE_COLUMN': {
       const { columnId, targetColumnId } = payload;
 
+      if (columnId === targetColumnId) {
+        return;
+      }
+
       const { data } = await Board.findOne({ _id: boardId }).exec();
 
       let columnToMoveIndex = data.indexOf(columnId);
 
       let targetColumnIndex = data.indexOf(targetColumnId);
-
-      if (targetColumnIndex === columnToMoveIndex) {
-        return;
-      }
 
       const newData = insertIntoArray(
         data,

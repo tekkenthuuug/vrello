@@ -1,6 +1,6 @@
-import { useEffect, useReducer, useRef, useCallback } from 'react';
-import { boardReducer, initialState } from '../utils/boardReducer';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import socketIOClient from 'socket.io-client';
+import { boardReducer, initialState } from '../utils/boardReducer';
 
 const useLiveBoard = () => {
   const socket = useRef(null);
@@ -22,6 +22,12 @@ const useLiveBoard = () => {
       // handle changes received from server
       dispatch(action);
     });
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
   }, []);
 
   const emitBoardChange = useCallback(

@@ -96,10 +96,14 @@ const addBoard = async () => {
   await mongoose.connect('mongodb://localhost:27017/vrello?retryWrites=false', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: true,
+    useCreateIndex: true,
   });
 
   // addBoard();
 })();
+
+app.use(require('./src/routes'));
 
 io.on('connection', socket => {
   Board.findOne({})

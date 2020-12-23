@@ -15,10 +15,7 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
 
       await newItem.save();
 
-      await Column.updateOne(
-        { _id: to },
-        { $push: { items: newItem._id } }
-      ).exec();
+      await newItem.appendToColumn(to);
 
       payload.item = newItem;
 
@@ -30,10 +27,7 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
 
       await newColumn.save();
 
-      await Board.updateOne(
-        { _id: boardId },
-        { $push: { data: newColumn._id } }
-      ).exec();
+      await newColumn.appendToBoard(boardId);
 
       payload.column = newColumn;
 
@@ -42,19 +36,15 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     case 'MOVE_CARD': {
       const { from, to, itemId } = payload;
 
-      await Column.updateOne(
-        { _id: from },
-        { $pull: { items: itemId } }
-      ).exec();
+      const item = await Item.findById(itemId);
+
+      await item.removeFromColumn(from);
 
       // no 'to' means delete
       if (to) {
-        await Column.updateOne(
-          { _id: to },
-          { $push: { items: itemId } }
-        ).exec();
+        await item.appendToColumn(to);
       } else {
-        await Item.deleteOne({ _id: itemId });
+        await Item.findByIdAndDelete(itemId).exec();
       }
 
       break;
@@ -66,22 +56,9 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
         return;
       }
 
-      const { data } = await Board.findOne({ _id: boardId }).exec();
+      const columnToMove = await Column.findById(columnId);
 
-      let columnToMoveIndex = data.indexOf(columnId);
-
-      let targetColumnIndex = data.indexOf(targetColumnId);
-
-      const newData = insertIntoArray(
-        data,
-        data.splice(columnToMoveIndex, 1)[0],
-        targetColumnIndex
-      );
-
-      await Board.updateOne(
-        { _id: boardId },
-        { $set: { data: newData } }
-      ).exec();
+      await columnToMove.moveToColumn(boardId, targetColumnId);
 
       break;
     }

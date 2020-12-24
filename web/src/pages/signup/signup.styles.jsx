@@ -27,6 +27,13 @@ export const SubmitBtn = styled.button`
   border-radius: 5px;
   font-weight: bold;
   color: #fff;
+
+  transition: opacity 0.3s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
 `;
 
 export const Heading = styled.h1`

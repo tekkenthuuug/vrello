@@ -12,9 +12,17 @@ import {
 import useUserContext from 'Hooks/useUserContext';
 import { Redirect } from 'react-router-dom';
 import { ROUTES } from 'Utils/constants';
+import useFetch from 'Hooks/useFetch';
 
 const SignIn = () => {
   const { user } = useUserContext();
+
+  const { data, fetchData } = useFetch(
+    'http://localhost:5000/api/auth/signup',
+    {
+      method: 'POST',
+    }
+  );
 
   if (user) {
     return <Redirect to={ROUTES.menu} />;
@@ -24,8 +32,10 @@ const SignIn = () => {
     <SigninContainer>
       <Formik
         initialValues={{ username: '', email: '', password: '' }}
-        onSubmit={(values, { setErrors }) => {
-          console.log(values);
+        onSubmit={async (values, { setErrors }) => {
+          await fetchData(values);
+
+          console.log(data);
         }}
       >
         {({ isSubmitting, values }) => (

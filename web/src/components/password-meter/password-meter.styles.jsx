@@ -14,5 +14,9 @@ export const Meter = styled.div`
 
   width: ${props => Math.min(props.width, 100) + '%'};
   height: 100%;
-  background-color: rgb(100, ${props => Math.min(props.width * 2, 255)}, 0);
+  background-color: rgb(
+    100,
+    ${props => 55 + Math.min(props.width * 2, 200)},
+    0
+  );
 `;

@@ -8,6 +8,7 @@ import {
   StyledForm,
   SubmitBtn,
 } from './signin.styles';
+import { ROUTES } from 'Utils/constants';
 
 const SignIn = () => {
   return (
@@ -21,7 +22,7 @@ const SignIn = () => {
         {({ isSubmitting }) => (
           <StyledForm>
             <Heading>Sign in to Vrello</Heading>
-            <SignupLink to='/signup'>
+            <SignupLink to={ROUTES.signup}>
               Already have an account? Sign in!
             </SignupLink>
             <InputField

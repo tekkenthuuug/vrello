@@ -2,13 +2,20 @@ import BoardColumn from 'Components/board-column/board-column';
 import BoardHeader from 'Components/board-header/board-header';
 import React, { useState } from 'react';
 import { MdAdd } from 'react-icons/md';
-import useLiveBoard from '../../hooks/useLiveBoard';
+import useLiveBoard from 'Hooks/useLiveBoard';
 import {
   AddBtn,
   BoardContainer,
   ColumnsContainer,
   StyledElementCreator,
 } from './board.styles';
+import {
+  moveCard,
+  addCard,
+  addColumn,
+  moveColumn,
+  deleteCard,
+} from 'Utils/board/board.actions';
 
 const Board = () => {
   const [isAddingColumn, setIsAddingColumn] = useState(false);
@@ -16,10 +23,10 @@ const Board = () => {
 
   const { state, dispatch, emitBoardChange } = useLiveBoard();
 
-  const { data, name, isLoading } = state;
+  const { columns, name, isLoading } = state;
 
-  const handleItemMove = (from, to, itemId) => {
-    const action = { type: 'MOVE_CARD', payload: { from, to, itemId } };
+  const handleCardMove = (from, to, cardId) => {
+    const action = moveCard(from, to, cardId);
 
     // apply changes locally
     dispatch(action);
@@ -28,15 +35,12 @@ const Board = () => {
     emitBoardChange(action);
   };
 
-  const handleItemAdd = (columnId, description) => {
+  const handleCardAdd = (columnId, description) => {
     if (!description.length) {
       return;
     }
 
-    const action = {
-      type: 'ADD_CARD',
-      payload: { to: columnId, item: { description } },
-    };
+    const action = addCard(columnId, { description });
 
     // send changes to server
     emitBoardChange(action);
@@ -47,10 +51,7 @@ const Board = () => {
       return;
     }
 
-    const action = {
-      type: 'ADD_COLUMN',
-      payload: { column: { name } },
-    };
+    const action = addColumn({ name });
 
     // send changes to server
     emitBoardChange(action);
@@ -58,8 +59,8 @@ const Board = () => {
     setIsAddingColumn(false);
   };
 
-  const handleItemDelete = (from, itemId) => {
-    const action = { type: 'MOVE_CARD', payload: { from, to: null, itemId } };
+  const handleCardDelete = (from, cardId) => {
+    const action = deleteCard(from, cardId);
 
     dispatch(action);
 
@@ -75,10 +76,7 @@ const Board = () => {
       return;
     }
 
-    const action = {
-      type: 'MOVE_COLUMN',
-      payload: { columnId, targetColumnId: dragOverColumnId },
-    };
+    const action = moveColumn(columnId, dragOverColumnId);
 
     emitBoardChange(action);
 
@@ -94,20 +92,20 @@ const Board = () => {
 
   return (
     <BoardContainer customBg='rgb(0, 121, 191)'>
-      {!isLoading && data ? (
+      {!isLoading && columns ? (
         <>
           <BoardHeader name={name} customBg='rgb(0, 121, 191)' />
           <ColumnsContainer
             onDrop={handleColumnMove}
             onDragOver={e => e.preventDefault()}
           >
-            {data.map(columnData => (
+            {columns.map(column => (
               <BoardColumn
-                key={columnData.id}
-                columnData={columnData}
-                onItemMove={handleItemMove}
-                onItemAdd={handleItemAdd}
-                onItemDelete={handleItemDelete}
+                key={column.id}
+                columnData={column}
+                onCardMove={handleCardMove}
+                onCardAdd={handleCardAdd}
+                onCardDelete={handleCardDelete}
                 onColumnDragOver={handleColumnDragOver}
               />
             ))}

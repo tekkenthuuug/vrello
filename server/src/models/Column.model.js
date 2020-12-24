@@ -10,11 +10,11 @@ const ColumnSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    items: [
+    cards: [
       {
         default: [],
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Item',
+        ref: 'Card',
       },
     ],
   },
@@ -26,23 +26,29 @@ const ColumnSchema = new mongoose.Schema(
 );
 
 ColumnSchema.methods.appendToBoard = async function (boardId) {
-  await Board.updateOne({ _id: boardId }, { $push: { data: this._id } }).exec();
+  await Board.updateOne(
+    { _id: boardId },
+    { $push: { columns: this._id } }
+  ).exec();
 };
 
 ColumnSchema.methods.moveToColumn = async function (boardId, columnId) {
-  const { data } = await Board.findById(boardId).exec();
+  const { columns } = await Board.findById(boardId).exec();
 
-  let columnToMoveIndex = data.indexOf(this._id);
+  let columnToMoveIndex = columns.indexOf(this._id);
 
-  let targetColumnIndex = data.indexOf(columnId);
+  let targetColumnIndex = columns.indexOf(columnId);
 
-  const newData = insertIntoArray(
-    data,
-    data.splice(columnToMoveIndex, 1)[0],
+  const newColumns = insertIntoArray(
+    columns,
+    columns.splice(columnToMoveIndex, 1)[0],
     targetColumnIndex
   );
 
-  await Board.updateOne({ _id: boardId }, { $set: { data: newData } }).exec();
+  await Board.updateOne(
+    { _id: boardId },
+    { $set: { columns: newColumns } }
+  ).exec();
 };
 
 module.exports = mongoose.model('Column', ColumnSchema);

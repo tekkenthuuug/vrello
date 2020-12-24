@@ -7,7 +7,7 @@ const BoardSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    data: [
+    columns: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Column',

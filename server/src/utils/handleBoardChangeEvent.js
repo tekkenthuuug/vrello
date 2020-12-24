@@ -1,4 +1,4 @@
-const Item = require('../models/Item.model');
+const Card = require('../models/Card.model');
 const Column = require('../models/Column.model');
 const Board = require('../models/Board.model');
 
@@ -9,15 +9,15 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
 
   switch (type) {
     case 'ADD_CARD': {
-      const { to, item } = payload;
+      const { toColumn, card } = payload;
 
-      const newItem = new Item(item);
+      const newCard = new Card(card);
 
-      await newItem.save();
+      await newCard.save();
 
-      await newItem.appendToColumn(to);
+      await newCard.appendToColumn(toColumn);
 
-      payload.item = newItem;
+      payload.card = newCard;
 
       break;
     }
@@ -34,29 +34,29 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
       break;
     }
     case 'MOVE_CARD': {
-      const { from, to, itemId } = payload;
+      const { fromColumn, toColumn, cardId } = payload;
 
-      const item = await Item.findById(itemId);
+      const card = await Card.findById(cardId);
 
-      await item.removeFromColumn(from);
+      await card.removeFromColumn(fromColumn);
 
       // no 'to' means delete
-      if (to) {
-        await item.appendToColumn(to);
+      if (toColumn) {
+        await card.appendToColumn(toColumn);
       } else {
-        await Item.findByIdAndDelete(itemId).exec();
+        await Card.findByIdAndDelete(cardId).exec();
       }
 
       break;
     }
     case 'MOVE_COLUMN': {
-      const { columnId, targetColumnId } = payload;
+      const { columnIdToMove, targetColumnId } = payload;
 
-      if (columnId === targetColumnId) {
+      if (columnIdToMove === targetColumnId) {
         return;
       }
 
-      const columnToMove = await Column.findById(columnId);
+      const columnToMove = await Column.findById(columnIdToMove);
 
       await columnToMove.moveToColumn(boardId, targetColumnId);
 

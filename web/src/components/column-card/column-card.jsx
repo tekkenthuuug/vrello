@@ -8,12 +8,12 @@ import {
   Description,
 } from './column-card.styles';
 
-const ColumnCard = ({ data, columnId, onDeleteClick, ...otherProps }) => {
+const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
   const handleDragStart = e => {
     e.stopPropagation();
 
     e.dataTransfer.setData('from', columnId);
-    e.dataTransfer.setData('id', data.id);
+    e.dataTransfer.setData('id', cardData.id);
 
     setTimeout(() => {
       e.target.style.display = 'none';
@@ -34,11 +34,11 @@ const ColumnCard = ({ data, columnId, onDeleteClick, ...otherProps }) => {
     >
       <Controls>
         <Color />
-        <DeleteContainer onClick={() => onDeleteClick(columnId, data.id)}>
+        <DeleteContainer onClick={() => onDeleteClick(columnId, cardData.id)}>
           <DeleteIcon />
         </DeleteContainer>
       </Controls>
-      <Description>{data.description}</Description>
+      <Description>{cardData.description}</Description>
     </CardContainer>
   );
 };

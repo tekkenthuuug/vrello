@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import socketIOClient from 'socket.io-client';
-import { boardReducer, initialState } from '../utils/boardReducer';
+import { boardReducer, initialState } from 'Utils/board/board.reducer';
+import { initializeBoard } from 'Utils/board/board.actions';
 
 const useLiveBoard = () => {
   const socket = useRef(null);
@@ -13,7 +14,7 @@ const useLiveBoard = () => {
     });
 
     socket.current.on('connected', boardData => {
-      dispatch({ type: 'INIT', payload: boardData });
+      dispatch(initializeBoard(boardData));
 
       socket.current.emit('join', boardData.id);
     });

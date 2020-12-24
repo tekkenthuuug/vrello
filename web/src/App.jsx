@@ -4,17 +4,19 @@ import SignUp from 'Pages/signup/signup';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import GlobalStyles from './GlobalStyles';
+import { UserProvider } from 'Contexts/userContext';
+import { ROUTES } from 'Utils/constants';
 
 const App = () => {
   return (
-    <>
+    <UserProvider>
       <GlobalStyles />
       <Switch>
-        <Route exact path='/' component={Board} />
-        <Route path='/signin' component={SignIn} />
-        <Route path='/signup' component={SignUp} />
+        <Route exact path={ROUTES.board} component={Board} />
+        <Route path={ROUTES.signin} component={SignIn} />
+        <Route path={ROUTES.signup} component={SignUp} />
       </Switch>
-    </>
+    </UserProvider>
   );
 };
 

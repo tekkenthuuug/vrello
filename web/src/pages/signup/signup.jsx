@@ -9,8 +9,17 @@ import {
   SubmitBtn,
   TOSParagraph,
 } from './signup.styles';
+import useUserContext from 'Hooks/useUserContext';
+import { Redirect } from 'react-router-dom';
+import { ROUTES } from 'Utils/constants';
 
 const SignIn = () => {
+  const { user } = useUserContext();
+
+  if (user) {
+    return <Redirect to={ROUTES.menu} />;
+  }
+
   return (
     <SigninContainer>
       <Formik
@@ -22,7 +31,7 @@ const SignIn = () => {
         {({ isSubmitting, values }) => (
           <StyledForm>
             <Heading>Sign up for your account</Heading>
-            <SigninLink to='/signin'>
+            <SigninLink to={ROUTES.signin}>
               Already have an account? Sign in!
             </SigninLink>
             <InputField

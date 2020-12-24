@@ -19,7 +19,7 @@ export const ColumnName = styled.h2`
   box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.1);
 `;
 
-export const ColumnItems = styled.div`
+export const CardsContainer = styled.div`
   margin-top: 12px;
   min-height: 71px;
 `;

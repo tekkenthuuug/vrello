@@ -2,33 +2,33 @@ import ColumnCard from 'Components/column-card/column-card';
 import ElementCreator from 'Components/element-creator/element-creator';
 import React, { memo, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
+import useOnClickOutside from 'Hooks/useOnClickOutside';
 import {
   AddBtn,
   ColumnContainer,
   ColumnContent,
-  ColumnItems,
+  CardsContainer,
   ColumnName,
 } from './board-column.styles';
 
 const BoardColumn = ({
   columnData,
-  onItemMove,
-  onItemAdd,
-  onItemDelete,
+  onCardMove,
+  onCardAdd,
+  onCardDelete,
   onColumnDragOver,
 }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const elementCreatorRef = React.createRef();
 
-  const handleItemDrop = e => {
+  const handleCardDrop = e => {
     e.preventDefault();
     e.stopPropagation();
 
     const initialColumnId = e.dataTransfer.getData('from');
-    const itemId = e.dataTransfer.getData('id');
+    const cardId = e.dataTransfer.getData('id');
 
-    onItemMove(initialColumnId, columnData.id, itemId);
+    onCardMove(initialColumnId, columnData.id, cardId);
   };
 
   const handleDragOver = e => {
@@ -51,17 +51,17 @@ const BoardColumn = ({
     >
       <ColumnName>{columnData.name}</ColumnName>
       <ColumnContent>
-        <ColumnItems onDrop={handleItemDrop} onDragOver={handleDragOver}>
-          {columnData.items.map(item => (
+        <CardsContainer onDrop={handleCardDrop} onDragOver={handleDragOver}>
+          {columnData.cards.map(card => (
             <ColumnCard
-              key={item.id}
-              data={item}
+              key={card.id}
+              cardData={card}
               columnId={columnData.id}
-              onDeleteClick={onItemDelete}
+              onDeleteClick={onCardDelete}
               draggable
             />
           ))}
-        </ColumnItems>
+        </CardsContainer>
         {isAddingCard ? (
           <ElementCreator
             asTextArea
@@ -71,7 +71,7 @@ const BoardColumn = ({
             ref={elementCreatorRef}
             onClose={() => setIsAddingCard(false)}
             onSubmit={description => {
-              onItemAdd(columnData.id, description);
+              onCardAdd(columnData.id, description);
               setIsAddingCard(false);
             }}
           />

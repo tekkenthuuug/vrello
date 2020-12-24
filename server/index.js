@@ -8,7 +8,7 @@ const socketIo = require('socket.io');
 
 const Board = require('./src/models/Board.model');
 const Column = require('./src/models/Column.model');
-const Item = require('./src/models/Item.model');
+const Card = require('./src/models/Card.model');
 
 const handleBoardChangeEvent = require('./src/utils/handleBoardChangeEvent');
 
@@ -29,17 +29,17 @@ const io = socketIo(server);
 
 const addBoard = async () => {
   await Board.remove({});
-  await Item.remove({});
+  await Card.remove({});
   await Column.remove({});
 
   const boardData = {
     id: '0',
     name: 'Board',
-    data: [
+    columns: [
       {
         id: '0',
         name: 'Column 1',
-        items: [
+        cards: [
           { id: '0', description: 'Text1' },
           { id: '1', description: 'Text2' },
         ],
@@ -47,7 +47,7 @@ const addBoard = async () => {
       {
         id: '1',
         name: 'Column 2',
-        items: [
+        cards: [
           { id: '2', description: 'Text3' },
           { id: '3', description: 'Text4' },
         ],
@@ -55,7 +55,7 @@ const addBoard = async () => {
       {
         id: '2',
         name: 'Column 3',
-        items: [
+        cards: [
           { id: '4', description: 'Text5' },
           { id: '5', description: 'Text6' },
         ],
@@ -65,29 +65,29 @@ const addBoard = async () => {
 
   let columns = [];
 
-  for (let i = 0; i < boardData.data.length; i++) {
-    const currentColumn = boardData.data[i];
+  for (let i = 0; i < boardData.columns.length; i++) {
+    const currentColumn = boardData.columns[i];
 
-    let items = [];
+    let cards = [];
 
-    for (let j = 0; j < currentColumn.items.length; j++) {
-      const currentItem = currentColumn.items[j];
+    for (let j = 0; j < currentColumn.cards.length; j++) {
+      const currentCard = currentColumn.cards[j];
 
-      const item = new Item({ description: currentItem.description });
+      const card = new Card({ description: currentCard.description });
 
-      item.save();
+      card.save();
 
-      items.push(item._id);
+      cards.push(card._id);
     }
 
-    const column = new Column({ name: currentColumn.name, items });
+    const column = new Column({ name: currentColumn.name, cards });
 
     column.save();
 
     columns.push(column._id);
   }
 
-  const board = new Board({ name: 'Board', data: columns });
+  const board = new Board({ name: 'Board', columns });
 
   board.save();
 };
@@ -108,9 +108,9 @@ app.use(require('./src/routes'));
 io.on('connection', socket => {
   Board.findOne({})
     .populate({
-      path: 'data',
+      path: 'columns',
       populate: {
-        path: 'items',
+        path: 'cards',
       },
     })
     .exec((err, board) => {

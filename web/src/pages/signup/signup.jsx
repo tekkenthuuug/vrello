@@ -1,44 +1,46 @@
 import InputField from 'Components/input-field/input-field';
 import { Formik } from 'formik';
+import useFetch from 'Hooks/useFetch';
+import useUserContext from 'Hooks/useUserContext';
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { ROUTES, API_ROUTES } from 'Utils/constants';
 import {
   Heading,
-  SigninContainer,
+  SignupContainer,
   SigninLink,
   StyledForm,
   SubmitBtn,
   TOSParagraph,
 } from './signup.styles';
-import useUserContext from 'Hooks/useUserContext';
-import { Redirect } from 'react-router-dom';
-import { ROUTES } from 'Utils/constants';
-import useFetch from 'Hooks/useFetch';
 
-const SignIn = () => {
-  const { user } = useUserContext();
+const SignUpFormInitialState = { username: '', email: '', password: '' };
 
-  const { data, fetchData } = useFetch(
-    'http://localhost:5000/api/auth/signup',
-    {
-      method: 'POST',
+const SignUp = () => {
+  const { user, setUser } = useUserContext();
+
+  const { fetchData } = useFetch(API_ROUTES.signup, {
+    method: 'POST',
+  });
+
+  const handleSubmit = async (values, { setErrors }) => {
+    const response = await fetchData(values);
+
+    if (response.success) {
+      setUser(response.data.user);
+    } else {
+      setErrors(response.error);
     }
-  );
+  };
 
   if (user) {
     return <Redirect to={ROUTES.menu} />;
   }
 
   return (
-    <SigninContainer>
-      <Formik
-        initialValues={{ username: '', email: '', password: '' }}
-        onSubmit={async (values, { setErrors }) => {
-          await fetchData(values);
-
-          console.log(data);
-        }}
-      >
-        {({ isSubmitting, values }) => (
+    <SignupContainer>
+      <Formik initialValues={SignUpFormInitialState} onSubmit={handleSubmit}>
+        {({ isSubmitting }) => (
           <StyledForm>
             <Heading>Sign up for your account</Heading>
             <SigninLink to={ROUTES.signin}>
@@ -48,6 +50,7 @@ const SignIn = () => {
               name='username'
               placeholder='Enter username'
               label='Username'
+              disabled={isSubmitting}
               invisibleLabel
             />
             <InputField
@@ -55,6 +58,7 @@ const SignIn = () => {
               placeholder='Enter email'
               label='Email'
               type='email'
+              disabled={isSubmitting}
               invisibleLabel
             />
             <InputField
@@ -63,6 +67,7 @@ const SignIn = () => {
               label='Password'
               type='password'
               invisibleLabel
+              disabled={isSubmitting}
               passwordMeter
             />
             <TOSParagraph>
@@ -75,8 +80,8 @@ const SignIn = () => {
           </StyledForm>
         )}
       </Formik>
-    </SigninContainer>
+    </SignupContainer>
   );
 };
 
-export default SignIn;
+export default SignUp;

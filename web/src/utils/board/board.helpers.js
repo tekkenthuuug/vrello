@@ -5,19 +5,19 @@ export const reorderCards = (columnsArray, from, to, cardId) => {
 
   const fromColumn = newColumnsArray.find(el => el.id === from);
 
-  for (let i = 0; i < fromColumn.items.length; i++) {
-    const currentCard = fromColumn.items[i];
+  for (let i = 0; i < fromColumn.cards.length; i++) {
+    const currentCard = fromColumn.cards[i];
 
     if (currentCard.id === cardId) {
       const cardToMove = currentCard;
 
-      fromColumn.items.splice(i, 1);
+      fromColumn.cards.splice(i, 1);
 
       // no 'to' means delete
       if (to) {
         const toColumn = newColumnsArray.find(el => el.id === to);
 
-        toColumn.items.push(cardToMove);
+        toColumn.cards.push(cardToMove);
       }
 
       break;

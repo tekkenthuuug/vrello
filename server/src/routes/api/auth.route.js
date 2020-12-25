@@ -9,7 +9,9 @@ router.post('/signup', async (req, res, next) => {
   try {
     const user = new User({ username, email });
 
-    await user.setPassword(password);
+    if (password) {
+      await user.setPassword(password);
+    }
 
     await user.save();
 

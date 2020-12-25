@@ -17,7 +17,7 @@ export const boardReducer = (state = initialState, { payload, type }) => {
       const { fromColumn, toColumn, cardId } = payload;
       return {
         ...state,
-        columns: reorderCards(state.data, fromColumn, toColumn, cardId),
+        columns: reorderCards(state.columns, fromColumn, toColumn, cardId),
       };
     }
     case BoardActionTypes.MOVE_COLUMN: {
@@ -25,7 +25,7 @@ export const boardReducer = (state = initialState, { payload, type }) => {
 
       return {
         ...state,
-        columns: reorderColumns(state.data, columnIdToMove, targetColumnId),
+        columns: reorderColumns(state.columns, columnIdToMove, targetColumnId),
       };
     }
     case BoardActionTypes.ADD_CARD: {

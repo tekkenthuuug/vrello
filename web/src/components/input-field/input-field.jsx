@@ -18,7 +18,7 @@ const InputField = ({
   const [field, { error }] = useField(props);
 
   return (
-    <FormControl>
+    <FormControl hasErrored={!!error}>
       {!invisibleLabel && <FormLabel htmlFor={field.name}>{label}</FormLabel>}
       <Input
         {...field}

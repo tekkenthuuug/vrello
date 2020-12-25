@@ -26,6 +26,8 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
     e.target.style.display = 'block';
   };
 
+  console.log('rerender', cardData);
+
   return (
     <CardContainer
       {...otherProps}

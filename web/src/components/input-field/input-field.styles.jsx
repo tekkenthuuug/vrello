@@ -1,12 +1,4 @@
-import styled from 'styled-components';
-
-export const FormControl = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.2em;
-`;
-
-export const FormLabel = styled.label``;
+import styled, { css } from 'styled-components';
 
 export const Input = styled.input`
   border: 2px solid #dfe1e6;
@@ -23,6 +15,33 @@ export const Input = styled.input`
     background-color: #ffffff;
     border: 2px solid #4c9aff;
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
-export const FormErrorMessage = styled.div``;
+export const FormControl = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2em;
+
+  ${props =>
+    props.hasErrored &&
+    css`
+      ${Input} {
+        border: 2px solid #ff0000;
+      }
+    `}
+`;
+
+export const FormLabel = styled.label``;
+
+export const FormErrorMessage = styled.div`
+  color: red;
+  margin-top: 4px;
+  &::before {
+    content: '*';
+    margin-right: 4px;
+  }
+`;

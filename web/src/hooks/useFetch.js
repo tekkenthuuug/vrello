@@ -31,6 +31,8 @@ const useFetch = (fetchUrl, requestInit) => {
 
     setData(data);
     setIsLoading(false);
+
+    return data;
   };
 
   return { isLoading, data, fetchData };

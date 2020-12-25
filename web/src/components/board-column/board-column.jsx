@@ -46,7 +46,10 @@ const BoardColumn = ({
   return (
     <ColumnContainer
       onDragStart={handleColumnDragStart}
-      onDragOver={e => onColumnDragOver(e, columnData.id)}
+      onDragOver={e => {
+        console.log('over');
+        onColumnDragOver(e, columnData.id);
+      }}
       draggable
     >
       <ColumnName>{columnData.name}</ColumnName>

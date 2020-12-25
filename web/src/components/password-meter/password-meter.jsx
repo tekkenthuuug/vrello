@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import ratePassword from 'Utils/ratePassword';
 import { Meter, MeterContainer } from './password-meter.styles';
 
@@ -22,4 +22,4 @@ const PasswordMeter = ({ password }) => {
   );
 };
 
-export default PasswordMeter;
+export default memo(PasswordMeter);

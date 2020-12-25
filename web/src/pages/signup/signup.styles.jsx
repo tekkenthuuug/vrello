@@ -2,7 +2,7 @@ import { Form } from 'formik';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const SigninContainer = styled.div`
+export const SignupContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   display: flex;

@@ -1,6 +1,6 @@
 import BoardColumn from 'Components/board-column/board-column';
 import BoardHeader from 'Components/board-header/board-header';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { MdAdd } from 'react-icons/md';
 import useLiveBoard from 'Hooks/useLiveBoard';
 import {
@@ -19,7 +19,7 @@ import {
 
 const Board = () => {
   const [isAddingColumn, setIsAddingColumn] = useState(false);
-  const [dragOverColumnId, setDragOverColumnId] = useState(null);
+  const dragOverColumnId = useRef(null);
 
   const { state, dispatch, emitBoardChange } = useLiveBoard();
 
@@ -72,22 +72,22 @@ const Board = () => {
 
     const columnId = e.dataTransfer.getData('id');
 
-    if (!dragOverColumnId || dragOverColumnId === columnId) {
+    if (!dragOverColumnId.current || dragOverColumnId.current === columnId) {
       return;
     }
 
-    const action = moveColumn(columnId, dragOverColumnId);
+    const action = moveColumn(columnId, dragOverColumnId.current);
 
     emitBoardChange(action);
 
-    setDragOverColumnId(null);
+    dragOverColumnId.current = null;
   };
 
   const handleColumnDragOver = (e, columnId) => {
     e.preventDefault();
     e.stopPropagation();
 
-    setDragOverColumnId(columnId);
+    dragOverColumnId.current = columnId;
   };
 
   return (

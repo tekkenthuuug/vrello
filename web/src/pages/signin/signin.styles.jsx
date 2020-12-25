@@ -27,6 +27,10 @@ export const SubmitBtn = styled.button`
   border-radius: 5px;
   font-weight: bold;
   color: #fff;
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 export const Heading = styled.h1`
@@ -40,4 +44,14 @@ export const SignupLink = styled(Link)`
   text-align: center;
   margin-bottom: 25px;
   display: block;
+`;
+
+export const FormError = styled.div`
+  text-align: center;
+  padding: 8px;
+  background-color: #ff3232;
+  color: white;
+  font-weight: 600;
+  margin-bottom: 18px;
+  border-radius: 4px;
 `;

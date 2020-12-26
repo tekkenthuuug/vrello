@@ -23,8 +23,11 @@ const useFetch = (fetchUrl, requestInit) => {
 
     const response = await fetch(fetchUrl, {
       headers,
-      body: JSON.stringify(body),
+      credentials: 'include',
       ...requestInit,
+      body: ['POST', 'PUT'].includes(requestInit?.method)
+        ? JSON.stringify(body)
+        : undefined,
     });
 
     const data = response.json();
@@ -35,7 +38,7 @@ const useFetch = (fetchUrl, requestInit) => {
     return data;
   };
 
-  return { isLoading, data, fetchData };
+  return [fetchData, { isLoading, data }];
 };
 
 export default useFetch;

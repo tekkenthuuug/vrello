@@ -15,6 +15,8 @@ router.post('/signup', async (req, res, next) => {
 
     await user.save();
 
+    req.session.userId = user._id;
+
     res.json(new SuccessResponse({ user }));
   } catch (error) {
     next(error);
@@ -34,9 +36,25 @@ router.post('/signin', async (req, res, next) => {
     const isValid = await user.isPasswordValid(password);
 
     if (isValid) {
+      req.session.userId = user._id;
+
       return res.json(new SuccessResponse({ user }));
     } else {
       return res.status(401).json(new ErrorResponse('Wrong credentials'));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/me', async (req, res, next) => {
+  try {
+    const user = await User.findById(req.session.userId).exec();
+
+    if (user) {
+      return res.json(new SuccessResponse({ user }));
+    } else {
+      return res.status(401).json(new ErrorResponse());
     }
   } catch (error) {
     next(error);

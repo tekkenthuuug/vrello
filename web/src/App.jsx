@@ -1,24 +1,31 @@
-import Board from 'Pages/board/board';
+import useUserContext from 'Hooks/useUserContext';
+import Application from 'Pages/application/application';
+import Home from 'Pages/home/home';
 import SignIn from 'Pages/signin/signin';
 import SignUp from 'Pages/signup/signup';
-import Home from 'Pages/home/home';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import GlobalStyles from './GlobalStyles';
-import { UserProvider } from 'Contexts/userContext';
-import { ROUTES } from 'Utils/constants';
 
 const App = () => {
+  const { checkUserSession, isLoading } = useUserContext();
+
+  useEffect(checkUserSession, []);
+
+  if (isLoading) {
+    return <div>LOADING...</div>;
+  }
+
   return (
-    <UserProvider>
+    <>
       <GlobalStyles />
       <Switch>
-        <Route exact path={ROUTES.home} component={Home} />
-        <Route path={ROUTES.signin} component={SignIn} />
-        <Route path={ROUTES.signup} component={SignUp} />
-        <Route path={ROUTES.board} component={Board} />
+        <Route exact path='/' component={Home} />
+        <Route path='/signin' component={SignIn} />
+        <Route path='/signup' component={SignUp} />
+        <Route path='/app' component={Application} />
       </Switch>
-    </UserProvider>
+    </>
   );
 };
 

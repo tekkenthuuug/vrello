@@ -5,6 +5,12 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const http = require('http');
 const socketIo = require('socket.io');
+const session = require('express-session');
+const connectRedis = require('connect-redis');
+const Redis = require('ioredis');
+require('dotenv').config();
+
+const { SESSION_COOKIE_NAME, __prod__ } = require('./src/utils/constants');
 
 const Board = require('./src/models/Board.model');
 const Column = require('./src/models/Column.model');
@@ -18,10 +24,40 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
 app.use(helmet());
 
 app.use(morgan('combined'));
+
+app.set('trust proxy', 1);
+
+const RedisStore = connectRedis(session);
+const redis = new Redis(process.env.REDIS_URL);
+
+// Session
+app.use(
+  session({
+    name: SESSION_COOKIE_NAME,
+    store: new RedisStore({
+      client: redis,
+      disableTouch: true,
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+      secure: __prod__, // cookie only works in https
+      sameSite: 'lax', // CSRF
+      domain: __prod__ ? '.maksimdev.com' : undefined,
+    },
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 const server = http.createServer(app);
 
@@ -93,7 +129,7 @@ const addBoard = async () => {
 };
 
 (async () => {
-  await mongoose.connect('mongodb://localhost:27017/vrello?retryWrites=false', {
+  await mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: true,

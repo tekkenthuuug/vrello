@@ -2,13 +2,13 @@ import InputField from 'Components/input-field/input-field';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import {
-  Heading,
-  SigninContainer,
-  SignupLink,
-  StyledForm,
-  SubmitBtn,
   FormError,
-} from './signin.styles';
+  SubmitBtn,
+  FormPageContainer,
+  StyledForm,
+  Heading,
+  FormLink,
+} from 'Styles/form.styles';
 import useFetch from 'Hooks/useFetch';
 import useUserContext from 'Hooks/useUserContext';
 import { ROUTES, API_ROUTES } from 'Utils/constants';
@@ -24,12 +24,12 @@ const SignIn = () => {
 
   const { user, setUser } = useUserContext();
 
-  const { fetchData } = useFetch(API_ROUTES.signin, {
+  const [signIn] = useFetch(API_ROUTES.auth.signin(), {
     method: 'POST',
   });
 
   const handleSubmit = async values => {
-    const response = await fetchData(values);
+    const response = await signIn(values);
 
     if (response.success) {
       setUser(response.data.user);
@@ -39,18 +39,18 @@ const SignIn = () => {
   };
 
   if (user) {
-    return <Redirect to={ROUTES.menu} />;
+    return <Redirect to={ROUTES.app.index} />;
   }
 
   return (
-    <SigninContainer>
+    <FormPageContainer>
       <Formik initialValues={SignInFormInitialState} onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
           <StyledForm>
             <Heading>Sign in to Vrello</Heading>
-            <SignupLink to={ROUTES.signup}>
+            <FormLink to={ROUTES.signup}>
               Don't have an account? Sign up!
-            </SignupLink>
+            </FormLink>
             {formError && <FormError>{formError}</FormError>}
             <InputField
               name='username'
@@ -72,7 +72,7 @@ const SignIn = () => {
           </StyledForm>
         )}
       </Formik>
-    </SigninContainer>
+    </FormPageContainer>
   );
 };
 

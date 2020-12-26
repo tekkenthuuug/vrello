@@ -2,7 +2,7 @@ import { Form } from 'formik';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const SigninContainer = styled.div`
+export const FormPageContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -30,6 +30,7 @@ export const SubmitBtn = styled.button`
 
   &:disabled {
     opacity: 0.5;
+    cursor: wait;
   }
 `;
 
@@ -40,7 +41,7 @@ export const Heading = styled.h1`
   text-align: center;
 `;
 
-export const SignupLink = styled(Link)`
+export const FormLink = styled(Link)`
   text-align: center;
   margin-bottom: 25px;
   display: block;

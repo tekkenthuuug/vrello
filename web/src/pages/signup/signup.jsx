@@ -5,26 +5,26 @@ import useUserContext from 'Hooks/useUserContext';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { ROUTES, API_ROUTES } from 'Utils/constants';
+import { TOSParagraph } from './signup.styles';
 import {
-  Heading,
-  SignupContainer,
-  SigninLink,
-  StyledForm,
   SubmitBtn,
-  TOSParagraph,
-} from './signup.styles';
+  FormPageContainer,
+  StyledForm,
+  Heading,
+  FormLink,
+} from 'Styles/form.styles';
 
 const SignUpFormInitialState = { username: '', email: '', password: '' };
 
 const SignUp = () => {
   const { user, setUser } = useUserContext();
 
-  const { fetchData } = useFetch(API_ROUTES.signup, {
+  const [signUp] = useFetch(API_ROUTES.auth.signup(), {
     method: 'POST',
   });
 
   const handleSubmit = async (values, { setErrors }) => {
-    const response = await fetchData(values);
+    const response = await signUp(values);
 
     if (response.success) {
       setUser(response.data.user);
@@ -34,18 +34,18 @@ const SignUp = () => {
   };
 
   if (user) {
-    return <Redirect to={ROUTES.menu} />;
+    return <Redirect to={ROUTES.app.index} />;
   }
 
   return (
-    <SignupContainer>
+    <FormPageContainer>
       <Formik initialValues={SignUpFormInitialState} onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
           <StyledForm>
             <Heading>Sign up for your account</Heading>
-            <SigninLink to={ROUTES.signin}>
+            <FormLink to={ROUTES.signin}>
               Already have an account? Sign in!
-            </SigninLink>
+            </FormLink>
             <InputField
               name='username'
               placeholder='Enter username'
@@ -80,7 +80,7 @@ const SignUp = () => {
           </StyledForm>
         )}
       </Formik>
-    </SignupContainer>
+    </FormPageContainer>
   );
 };
 

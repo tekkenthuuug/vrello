@@ -24,6 +24,7 @@ module.exports = {
       Utils: path.resolve(__dirname, 'src', 'utils'),
       Hooks: path.resolve(__dirname, 'src', 'hooks'),
       Contexts: path.resolve(__dirname, 'src', 'contexts'),
+      Styles: path.resolve(__dirname, 'src', 'shared-styles'),
     },
   },
   module: {

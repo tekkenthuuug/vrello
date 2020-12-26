@@ -2,13 +2,21 @@ export const ROUTES = {
   home: '/',
   signin: '/signin',
   signup: '/signup',
-  board: '/board',
-  menu: '/menu',
+  app: {
+    index: '/app',
+    board: '/app/board',
+  },
 };
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
 export const API_ROUTES = {
-  signup: `${API_BASE_URL}/auth/signup`,
-  signin: `${API_BASE_URL}/auth/signin`,
+  auth: {
+    signin: () => `${API_BASE_URL}/auth/signin`,
+    signup: () => `${API_BASE_URL}/auth/signup`,
+    me: () => `${API_BASE_URL}/auth/me`,
+  },
+  user: {
+    boards: uid => `${API_BASE_URL}/user/${uid}/boards`,
+  },
 };

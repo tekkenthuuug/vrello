@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { SESSION_COOKIE_NAME } = require('../../utils/constants');
 const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
 
 const User = require('../../models/User.model');
@@ -8,6 +9,8 @@ router.post('/signup', async (req, res, next) => {
 
   try {
     const user = new User({ username, email });
+
+    user.generateShortUsername();
 
     if (password) {
       await user.setPassword(password);
@@ -19,6 +22,7 @@ router.post('/signup', async (req, res, next) => {
 
     res.json(new SuccessResponse({ user }));
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -56,6 +60,22 @@ router.get('/me', async (req, res, next) => {
     } else {
       return res.status(401).json(new ErrorResponse());
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/signout', async (req, res, next) => {
+  try {
+    req.session.destroy(error => {
+      res.clearCookie(SESSION_COOKIE_NAME);
+
+      if (error) {
+        return res.status(401).json(new ErrorResponse());
+      } else {
+        return res.json(new SuccessResponse());
+      }
+    });
   } catch (error) {
     next(error);
   }

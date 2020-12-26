@@ -11,7 +11,7 @@ const Menu = ({ match }) => {
     API_ROUTES.user.boards(user.uid)
   );
 
-  useEffect(fetchBoards, []);
+  // useEffect(fetchBoards, []);
 
   return (
     <MenuPageContainer>

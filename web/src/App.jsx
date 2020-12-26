@@ -3,6 +3,7 @@ import Application from 'Pages/application/application';
 import Home from 'Pages/home/home';
 import SignIn from 'Pages/signin/signin';
 import SignUp from 'Pages/signup/signup';
+import Header from 'Components/header/header';
 import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import GlobalStyles from './GlobalStyles';
@@ -19,6 +20,7 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
+      <Header />
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/signin' component={SignIn} />

@@ -12,6 +12,10 @@ const UserSchema = new mongoose.Schema(
       match: [/^[a-zA-Z0-9]+$/, 'Is not valid'],
       index: true,
     },
+    shortUsername: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       unique: true,
@@ -36,6 +40,20 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.plugin(uniqueValidator, { message: 'Is already taken' });
+
+UserSchema.methods.generateShortUsername = function () {
+  const splitUsername = this.username.split(' ');
+
+  let result = null;
+
+  if (splitUsername.length > 1) {
+    result = splitUsername[0][0] + splitUsername[1][0];
+  } else {
+    result = splitUsername[0][0];
+  }
+
+  this.shortUsername = result.toUpperCase();
+};
 
 UserSchema.methods.setPassword = async function (password) {
   this.password = await argon2.hash(password);

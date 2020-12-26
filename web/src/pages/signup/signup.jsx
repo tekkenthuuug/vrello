@@ -19,7 +19,7 @@ const SignUpFormInitialState = { username: '', email: '', password: '' };
 const SignUp = () => {
   const { user, setUser } = useUserContext();
 
-  const [signUp] = useFetch(API_ROUTES.auth.signup(), {
+  const [signUp] = useFetch(API_ROUTES.auth.signUp(), {
     method: 'POST',
   });
 

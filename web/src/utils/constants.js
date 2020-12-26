@@ -12,8 +12,9 @@ const API_BASE_URL = 'http://localhost:5000/api';
 
 export const API_ROUTES = {
   auth: {
-    signin: () => `${API_BASE_URL}/auth/signin`,
-    signup: () => `${API_BASE_URL}/auth/signup`,
+    signIn: () => `${API_BASE_URL}/auth/signin`,
+    signUp: () => `${API_BASE_URL}/auth/signup`,
+    signOut: () => `${API_BASE_URL}/auth/signout`,
     me: () => `${API_BASE_URL}/auth/me`,
   },
   user: {

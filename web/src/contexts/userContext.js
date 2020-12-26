@@ -1,14 +1,20 @@
 import React, { createContext, useState } from 'react';
 import useFetch from 'Hooks/useFetch';
 import { API_ROUTES } from 'Utils/constants';
+import { useHistory } from 'react-router-dom';
 
 export const UserStateContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  const history = useHistory();
+
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [checkSession] = useFetch(API_ROUTES.auth.me());
+  const [signOutRequest] = useFetch(API_ROUTES.auth.signOut(), {
+    method: 'POST',
+  });
 
   const checkUserSession = async () => {
     setIsLoading(true);
@@ -21,9 +27,15 @@ export const UserProvider = ({ children }) => {
     setIsLoading(false);
   };
 
+  const signOut = async () => {
+    setUser(null);
+    history.push('/signin');
+    await signOutRequest();
+  };
+
   return (
     <UserStateContext.Provider
-      value={{ user, checkUserSession, setUser, isLoading }}
+      value={{ user, checkUserSession, setUser, isLoading, signOut }}
     >
       {children}
     </UserStateContext.Provider>

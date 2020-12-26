@@ -24,7 +24,7 @@ const SignIn = () => {
 
   const { user, setUser } = useUserContext();
 
-  const [signIn] = useFetch(API_ROUTES.auth.signin(), {
+  const [signIn] = useFetch(API_ROUTES.auth.signIn(), {
     method: 'POST',
   });
 

@@ -1,4 +1,4 @@
-import PasswordStrength from 'Components/password-meter/password-meter';
+import PasswordStrength from '../password-meter/password-meter';
 import { useField } from 'formik';
 import React from 'react';
 import {

@@ -142,19 +142,21 @@ const addBoard = async () => {
 app.use(require('./src/routes'));
 
 io.on('connection', socket => {
-  Board.findOne({})
-    .populate({
-      path: 'columns',
-      populate: {
-        path: 'cards',
-      },
-    })
-    .exec((err, board) => {
-      socket.emit('connected', board);
-    });
+  socket.emit('connected');
 
-  socket.on('join', room => {
-    socket.join(room);
+  socket.on('join', async boardId => {
+    const board = await Board.findById(boardId)
+      .populate({
+        path: 'columns',
+        populate: {
+          path: 'cards',
+        },
+      })
+      .exec();
+
+    socket.emit('joined', board);
+
+    socket.join(boardId);
   });
 
   socket.on('board-change', handleBoardChangeEvent(io));

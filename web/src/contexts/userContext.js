@@ -1,6 +1,6 @@
-import React, { createContext, useState } from 'react';
-import useFetch from 'Hooks/useFetch';
-import { API_ROUTES } from 'Utils/constants';
+import React, { createContext, useState, useCallback } from 'react';
+import useFetch from '../hooks/useFetch';
+import { API_ROUTES } from '../utils/constants';
 import { useHistory } from 'react-router-dom';
 
 export const UserStateContext = createContext();
@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
     method: 'POST',
   });
 
-  const checkUserSession = async () => {
+  const checkUserSession = useCallback(async () => {
     setIsLoading(true);
 
     const response = await checkSession();
@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
       setUser(response.data.user);
     }
     setIsLoading(false);
-  };
+  }, [checkSession]);
 
   const signOut = async () => {
     setUser(null);

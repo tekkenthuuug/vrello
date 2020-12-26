@@ -1,33 +1,43 @@
 {
-  "scripts": {
-    "dev": "webpack serve --mode development --hot --port 3000",
-    "build": "webpack --mode production"
-  },
+  "name": "web-cra",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "formik": "^2.2.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-icons": "^4.1.0",
     "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.1",
     "socket.io-client": "^3.0.4",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "web-vitals": "^0.2.4"
   },
-  "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
-    "babel-loader": "^8.2.2",
-    "babel-plugin-styled-components": "^1.12.0",
-    "css-loader": "^5.0.1",
-    "eslint-plugin-react": "^7.21.5",
-    "html-webpack-plugin": "^4.5.0",
-    "sass": "^1.30.0",
-    "sass-loader": "^10.1.0",
-    "style-loader": "^2.0.0",
-    "webpack": "^5.10.3",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+  "scripts": {
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

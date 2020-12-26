@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import ElementCreator from '../../components/element-creator/element-creator';
 
 export const BoardContainer = styled.div`
+  padding-top: 40px;
   background-color: ${props => props.customBg};
   height: 100vh;
 `;

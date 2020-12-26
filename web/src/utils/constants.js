@@ -20,4 +20,7 @@ export const API_ROUTES = {
   user: {
     boards: uid => `${API_BASE_URL}/user/${uid}/boards`,
   },
+  board: {
+    create: () => `${API_BASE_URL}/board/create`,
+  },
 };

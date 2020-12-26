@@ -35,7 +35,10 @@ export const FormControl = styled.div`
     `}
 `;
 
-export const FormLabel = styled.label``;
+export const FormLabel = styled.label`
+  margin-left: 2px;
+  margin-bottom: 4px;
+`;
 
 export const FormErrorMessage = styled.div`
   color: red;

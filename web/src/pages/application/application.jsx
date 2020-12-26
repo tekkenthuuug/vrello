@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Board from 'Pages/board/board';
-import Menu from 'Pages/menu/menu';
+import Board from '../board/board';
+import Menu from '../menu/menu';
 
 const Application = ({ match }) => {
   return (

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import socketIOClient from 'socket.io-client';
-import { boardReducer, initialState } from 'Utils/board/board.reducer';
-import { initializeBoard } from 'Utils/board/board.actions';
+import { boardReducer, initialState } from '../utils/board/board.reducer';
+import { initializeBoard } from '../utils/board/board.actions';
 
-const useLiveBoard = () => {
+const useLiveBoard = boardId => {
   const socket = useRef(null);
 
   const [state, dispatch] = useReducer(boardReducer, initialState);
@@ -13,10 +13,12 @@ const useLiveBoard = () => {
       transports: ['websocket'],
     });
 
-    socket.current.on('connected', boardData => {
-      dispatch(initializeBoard(boardData));
+    socket.current.on('connected', () => {
+      socket.current.emit('join', boardId);
+    });
 
-      socket.current.emit('join', boardData.id);
+    socket.current.on('joined', boardData => {
+      dispatch(initializeBoard(boardData));
     });
 
     socket.current.on('board-change', action => {
@@ -29,7 +31,7 @@ const useLiveBoard = () => {
         socket.current.disconnect();
       }
     };
-  }, []);
+  }, [boardId]);
 
   const emitBoardChange = useCallback(
     action => {

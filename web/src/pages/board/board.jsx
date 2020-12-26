@@ -1,8 +1,8 @@
-import BoardColumn from 'Components/board-column/board-column';
-import BoardHeader from 'Components/board-header/board-header';
+import BoardColumn from '../../components/board-column/board-column';
+import BoardHeader from '../../components/board-header/board-header';
 import React, { useState, useRef } from 'react';
 import { MdAdd } from 'react-icons/md';
-import useLiveBoard from 'Hooks/useLiveBoard';
+import useLiveBoard from '../../hooks/useLiveBoard';
 import {
   AddBtn,
   BoardContainer,
@@ -15,13 +15,16 @@ import {
   addColumn,
   moveColumn,
   deleteCard,
-} from 'Utils/board/board.actions';
+} from '../../utils/board/board.actions';
+import { useParams } from 'react-router-dom';
 
 const Board = () => {
+  const { boardId } = useParams();
+
   const [isAddingColumn, setIsAddingColumn] = useState(false);
   const dragOverColumnId = useRef(null);
 
-  const { state, dispatch, emitBoardChange } = useLiveBoard();
+  const { state, dispatch, emitBoardChange } = useLiveBoard(boardId);
 
   const { columns, name, isLoading } = state;
 

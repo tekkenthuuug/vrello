@@ -1,10 +1,10 @@
-import InputField from 'Components/input-field/input-field';
+import InputField from '../../components/input-field/input-field';
 import { Formik } from 'formik';
-import useFetch from 'Hooks/useFetch';
-import useUserContext from 'Hooks/useUserContext';
+import useFetch from '../../hooks/useFetch';
+import useUserContext from '../../hooks/useUserContext';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { ROUTES, API_ROUTES } from 'Utils/constants';
+import { ROUTES, API_ROUTES } from '../../utils/constants';
 import { TOSParagraph } from './signup.styles';
 import {
   SubmitBtn,
@@ -12,7 +12,7 @@ import {
   StyledForm,
   Heading,
   FormLink,
-} from 'Styles/form.styles';
+} from '../../shared-styles/form.styles';
 
 const SignUpFormInitialState = { username: '', email: '', password: '' };
 
@@ -72,7 +72,8 @@ const SignUp = () => {
             />
             <TOSParagraph>
               By signing up, you confirm that you've read and accepted our{' '}
-              <a>Terms of Service</a> and <a>Privacy Policy</a>.
+              <a href='/#'>Terms of Service</a> and{' '}
+              <a href='/#'>Privacy Policy</a>.
             </TOSParagraph>
             <SubmitBtn type='submit' disabled={isSubmitting}>
               Sign up

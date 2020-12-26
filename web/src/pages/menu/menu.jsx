@@ -1,21 +1,20 @@
-import React, { useEffect } from 'react';
-import useFetch from 'Hooks/useFetch';
-import useUserContext from 'Hooks/useUserContext';
+import React, { useState } from 'react';
 import { MenuPageContainer } from './menu.styles';
-import { API_ROUTES } from 'Utils/constants';
-import { Link } from 'react-router-dom';
+import { CreateBoardBtn } from './menu.styles';
+import CreateBoardModal from '../../components/create-board-modal/create-board-modal';
 
-const Menu = ({ match }) => {
-  const { user } = useUserContext();
-  const [fetchBoards, { isLoading, data }] = useFetch(
-    API_ROUTES.user.boards(user.uid)
-  );
-
-  // useEffect(fetchBoards, []);
+const Menu = () => {
+  const [isModalOpened, setIsModalOpened] = useState(false);
 
   return (
     <MenuPageContainer>
-      <Link to={`${match.url}/board/${1}`}>Click me</Link>
+      {/* <Link to={`${match.url}/board/${1}`}>Click me</Link> */}
+      <CreateBoardBtn onClick={() => setIsModalOpened(s => !s)}>
+        Create board
+      </CreateBoardBtn>
+      {isModalOpened && (
+        <CreateBoardModal onClose={() => setIsModalOpened(false)} />
+      )}
     </MenuPageContainer>
   );
 };

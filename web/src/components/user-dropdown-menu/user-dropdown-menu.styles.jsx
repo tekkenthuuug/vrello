@@ -11,6 +11,35 @@ export const DropdownContainer = styled.div`
   color: #172b4d;
   width: 300px;
   padding: 12px 0;
+  font-size: 14px;
+  transform-origin: top right;
+
+  @keyframes appear {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  animation: appear 0.2s ease;
+`;
+
+export const ProfileContainer = styled.div`
+  padding: 6px 12px;
+  font-weight: normal;
+`;
+
+export const Username = styled.div`
+  color: #172b4d;
+`;
+
+export const Email = styled.div`
+  font-size: 12px;
+  color: #b3bac5;
 `;
 
 export const List = styled.ul`

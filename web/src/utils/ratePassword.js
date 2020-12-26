@@ -1,6 +1,6 @@
 const ratePassword = password => {
   const numberOfSpecialChars =
-    password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g)?.length | 0;
+    password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/g)?.length | 0;
 
   const numberOfNumericChars = password.match(/[123456789]/g)?.length | 0;
 

@@ -3,6 +3,7 @@ const validationErrorMiddleware = require('../../middleware/validationErrorMiddl
 
 router.use('/auth', require('./auth.route'));
 router.use('/user', require('./user.route'));
+router.use('/board', require('./board.route'));
 
 router.use(validationErrorMiddleware);
 

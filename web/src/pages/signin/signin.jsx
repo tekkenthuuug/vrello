@@ -1,4 +1,4 @@
-import InputField from 'Components/input-field/input-field';
+import InputField from '../../components/input-field/input-field';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import {
@@ -8,10 +8,10 @@ import {
   StyledForm,
   Heading,
   FormLink,
-} from 'Styles/form.styles';
-import useFetch from 'Hooks/useFetch';
-import useUserContext from 'Hooks/useUserContext';
-import { ROUTES, API_ROUTES } from 'Utils/constants';
+} from '../../shared-styles/form.styles';
+import useFetch from '../../hooks/useFetch';
+import useUserContext from '../../hooks/useUserContext';
+import { ROUTES, API_ROUTES } from '../../utils/constants';
 import { Redirect } from 'react-router-dom';
 
 const SignInFormInitialState = {
@@ -63,6 +63,7 @@ const SignIn = () => {
               name='password'
               placeholder='Enter password'
               label='Password'
+              type='password'
               invisibleLabel
               disabled={isSubmitting}
             />

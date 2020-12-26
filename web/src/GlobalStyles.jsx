@@ -19,8 +19,8 @@ button {
 }
 a {
   text-decoration: none;
-  color: #0052CC;
   cursor: pointer;
+  color: inherit;
   &:hover {
     text-decoration: underline;
   }

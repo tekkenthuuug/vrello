@@ -5,7 +5,6 @@ export const HeaderContainer = styled.header`
   height: 40px;
   background-color: #026aa7;
   color: white;
-  font-weight: 600;
 
   padding: 0 12px;
   position: fixed;
@@ -19,7 +18,6 @@ export const Navigation = styled.nav`
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  font-weight: 800;
 
   & > * {
     flex: 1;
@@ -41,12 +39,13 @@ export const LogoContainer = styled.div`
 const buttonsCss = css`
   height: 30px;
   padding: 0 12px;
-  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
   font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 
   &:hover {
     text-decoration: none;
@@ -81,4 +80,21 @@ export const ShortUsernameContainer = styled.div`
   align-items: center;
   color: #172b4d;
   cursor: pointer;
+  font-weight: bold;
+`;
+
+export const NavigationList = styled.ul`
+  display: flex;
+  list-style: none;
+  font-weight: bold;
+`;
+
+export const ListItem = styled.li`
+  text-transform: uppercase;
+
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
 `;

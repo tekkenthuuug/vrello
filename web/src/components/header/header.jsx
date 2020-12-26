@@ -7,10 +7,13 @@ import {
   SigninLink,
   SignupLink,
   ShortUsernameContainer,
+  NavigationList,
+  ListItem,
 } from './header.styles';
-import UserDropdownMenu from 'Components/user-dropdown-menu/user-dropdown-menu';
-import useUserContext from 'Hooks/useUserContext';
-import useOnClickOutside from 'Hooks/useOnClickOutside';
+import UserDropdownMenu from '../user-dropdown-menu/user-dropdown-menu';
+import useUserContext from '../../hooks/useUserContext';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
@@ -24,7 +27,13 @@ const Header = () => {
   return (
     <HeaderContainer>
       <Navigation>
-        <div>HOME</div>
+        <NavigationList>
+          {user && (
+            <ListItem>
+              <Link to='/app'>Home</Link>
+            </ListItem>
+          )}
+        </NavigationList>
         <LogoContainer>Vrello</LogoContainer>
         <RightContainer>
           {user ? (
@@ -34,7 +43,11 @@ const Header = () => {
               >
                 {user.shortUsername}
               </ShortUsernameContainer>
-              {isDropdownOpened && <UserDropdownMenu />}
+              {isDropdownOpened && (
+                <UserDropdownMenu
+                  onItemClick={() => setIsDropdownOpened(false)}
+                />
+              )}
             </div>
           ) : (
             <>

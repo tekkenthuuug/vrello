@@ -5,6 +5,7 @@ export const initialState = {
   id: null,
   name: null,
   columns: null,
+  creatorId: null,
   isLoading: true,
 };
 

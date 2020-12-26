@@ -5,7 +5,7 @@ const BoardSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Required'],
     },
     columns: [
       {
@@ -13,6 +13,10 @@ const BoardSchema = new mongoose.Schema(
         ref: 'Column',
       },
     ],
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     toJSON: {

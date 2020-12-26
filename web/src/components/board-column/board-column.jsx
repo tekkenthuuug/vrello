@@ -1,8 +1,8 @@
-import ColumnCard from 'Components/column-card/column-card';
-import ElementCreator from 'Components/element-creator/element-creator';
+import ColumnCard from '../column-card/column-card';
+import ElementCreator from '../element-creator/element-creator';
 import React, { memo, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
-import useOnClickOutside from 'Hooks/useOnClickOutside';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 import {
   AddBtn,
   ColumnContainer,

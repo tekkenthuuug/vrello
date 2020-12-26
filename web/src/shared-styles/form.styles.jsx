@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const FormPageContainer = styled.div`
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,9 +28,15 @@ export const SubmitBtn = styled.button`
   font-weight: bold;
   color: #fff;
 
+  transition: all 0.2s ease;
+
   &:disabled {
     opacity: 0.5;
     cursor: wait;
+  }
+
+  &:hover {
+    background-color: #519839;
   }
 `;
 
@@ -45,6 +51,7 @@ export const FormLink = styled(Link)`
   text-align: center;
   margin-bottom: 25px;
   display: block;
+  color: #0052cc;
 `;
 
 export const FormError = styled.div`

@@ -11,7 +11,7 @@ import {
 } from '../../shared-styles/form.styles';
 import useFetch from '../../hooks/useFetch';
 import useUserContext from '../../hooks/useUserContext';
-import { ROUTES, API_ROUTES } from '../../utils/constants';
+import { API_ROUTES } from '../../utils/constants';
 import { Redirect } from 'react-router-dom';
 
 const SignInFormInitialState = {
@@ -39,7 +39,7 @@ const SignIn = () => {
   };
 
   if (user) {
-    return <Redirect to={ROUTES.app.index} />;
+    return <Redirect to='/app' />;
   }
 
   return (
@@ -48,9 +48,7 @@ const SignIn = () => {
         {({ isSubmitting }) => (
           <StyledForm>
             <Heading>Sign in to Vrello</Heading>
-            <FormLink to={ROUTES.signup}>
-              Don't have an account? Sign up!
-            </FormLink>
+            <FormLink to='/signup'>Don't have an account? Sign up!</FormLink>
             {formError && <FormError>{formError}</FormError>}
             <InputField
               name='username'

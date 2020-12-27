@@ -2,11 +2,11 @@ import PasswordStrength from '../password-meter/password-meter';
 import { useField } from 'formik';
 import React from 'react';
 import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
+  StyledInputControl,
+  InputErrorMessage,
   Input,
 } from './input-field.styles';
+import { InputLabel } from '../../shared-styles/input.styles';
 
 const InputField = ({
   label,
@@ -18,8 +18,8 @@ const InputField = ({
   const [field, { error }] = useField(props);
 
   return (
-    <FormControl hasErrored={!!error}>
-      {!invisibleLabel && <FormLabel htmlFor={field.name}>{label}</FormLabel>}
+    <StyledInputControl hasErrored={!!error}>
+      {!invisibleLabel && <InputLabel htmlFor={field.name}>{label}</InputLabel>}
       <Input
         {...field}
         {...props}
@@ -29,8 +29,8 @@ const InputField = ({
       {props.type === 'password' && passwordMeter && (
         <PasswordStrength password={field.value} />
       )}
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
-    </FormControl>
+      {error && <InputErrorMessage>{error}</InputErrorMessage>}
+    </StyledInputControl>
   );
 };
 

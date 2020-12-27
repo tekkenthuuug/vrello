@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { InputControl } from '../../shared-styles/input.styles';
 
 export const Input = styled.input`
   border: 2px solid #dfe1e6;
@@ -21,11 +22,7 @@ export const Input = styled.input`
   }
 `;
 
-export const FormControl = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.2em;
-
+export const StyledInputControl = styled(InputControl)`
   ${props =>
     props.hasErrored &&
     css`
@@ -35,12 +32,7 @@ export const FormControl = styled.div`
     `}
 `;
 
-export const FormLabel = styled.label`
-  margin-left: 2px;
-  margin-bottom: 4px;
-`;
-
-export const FormErrorMessage = styled.div`
+export const InputErrorMessage = styled.div`
   color: red;
   margin-top: 4px;
   &::before {

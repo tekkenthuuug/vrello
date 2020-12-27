@@ -3,11 +3,11 @@ const Board = require('../../models/Board.model');
 const { SuccessResponse } = require('../../utils/Responses');
 
 router.post('/create', async (req, res, next) => {
-  const { name } = req.body;
+  const { name, backgroundColor } = req.body;
   const { userId } = req.session;
 
   try {
-    const board = new Board({ name, creatorId: userId });
+    const board = new Board({ name, backgroundColor, creatorId: userId });
 
     await board.save();
 

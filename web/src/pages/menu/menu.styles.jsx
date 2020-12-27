@@ -31,7 +31,7 @@ export const CreateBoardBtn = styled.button`
   }
 `;
 
-export const BoardsGrid = styled.div`
+export const BoardsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 12px;

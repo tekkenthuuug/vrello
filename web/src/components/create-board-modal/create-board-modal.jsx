@@ -1,15 +1,17 @@
 import React from 'react';
 import Modal from '../modal/modal';
 import InputField from '../input-field/input-field';
+import ColorSelector from '../color-selector/color-selector';
 import { Formik } from 'formik';
 import { StyledForm } from './create-board-modal.styles';
 import { SubmitBtn } from '../../shared-styles/form.styles';
 import useFetch from '../../hooks/useFetch';
-import { API_ROUTES } from '../../utils/constants';
+import { API_ROUTES, BOARD_COLORS } from '../../utils/constants';
 import { useHistory } from 'react-router-dom';
 
 const CreateBoardFormInitialState = {
   name: '',
+  backgroundColor: BOARD_COLORS[0],
 };
 
 const CreateBoardModal = ({ onClose }) => {
@@ -35,13 +37,21 @@ const CreateBoardModal = ({ onClose }) => {
         initialValues={CreateBoardFormInitialState}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setValues, values }) => (
           <StyledForm>
             <InputField
               name='name'
               placeholder='Enter board name'
               label='Board name'
               disabled={isSubmitting}
+            />
+            <ColorSelector
+              label='Board background'
+              colors={BOARD_COLORS}
+              value={values.backgroundColor}
+              onSelect={backgroundColor =>
+                setValues({ ...values, backgroundColor })
+              }
             />
             <SubmitBtn type='submit' disabled={isSubmitting}>
               Create board

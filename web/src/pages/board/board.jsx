@@ -93,45 +93,43 @@ const Board = () => {
     dragOverColumnId.current = columnId;
   };
 
+  if (isLoading && !columns) {
+    return <h1>Loading</h1>;
+  }
+
   return (
-    <BoardContainer customBg='#0079BF'>
-      {!isLoading && columns ? (
-        <>
-          <BoardHeader name={name} customBg='#0079BF' />
-          <ColumnsContainer
-            onDrop={handleColumnMove}
-            onDragOver={e => e.preventDefault()}
-          >
-            {columns.map(column => (
-              <BoardColumn
-                key={column.id}
-                columnData={column}
-                onCardMove={handleCardMove}
-                onCardAdd={handleCardAdd}
-                onCardDelete={handleCardDelete}
-                onColumnDragOver={handleColumnDragOver}
-              />
-            ))}
-            {isAddingColumn ? (
-              <StyledElementCreator
-                name='columnName'
-                placeholder='Type column name here'
-                buttonText='Add column'
-                onClose={() => setIsAddingColumn(false)}
-                onSubmit={handleColumnAdd}
-                autoComplete='off'
-              />
-            ) : (
-              <AddBtn onClick={() => setIsAddingColumn(true)}>
-                <MdAdd />
-                Add column
-              </AddBtn>
-            )}
-          </ColumnsContainer>
-        </>
-      ) : (
-        <h1>Loading</h1>
-      )}
+    <BoardContainer customBg={state.backgroundColor}>
+      <BoardHeader name={name} />
+      <ColumnsContainer
+        onDrop={handleColumnMove}
+        onDragOver={e => e.preventDefault()}
+      >
+        {columns.map(column => (
+          <BoardColumn
+            key={column.id}
+            columnData={column}
+            onCardMove={handleCardMove}
+            onCardAdd={handleCardAdd}
+            onCardDelete={handleCardDelete}
+            onColumnDragOver={handleColumnDragOver}
+          />
+        ))}
+        {isAddingColumn ? (
+          <StyledElementCreator
+            name='columnName'
+            placeholder='Type column name here'
+            buttonText='Add column'
+            onClose={() => setIsAddingColumn(false)}
+            onSubmit={handleColumnAdd}
+            autoComplete='off'
+          />
+        ) : (
+          <AddBtn onClick={() => setIsAddingColumn(true)}>
+            <MdAdd />
+            Add column
+          </AddBtn>
+        )}
+      </ColumnsContainer>
     </BoardContainer>
   );
 };

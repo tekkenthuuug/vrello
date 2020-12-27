@@ -4,7 +4,7 @@ import useFetch from '../../hooks/useFetch';
 import useUserContext from '../../hooks/useUserContext';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { ROUTES, API_ROUTES } from '../../utils/constants';
+import { API_ROUTES } from '../../utils/constants';
 import { TOSParagraph } from './signup.styles';
 import {
   SubmitBtn,
@@ -34,7 +34,7 @@ const SignUp = () => {
   };
 
   if (user) {
-    return <Redirect to={ROUTES.app.index} />;
+    return <Redirect to='/app' />;
   }
 
   return (
@@ -43,9 +43,7 @@ const SignUp = () => {
         {({ isSubmitting }) => (
           <StyledForm>
             <Heading>Sign up for your account</Heading>
-            <FormLink to={ROUTES.signin}>
-              Already have an account? Sign in!
-            </FormLink>
+            <FormLink to='/signin'>Already have an account? Sign in!</FormLink>
             <InputField
               name='username'
               placeholder='Enter username'

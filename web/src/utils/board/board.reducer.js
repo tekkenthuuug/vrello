@@ -4,6 +4,7 @@ import BoardActionTypes from './board.types';
 export const initialState = {
   id: null,
   name: null,
+  backgroundColor: null,
   columns: null,
   creatorId: null,
   isLoading: true,

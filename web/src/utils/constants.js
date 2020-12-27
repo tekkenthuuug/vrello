@@ -1,12 +1,14 @@
-export const ROUTES = {
-  home: '/',
-  signin: '/signin',
-  signup: '/signup',
-  app: {
-    index: '/app',
-    board: '/app/board',
-  },
-};
+export const BOARD_COLORS = [
+  '#0079bf',
+  '#d29034',
+  '#519839',
+  '#b04632',
+  '#89609e',
+  '#cd5a91',
+  '#4bbf6b',
+  '#00aecc',
+  '#838c91',
+];
 
 const API_BASE_URL = 'http://localhost:5000/api';
 

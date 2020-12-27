@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   MenuPage,
-  BoardsGrid,
+  BoardsContainer,
   MenuContainer,
   SectionHeading,
   AddIcon,
@@ -36,7 +36,7 @@ const Menu = () => {
     <MenuPage>
       <MenuContainer>
         <SectionHeading>Personal boards</SectionHeading>
-        <BoardsGrid>
+        <BoardsContainer>
           {boards.map(board => (
             <BoardCard key={board.id} board={board} />
           ))}
@@ -44,7 +44,7 @@ const Menu = () => {
             <AddIcon />
             Create board
           </CreateBoardBtn>
-        </BoardsGrid>
+        </BoardsContainer>
         {isModalOpened && (
           <CreateBoardModal onClose={() => setIsModalOpened(false)} />
         )}

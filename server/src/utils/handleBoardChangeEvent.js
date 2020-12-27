@@ -1,8 +1,5 @@
 const Card = require('../models/Card.model');
 const Column = require('../models/Column.model');
-const Board = require('../models/Board.model');
-
-const insertIntoArray = require('./insertIntoArray');
 
 const handleBoardChangeEvent = io => async ({ boardId, action }) => {
   const { type, payload } = action;

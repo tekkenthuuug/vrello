@@ -6,7 +6,7 @@ const defaultHeaders = {
 
 const useFetch = (fetchUrl, requestInit) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [response, setResponse] = useState(null);
 
   const headers = defaultHeaders;
 
@@ -24,7 +24,7 @@ const useFetch = (fetchUrl, requestInit) => {
         Object.assign(body, {}, requestInit.body);
       }
 
-      const response = await fetch(fetchUrl, {
+      const responseJSON = await fetch(fetchUrl, {
         headers,
         credentials: 'include',
         ...requestInit,
@@ -33,17 +33,17 @@ const useFetch = (fetchUrl, requestInit) => {
           : undefined,
       });
 
-      const data = response.json();
+      const response = await responseJSON.json();
 
-      setData(data);
+      setResponse(response);
       setIsLoading(false);
 
-      return data;
+      return response;
     },
     [fetchUrl, requestInit, headers]
   );
 
-  return [fetchData, { isLoading, data }];
+  return [fetchData, { isLoading, response }];
 };
 
 export default useFetch;

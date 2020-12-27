@@ -7,6 +7,10 @@ const BoardSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Required'],
     },
+    backgroundColor: {
+      type: String,
+      default: '#0079BF',
+    },
     columns: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -24,5 +28,14 @@ const BoardSchema = new mongoose.Schema(
     },
   }
 );
+
+BoardSchema.methods.toJSONWithoutColumns = function () {
+  const { columns, __v, ...otherBoardProperties } = this._doc;
+
+  return {
+    ...otherBoardProperties,
+    id: otherBoardProperties._id,
+  };
+};
 
 module.exports = mongoose.model('Board', BoardSchema);

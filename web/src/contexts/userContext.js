@@ -24,6 +24,7 @@ export const UserProvider = ({ children }) => {
     if (response.success) {
       setUser(response.data.user);
     }
+
     setIsLoading(false);
   }, [checkSession]);
 

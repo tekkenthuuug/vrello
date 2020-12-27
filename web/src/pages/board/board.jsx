@@ -94,10 +94,10 @@ const Board = () => {
   };
 
   return (
-    <BoardContainer customBg='rgb(0, 121, 191)'>
+    <BoardContainer customBg='#0079BF'>
       {!isLoading && columns ? (
         <>
-          <BoardHeader name={name} customBg='rgb(0, 121, 191)' />
+          <BoardHeader name={name} customBg='#0079BF' />
           <ColumnsContainer
             onDrop={handleColumnMove}
             onDragOver={e => e.preventDefault()}

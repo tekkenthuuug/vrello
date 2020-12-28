@@ -25,3 +25,8 @@ export const ColorItem = styled.div`
 
   margin-bottom: 1.2em;
 `;
+
+export const ColorSelectorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

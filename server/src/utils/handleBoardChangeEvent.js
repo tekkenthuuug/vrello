@@ -1,5 +1,6 @@
 const Card = require('../models/Card.model');
 const Column = require('../models/Column.model');
+const Board = require('../models/Board.model');
 
 const handleBoardChangeEvent = io => async ({ boardId, action }) => {
   const { type, payload } = action;
@@ -56,6 +57,16 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
       const columnToMove = await Column.findById(columnIdToMove);
 
       await columnToMove.moveToColumn(boardId, targetColumnId);
+
+      break;
+    }
+    case 'RENAME': {
+      await Board.updateOne({ _id: boardId }, { name: payload });
+
+      break;
+    }
+    case 'CHANGE_BG': {
+      await Board.updateOne({ _id: boardId }, { backgroundColor: payload });
 
       break;
     }

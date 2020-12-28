@@ -6,7 +6,6 @@ import {
   LogoContainer,
   SigninLink,
   SignupLink,
-  ShortUsernameContainer,
   NavigationList,
   ListItem,
 } from './header.styles';
@@ -14,6 +13,7 @@ import UserDropdownMenu from '../user-dropdown-menu/user-dropdown-menu';
 import useUserContext from '../../hooks/useUserContext';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { Link } from 'react-router-dom';
+import { ShortUsernameContainer } from '../../shared-styles/user.styles';
 
 const Header = () => {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);

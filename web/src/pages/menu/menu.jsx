@@ -7,13 +7,15 @@ import {
   AddIcon,
 } from './menu.styles';
 import { CreateBoardBtn } from './menu.styles';
-import CreateBoardModal from '../../components/create-board-modal/create-board-modal';
+import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
 import BoardCard from '../../components/board-card/board-card';
 import useUserContext from '../../hooks/useUserContext';
 import useFetch from '../../hooks/useFetch';
 import { API_ROUTES } from '../../utils/constants';
+import { useHistory } from 'react-router-dom';
 
 const Menu = () => {
+  const history = useHistory();
   const { user } = useUserContext();
 
   const [isModalOpened, setIsModalOpened] = useState(false);
@@ -21,6 +23,19 @@ const Menu = () => {
   const [fetchBoards, { response, isLoading }] = useFetch(
     API_ROUTES.user.boards(user.id)
   );
+  const [createBoard] = useFetch(API_ROUTES.board.create(), { method: 'POST' });
+
+  const handleCreateBoardModalSubmit = async (values, { setErrors }) => {
+    const response = await createBoard(values);
+
+    if (response.success) {
+      const { board } = response.data;
+      setIsModalOpened(false);
+      history.push(`/app/board/${board.id}`);
+    } else {
+      setErrors(response.error);
+    }
+  };
 
   useEffect(() => {
     fetchBoards();
@@ -46,7 +61,10 @@ const Menu = () => {
           </CreateBoardBtn>
         </BoardsContainer>
         {isModalOpened && (
-          <CreateBoardModal onClose={() => setIsModalOpened(false)} />
+          <CreateOrEditBoardModal
+            onClose={() => setIsModalOpened(false)}
+            onSubmit={handleCreateBoardModalSubmit}
+          />
         )}
       </MenuContainer>
     </MenuPage>

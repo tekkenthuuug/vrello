@@ -14,7 +14,7 @@ export const ModalOverlay = styled.div`
   align-items: center;
   padding-bottom: 10vh;
 
-  @keyframes appear {
+  @keyframes appearModal {
     from {
       opacity: 0;
     }
@@ -23,7 +23,7 @@ export const ModalOverlay = styled.div`
     }
   }
 
-  animation: appear 0.2s ease;
+  animation: appearModal 0.2s ease;
 `;
 
 export const ModalContainer = styled.div`

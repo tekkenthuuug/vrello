@@ -3,43 +3,33 @@ import Modal from '../modal/modal';
 import InputField from '../input-field/input-field';
 import ColorSelector from '../color-selector/color-selector';
 import { Formik } from 'formik';
-import { StyledForm } from './create-board-modal.styles';
+import { StyledForm } from './create-or-edit-board-modal.styles';
 import { SubmitBtn } from '../../shared-styles/form.styles';
-import useFetch from '../../hooks/useFetch';
-import { API_ROUTES, BOARD_COLORS } from '../../utils/constants';
-import { useHistory } from 'react-router-dom';
+import { BOARD_COLORS } from '../../utils/constants';
 
-const CreateBoardFormInitialState = {
+const createBoardFormInitialState = {
   name: '',
   backgroundColor: BOARD_COLORS[0],
 };
 
-const CreateBoardModal = ({ onClose }) => {
-  const history = useHistory();
-
-  const [createBoard] = useFetch(API_ROUTES.board.create(), { method: 'POST' });
-
-  const handleSubmit = async (values, { setErrors }) => {
-    const response = await createBoard(values);
-
-    if (response.success) {
-      const { board } = response.data;
-      onClose();
-      history.push(`/app/board/${board.id}`);
-    } else {
-      setErrors(response.error);
-    }
-  };
+const CreateBoardModal = ({
+  onSubmit,
+  onClose,
+  type = 'create',
+  initialValues = {},
+}) => {
+  const actionName = type === 'create' ? 'Create board' : 'Edit board';
 
   return (
-    <Modal name='Create board' onClose={onClose}>
+    <Modal name={actionName} onClose={onClose}>
       <Formik
-        initialValues={CreateBoardFormInitialState}
-        onSubmit={handleSubmit}
+        initialValues={{ ...createBoardFormInitialState, ...initialValues }}
+        onSubmit={onSubmit}
       >
         {({ isSubmitting, setValues, values }) => (
           <StyledForm>
             <InputField
+              autoComplete='off'
               name='name'
               placeholder='Enter board name'
               label='Board name'
@@ -54,7 +44,7 @@ const CreateBoardModal = ({ onClose }) => {
               }
             />
             <SubmitBtn type='submit' disabled={isSubmitting}>
-              Create board
+              {actionName}
             </SubmitBtn>
           </StyledForm>
         )}

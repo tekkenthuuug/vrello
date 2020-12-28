@@ -44,6 +44,18 @@ export const boardReducer = (state = initialState, { payload, type }) => {
       newState.columns.push(column);
       return newState;
     }
+    case BoardActionTypes.CHANGE_BG: {
+      return {
+        ...state,
+        backgroundColor: payload,
+      };
+    }
+    case BoardActionTypes.RENAME: {
+      return {
+        ...state,
+        name: payload,
+      };
+    }
     default: {
       return state;
     }

@@ -1,12 +1,9 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import socketIOClient from 'socket.io-client';
-import { boardReducer, initialState } from '../utils/board/board.reducer';
 import { initializeBoard } from '../utils/board/board.actions';
 
-const useLiveBoard = boardId => {
+const useLiveBoard = (boardId, localDispatch) => {
   const socket = useRef(null);
-
-  const [state, dispatch] = useReducer(boardReducer, initialState);
 
   useEffect(() => {
     socket.current = socketIOClient('http://localhost:5000', {
@@ -18,12 +15,12 @@ const useLiveBoard = boardId => {
     });
 
     socket.current.on('joined', boardData => {
-      dispatch(initializeBoard(boardData));
+      localDispatch(initializeBoard(boardData));
     });
 
     socket.current.on('board-change', action => {
       // handle changes received from server
-      dispatch(action);
+      localDispatch(action);
     });
 
     return () => {
@@ -31,21 +28,19 @@ const useLiveBoard = boardId => {
         socket.current.disconnect();
       }
     };
-  }, [boardId]);
+  }, [boardId, localDispatch]);
 
   const emitBoardChange = useCallback(
     action => {
       socket.current.emit('board-change', {
-        boardId: state.id,
+        boardId: boardId,
         action,
       });
     },
-    [socket, state]
+    [socket, boardId]
   );
 
   return {
-    state,
-    dispatch,
     emitBoardChange,
   };
 };

@@ -3,7 +3,7 @@ import ElementCreator from '../../components/element-creator/element-creator';
 
 export const BoardContainer = styled.div`
   padding-top: 40px;
-  background-color: ${props => props.customBg};
+  background-color: ${props => props.backgroundColor};
   height: 100vh;
 `;
 

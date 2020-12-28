@@ -1,13 +1,11 @@
 import React from 'react';
+import { ProfileContainer, Username, Email } from './user-dropdown-menu.styles';
+import useUserContext from '../../hooks/useUserContext';
 import {
   DropdownContainer,
   List,
   ListItem,
-  ProfileContainer,
-  Username,
-  Email,
-} from './user-dropdown-menu.styles';
-import useUserContext from '../../hooks/useUserContext';
+} from '../../shared-styles/dropdown.styles';
 
 const UserDropdownMenu = ({ onItemClick }) => {
   const { signOut, user } = useUserContext();

@@ -40,3 +40,13 @@ export const deleteCard = (fromColumn, cardId) => ({
     cardId,
   },
 });
+
+export const rename = newName => ({
+  type: BoardActionTypes.RENAME,
+  payload: newName,
+});
+
+export const changeBackgroundColor = newBackgroundColor => ({
+  type: BoardActionTypes.CHANGE_BG,
+  payload: newBackgroundColor,
+});

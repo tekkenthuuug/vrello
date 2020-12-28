@@ -1,20 +1,24 @@
 import React from 'react';
-import { ColorsContainer, ColorItem } from './color-selector.styles';
+import {
+  ColorsContainer,
+  ColorItem,
+  ColorSelectorContainer,
+} from './color-selector.styles';
 import { InputLabel } from '../../shared-styles/input.styles';
 import { MdDone } from 'react-icons/md';
 
 const ColorSelector = ({ colors, value, onSelect, label }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <ColorSelectorContainer>
       <InputLabel>{label}</InputLabel>
       <ColorsContainer>
         {colors.map(color => (
           <ColorItem key={color} color={color} onClick={() => onSelect(color)}>
-            {color === value && <MdDone />}
+            {color.toLowerCase() === value.toLowerCase() && <MdDone />}
           </ColorItem>
         ))}
       </ColorsContainer>
-    </div>
+    </ColorSelectorContainer>
   );
 };
 

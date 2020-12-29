@@ -1,9 +1,11 @@
 import { useContext } from 'react';
-import { BoardStateContext } from '../contexts/boardStateContext';
+import { BoardContext } from '../contexts/boardContext';
 
 const useBoardContext = () => {
-  const context = useContext(BoardStateContext);
-
+  const context = useContext(BoardContext);
+  if (context === undefined) {
+    throw new Error('useBoardContext must be used within a BoardProvider');
+  }
   return context;
 };
 

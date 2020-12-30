@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import {
   CardContainer,
   Color,
@@ -26,8 +26,6 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
     e.target.style.display = 'block';
   };
 
-  console.log('rerender', cardData);
-
   return (
     <CardContainer
       {...otherProps}
@@ -45,4 +43,4 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
   );
 };
 
-export default memo(ColumnCard);
+export default ColumnCard;

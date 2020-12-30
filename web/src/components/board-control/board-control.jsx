@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import {
   moveCard,
   addCard,
   addColumn,
   moveColumn,
   deleteCard,
-} from '../../utils/board/board.actions';
+} from '../../redux/board/board.actions';
 import {
   AddBtn,
   ColumnsContainer,
@@ -13,25 +13,32 @@ import {
 } from './board-control.styles';
 import { MdAdd } from 'react-icons/md';
 import BoardColumn from '../board-column/board-column';
-import useBoardContext from '../../hooks/useBoardContext';
+import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectColumnsIds } from '../../redux/board/board.selectors';
 
 const BoardControl = () => {
-  const { boardState, boardDispatch, emitBoardChange } = useBoardContext();
+  const boardDispatch = useDispatch();
 
-  const [isAddingColumn, setIsAddingColumn] = useState(false);
+  const emitBoardChange = useBoardEventsEmmiter();
+
+  const columnsIds = useSelector(selectColumnsIds);
+
+  const [isAddColumnFormVisible, setIsAddColumnFormVisible] = useState(false);
   const dragOverColumnId = useRef(null);
 
-  const { isLoading, columns } = boardState;
+  const handleCardMove = useCallback(
+    (from, to, cardId) => {
+      const action = moveCard(from, to, cardId);
 
-  const handleCardMove = (from, to, cardId) => {
-    const action = moveCard(from, to, cardId);
+      // apply changes locally
+      boardDispatch(action);
 
-    // apply changes locally
-    boardDispatch(action);
-
-    // send changes to server
-    emitBoardChange(action);
-  };
+      // send changes to server
+      emitBoardChange(action);
+    },
+    [emitBoardChange, boardDispatch]
+  );
 
   const handleCardAdd = (columnId, description) => {
     if (!description.length) {
@@ -44,18 +51,21 @@ const BoardControl = () => {
     emitBoardChange(action);
   };
 
-  const handleColumnAdd = name => {
-    if (!name.length) {
-      return;
-    }
+  const handleColumnAdd = useCallback(
+    name => {
+      if (!name.length) {
+        return;
+      }
 
-    const action = addColumn({ name });
+      const action = addColumn({ name });
 
-    // send changes to server
-    emitBoardChange(action);
+      // send changes to server
+      emitBoardChange(action);
 
-    setIsAddingColumn(false);
-  };
+      setIsAddColumnFormVisible(false);
+    },
+    [emitBoardChange]
+  );
 
   const handleCardDelete = (from, cardId) => {
     const action = deleteCard(from, cardId);
@@ -88,36 +98,36 @@ const BoardControl = () => {
     dragOverColumnId.current = columnId;
   };
 
-  if (isLoading && !columns) {
-    return <h1>Loading</h1>;
-  }
+  const hideAddColumnForm = useCallback(() => {
+    setIsAddColumnFormVisible(false);
+  }, []);
 
   return (
     <ColumnsContainer
       onDrop={handleColumnMove}
       onDragOver={e => e.preventDefault()}
     >
-      {columns.map(column => (
+      {columnsIds.map(columnId => (
         <BoardColumn
-          key={column.id}
-          columnData={column}
+          key={columnId}
+          columnId={columnId}
           onCardMove={handleCardMove}
           onCardAdd={handleCardAdd}
           onCardDelete={handleCardDelete}
           onColumnDragOver={handleColumnDragOver}
         />
       ))}
-      {isAddingColumn ? (
+      {isAddColumnFormVisible ? (
         <StyledElementCreator
           name='columnName'
           placeholder='Type column name here'
           buttonText='Add column'
-          onClose={() => setIsAddingColumn(false)}
+          onClose={hideAddColumnForm}
           onSubmit={handleColumnAdd}
           autoComplete='off'
         />
       ) : (
-        <AddBtn onClick={() => setIsAddingColumn(true)}>
+        <AddBtn onClick={() => setIsAddColumnFormVisible(true)}>
           <MdAdd />
           Add column
         </AddBtn>

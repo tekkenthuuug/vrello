@@ -1,6 +1,6 @@
 import ColumnCard from '../column-card/column-card';
 import ElementCreator from '../element-creator/element-creator';
-import React, { memo, useState } from 'react';
+import React, { memo, useState, createRef } from 'react';
 import { MdAdd } from 'react-icons/md';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import {
@@ -10,16 +10,20 @@ import {
   CardsContainer,
   ColumnName,
 } from './board-column.styles';
+import { useSelector } from 'react-redux';
+import { selectColumn } from '../../redux/board/board.selectors';
 
 const BoardColumn = ({
-  columnData,
+  columnId,
   onCardMove,
   onCardAdd,
   onCardDelete,
   onColumnDragOver,
 }) => {
+  const columnData = useSelector(selectColumn(columnId));
+
   const [isAddingCard, setIsAddingCard] = useState(false);
-  const elementCreatorRef = React.createRef();
+  const elementCreatorRef = createRef();
 
   const handleCardDrop = e => {
     e.preventDefault();
@@ -47,7 +51,6 @@ const BoardColumn = ({
     <ColumnContainer
       onDragStart={handleColumnDragStart}
       onDragOver={e => {
-        console.log('over');
         onColumnDragOver(e, columnData.id);
       }}
       draggable

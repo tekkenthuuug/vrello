@@ -1,14 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import App from './App';
 import { UserProvider } from './contexts/userContext';
+import store from './redux/store';
 
 ReactDOM.render(
-  <Router>
+  <Provider store={store}>
     <UserProvider>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </UserProvider>
-  </Router>,
+  </Provider>,
   document.getElementById('root')
 );

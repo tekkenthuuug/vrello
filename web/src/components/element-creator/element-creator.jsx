@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import {
   AddCardBtn,
   Buttons,
@@ -55,4 +55,4 @@ const ElementCreator = React.forwardRef(
   }
 );
 
-export default ElementCreator;
+export default memo(ElementCreator);

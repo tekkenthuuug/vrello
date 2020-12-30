@@ -1,4 +1,4 @@
-import insertIntoArray from '../insertIntoArray';
+import insertIntoArray from '../../utils/insertIntoArray';
 
 export const reorderCards = (columnsArray, from, to, cardId) => {
   const newColumnsArray = [...columnsArray];

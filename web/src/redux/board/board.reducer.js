@@ -1,7 +1,7 @@
-import { reorderColumns, reorderCards } from './board.helpers';
+import { reorderColumns, reorderCards } from './board.utils';
 import BoardActionTypes from './board.types';
 
-export const initialState = {
+const initialState = {
   id: null,
   name: null,
   backgroundColor: null,
@@ -10,7 +10,7 @@ export const initialState = {
   isLoading: true,
 };
 
-export const boardReducer = (state = initialState, { payload, type }) => {
+const boardReducer = (state = initialState, { payload, type }) => {
   switch (type) {
     case BoardActionTypes.INIT: {
       return { ...state, ...payload, isLoading: false };
@@ -56,8 +56,13 @@ export const boardReducer = (state = initialState, { payload, type }) => {
         name: payload,
       };
     }
+    case BoardActionTypes.RESET: {
+      return initialState;
+    }
     default: {
       return state;
     }
   }
 };
+
+export default boardReducer;

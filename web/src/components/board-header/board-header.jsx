@@ -8,8 +8,12 @@ import {
 import { MdMoreHoriz, MdPersonAdd } from 'react-icons/md';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import BoardDropdownMenu from '../board-dropdown-menu/board-dropdown-menu';
+import { useSelector } from 'react-redux';
+import { selectBoardName } from '../../redux/board/board.selectors';
 
-const BoardHeader = ({ name }) => {
+const BoardHeader = () => {
+  const name = useSelector(selectBoardName);
+
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   const dropdownRef = useRef(null);

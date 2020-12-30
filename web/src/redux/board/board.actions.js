@@ -50,3 +50,7 @@ export const changeBackgroundColor = newBackgroundColor => ({
   type: BoardActionTypes.CHANGE_BG,
   payload: newBackgroundColor,
 });
+
+export const reset = () => ({
+  type: BoardActionTypes.RESET,
+});

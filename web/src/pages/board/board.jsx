@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import BoardControl from '../../components/board-control/board-control';
 import BoardHeader from '../../components/board-header/board-header';
 import { BoardContainer } from './board.styles';
@@ -15,6 +15,8 @@ import socketIOClient from 'socket.io-client';
 const Board = () => {
   const { boardId } = useParams();
 
+  const history = useHistory();
+
   const backgroundColor = useSelector(selectBoardBackgroundColor);
   const isLoading = useSelector(selectBoardIsLoading);
 
@@ -27,7 +29,6 @@ const Board = () => {
     });
 
     socket.current.on('connected', () => {
-      console.log('Connected, joining...');
       socket.current.emit('join', boardId);
     });
 
@@ -36,6 +37,11 @@ const Board = () => {
     });
 
     socket.current.on('board-change', action => {
+      if (action.type === 'DELETE_BOARD') {
+        history.push('/app');
+        return;
+      }
+
       // handle changes received from server
       boardDispatch(action);
     });
@@ -46,7 +52,7 @@ const Board = () => {
         socket.current.disconnect();
       }
     };
-  }, [boardId, boardDispatch]);
+  }, [boardId, boardDispatch, history]);
 
   const emitBoardChange = useCallback(
     action => {

@@ -1,6 +1,6 @@
-const Card = require('../models/Card.model');
-const Column = require('../models/Column.model');
 const Board = require('../models/Board.model');
+const Column = require('../models/Column.model');
+const Card = require('../models/Card.model');
 
 const handleBoardChangeEvent = io => async ({ boardId, action }) => {
   const { type, payload } = action;
@@ -9,11 +9,13 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     case 'ADD_CARD': {
       const { toColumn, card } = payload;
 
-      const newCard = new Card(card);
+      const newCard = new Card({ ...card, columnId: toColumn });
+
+      const column = await Column.findById(toColumn);
+
+      await column.appendCard(newCard._id);
 
       await newCard.save();
-
-      await newCard.appendToColumn(toColumn);
 
       payload.card = newCard;
 
@@ -21,11 +23,13 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     }
     case 'ADD_COLUMN': {
       const { column } = payload;
-      const newColumn = new Column(column);
+      const newColumn = new Column({ ...column, boardId });
+
+      const board = await Board.findById(boardId);
+
+      await board.appendColumn(newColumn._id);
 
       await newColumn.save();
-
-      await newColumn.appendToBoard(boardId);
 
       payload.column = newColumn;
 
@@ -36,13 +40,19 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
 
       const card = await Card.findById(cardId);
 
-      await card.removeFromColumn(fromColumn);
+      const column = await Column.findById(fromColumn);
+
+      await column.removeCard(card._id);
 
       // no 'to' means delete
       if (toColumn) {
-        await card.appendToColumn(toColumn);
+        const column = await Column.findById(toColumn);
+
+        await column.appendCard(card._id);
+
+        await card.updateOne({ columnId: toColumn });
       } else {
-        await Card.findByIdAndDelete(cardId).exec();
+        await card.deleteOne();
       }
 
       break;
@@ -54,9 +64,9 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
         return;
       }
 
-      const columnToMove = await Column.findById(columnIdToMove);
+      const board = await Board.findById(boardId);
 
-      await columnToMove.moveToColumn(boardId, targetColumnId);
+      await board.moveColumn(columnIdToMove, targetColumnId);
 
       break;
     }
@@ -67,6 +77,13 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     }
     case 'CHANGE_BG': {
       await Board.updateOne({ _id: boardId }, { backgroundColor: payload });
+
+      break;
+    }
+    case 'DELETE_BOARD': {
+      const board = await Board.findById(boardId);
+
+      await board.deleteOne();
 
       break;
     }

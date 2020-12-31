@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
-const insertIntoArray = require('../utils/insertIntoArray');
 const normalizeTransform = require('../utils/normalizeTransform');
-
-const Board = require('./Board.model');
+const Card = require('./Card.model');
 
 const ColumnSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+    },
+    boardId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Board',
     },
     cards: [
       {
@@ -25,30 +27,22 @@ const ColumnSchema = new mongoose.Schema(
   }
 );
 
-ColumnSchema.methods.appendToBoard = async function (boardId) {
-  await Board.updateOne(
-    { _id: boardId },
-    { $push: { columns: this._id } }
-  ).exec();
+ColumnSchema.methods.appendCard = async function (cardId) {
+  await this.updateOne({ $push: { cards: cardId } }).exec();
 };
 
-ColumnSchema.methods.moveToColumn = async function (boardId, columnId) {
-  const { columns } = await Board.findById(boardId).exec();
-
-  let columnToMoveIndex = columns.indexOf(this._id);
-
-  let targetColumnIndex = columns.indexOf(columnId);
-
-  const newColumns = insertIntoArray(
-    columns,
-    columns.splice(columnToMoveIndex, 1)[0],
-    targetColumnIndex
-  );
-
-  await Board.updateOne(
-    { _id: boardId },
-    { $set: { columns: newColumns } }
-  ).exec();
+ColumnSchema.methods.removeCard = async function (cardId) {
+  await this.updateOne({ $pull: { cards: cardId } }).exec();
 };
+
+ColumnSchema.pre('deleteOne', { document: true }, async function (next) {
+  const cards = await Card.find({ columnId: this._id });
+
+  for (const card of cards) {
+    await card.deleteOne();
+  }
+
+  next();
+});
 
 module.exports = mongoose.model('Column', ColumnSchema);

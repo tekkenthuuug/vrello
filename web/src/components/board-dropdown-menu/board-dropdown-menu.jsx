@@ -46,19 +46,18 @@ const BoardDropdownMenu = ({ onItemClick }) => {
     onItemClick();
   };
 
+  const handleBoardDelete = () => {
+    onItemClick();
+    emitBoardChange({ type: 'DELETE_BOARD' });
+  };
+
   return (
     <StyledDropdownContainer>
       <List>
         <ListItem onClick={() => setIsEditModalOpened(true)}>
           Edit board
         </ListItem>
-        <ListItem
-          onClick={() => {
-            onItemClick();
-          }}
-        >
-          Delete board
-        </ListItem>
+        <ListItem onClick={handleBoardDelete}>Delete board</ListItem>
       </List>
       {isEditModalOpened && (
         <CreateOrEditBoardModal

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const insertIntoArray = require('../utils/insertIntoArray');
 const normalizeTransform = require('../utils/normalizeTransform');
+const Column = require('./Column.model');
 
 const BoardSchema = new mongoose.Schema(
   {
@@ -37,5 +39,38 @@ BoardSchema.methods.toJSONWithoutColumns = function () {
     id: otherBoardProperties._id,
   };
 };
+
+BoardSchema.methods.appendColumn = async function (columnId) {
+  await this.updateOne({ $push: { columns: columnId } }).exec();
+};
+
+BoardSchema.methods.moveColumn = async function (
+  columnIdToMove,
+  targetColumnId
+) {
+  const { columns } = this;
+
+  let columnToMoveIndex = columns.indexOf(columnIdToMove);
+
+  let targetColumnIndex = columns.indexOf(targetColumnId);
+
+  const newColumns = insertIntoArray(
+    columns,
+    columns.splice(columnToMoveIndex, 1)[0],
+    targetColumnIndex
+  );
+
+  await this.updateOne({ $set: { columns: newColumns } }).exec();
+};
+
+BoardSchema.pre('deleteOne', { document: true }, async function (next) {
+  const columns = await Column.find({ boardId: this._id });
+
+  for (const column of columns) {
+    await column.deleteOne();
+  }
+
+  next();
+});
 
 module.exports = mongoose.model('Board', BoardSchema);

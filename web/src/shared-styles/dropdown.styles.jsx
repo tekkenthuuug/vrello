@@ -13,7 +13,7 @@ export const DropdownContainer = styled.div`
   padding: 12px 0;
   font-size: 14px;
   transform-origin: top right;
-  z-index: 100;
+  z-index: 1;
 
   @keyframes appearDropdown {
     from {
@@ -38,6 +38,15 @@ export const ListItem = styled.li`
   padding: 6px 12px;
   font-weight: normal;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 6px;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
   &:hover {
     background-color: rgba(9, 30, 66, 0.04);
   }

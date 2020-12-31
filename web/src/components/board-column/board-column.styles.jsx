@@ -12,13 +12,6 @@ export const ColumnContainer = styled.div`
   height: fit-content;
 `;
 
-export const ColumnName = styled.h2`
-  font-size: 20px;
-  font-weight: 600;
-  padding: 8px 12px;
-  box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.1);
-`;
-
 export const CardsContainer = styled.div`
   margin-top: 12px;
   min-height: 71px;

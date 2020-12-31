@@ -6,14 +6,20 @@ import { changeBackgroundColor, rename } from '../../redux/board/board.actions';
 import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectInitialBoardEditValues } from '../../redux/board/board.selectors';
+import { MdEdit, MdDelete } from 'react-icons/md';
 
 const BoardDropdownMenu = ({ onItemClick }) => {
-  const boardDispatch = useDispatch();
+  const dispatch = useDispatch();
   const initialBoardEditValues = useSelector(selectInitialBoardEditValues);
 
   const emitBoardChange = useBoardEventsEmmiter();
 
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
+
+  const onEditClick = e => {
+    e.stopPropagation();
+    setIsEditModalOpened(true);
+  };
 
   const handleBoardEdit = (
     { name, backgroundColor },
@@ -29,7 +35,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
     if (backgroundColor !== initialBoardEditValues.backgroundColor) {
       const action = changeBackgroundColor(backgroundColor);
 
-      boardDispatch(action);
+      dispatch(action);
 
       emitBoardChange(action);
     }
@@ -37,7 +43,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
     if (name !== initialBoardEditValues.name) {
       const action = rename(name);
 
-      boardDispatch(action);
+      dispatch(action);
 
       emitBoardChange(action);
     }
@@ -47,17 +53,20 @@ const BoardDropdownMenu = ({ onItemClick }) => {
   };
 
   const handleBoardDelete = () => {
-    onItemClick();
     emitBoardChange({ type: 'DELETE_BOARD' });
   };
 
   return (
     <StyledDropdownContainer>
-      <List>
-        <ListItem onClick={() => setIsEditModalOpened(true)}>
+      <List onClick={onItemClick}>
+        <ListItem onClick={onEditClick}>
+          <MdEdit />
           Edit board
         </ListItem>
-        <ListItem onClick={handleBoardDelete}>Delete board</ListItem>
+        <ListItem onClick={handleBoardDelete}>
+          <MdDelete />
+          Delete board
+        </ListItem>
       </List>
       {isEditModalOpened && (
         <CreateOrEditBoardModal

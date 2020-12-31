@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   CardContainer,
   Color,
@@ -26,6 +26,10 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
     e.target.style.display = 'block';
   };
 
+  const handleDeleteClick = useCallback(() => {
+    onDeleteClick(columnId, cardData.id);
+  }, [columnId, cardData, onDeleteClick]);
+
   return (
     <CardContainer
       {...otherProps}
@@ -34,7 +38,7 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
     >
       <Controls>
         <Color />
-        <DeleteContainer onClick={() => onDeleteClick(columnId, cardData.id)}>
+        <DeleteContainer onClick={handleDeleteClick}>
           <DeleteIcon />
         </DeleteContainer>
       </Controls>

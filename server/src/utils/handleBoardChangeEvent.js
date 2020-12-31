@@ -60,6 +60,15 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     case 'MOVE_COLUMN': {
       const { columnIdToMove, targetColumnId } = payload;
 
+      // delete column
+      if (targetColumnId === undefined) {
+        const column = await Column.findById(columnIdToMove);
+
+        await column.deleteOne();
+
+        break;
+      }
+
       if (columnIdToMove === targetColumnId) {
         return;
       }

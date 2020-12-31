@@ -4,9 +4,13 @@ import ElementCreator from '../element-creator/element-creator';
 export const ColumnsContainer = styled.div`
   display: flex;
   margin-top: 48px;
+  overflow-x: auto;
+  padding-bottom: 20vh;
 
   & > * {
     margin-left: 12px;
+    flex-basis: 256px;
+    flex-shrink: 0;
   }
 `;
 

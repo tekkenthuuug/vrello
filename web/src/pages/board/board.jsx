@@ -21,7 +21,7 @@ const Board = () => {
   const isLoading = useSelector(selectBoardIsLoading);
 
   const socket = useRef(null);
-  const boardDispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.current = socketIOClient('http://localhost:5000', {
@@ -33,7 +33,7 @@ const Board = () => {
     });
 
     socket.current.on('joined', boardData => {
-      boardDispatch(initializeBoard(boardData));
+      dispatch(initializeBoard(boardData));
     });
 
     socket.current.on('board-change', action => {
@@ -43,16 +43,16 @@ const Board = () => {
       }
 
       // handle changes received from server
-      boardDispatch(action);
+      dispatch(action);
     });
 
     return () => {
-      boardDispatch(reset());
+      dispatch(reset());
       if (socket.current) {
         socket.current.disconnect();
       }
     };
-  }, [boardId, boardDispatch, history]);
+  }, [boardId, dispatch, history]);
 
   const emitBoardChange = useCallback(
     action => {

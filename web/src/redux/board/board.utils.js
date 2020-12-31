@@ -12,7 +12,6 @@ export const reorderCards = (columnsArray, from, to, cardId) => {
       const cardToMove = currentCard;
 
       fromColumn.cards.splice(i, 1);
-
       // no 'to' means delete
       if (to) {
         const toColumn = newColumnsArray.find(el => el.id === to);
@@ -45,6 +44,11 @@ export const reorderColumns = (columnsArray, columnId, targetColumnId) => {
   }
 
   const columnsArrayClone = [...columnsArray];
+
+  if (targetColumnIndex === undefined) {
+    columnsArrayClone.splice(columnToMoveIndex, 1);
+    return columnsArrayClone;
+  }
 
   return insertIntoArray(
     columnsArrayClone,

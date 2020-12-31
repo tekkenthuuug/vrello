@@ -1,11 +1,5 @@
-import React, { useRef, useState, useCallback } from 'react';
-import {
-  moveCard,
-  addCard,
-  addColumn,
-  moveColumn,
-  deleteCard,
-} from '../../redux/board/board.actions';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { addColumn, moveColumn } from '../../redux/board/board.actions';
 import {
   AddBtn,
   ColumnsContainer,
@@ -14,12 +8,10 @@ import {
 import { MdAdd } from 'react-icons/md';
 import BoardColumn from '../board-column/board-column';
 import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectColumnsIds } from '../../redux/board/board.selectors';
 
 const BoardControl = () => {
-  const boardDispatch = useDispatch();
-
   const emitBoardChange = useBoardEventsEmmiter();
 
   const columnsIds = useSelector(selectColumnsIds);
@@ -27,29 +19,22 @@ const BoardControl = () => {
   const [isAddColumnFormVisible, setIsAddColumnFormVisible] = useState(false);
   const dragOverColumnId = useRef(null);
 
-  const handleCardMove = useCallback(
-    (from, to, cardId) => {
-      const action = moveCard(from, to, cardId);
-
-      // apply changes locally
-      boardDispatch(action);
-
-      // send changes to server
-      emitBoardChange(action);
-    },
-    [emitBoardChange, boardDispatch]
-  );
-
-  const handleCardAdd = (columnId, description) => {
-    if (!description.length) {
+  const handleKeyPress = e => {
+    if (e.target !== document.body) {
       return;
     }
 
-    const action = addCard(columnId, { description });
-
-    // send changes to server
-    emitBoardChange(action);
+    if (e.keyCode === 99 || e.code === 'KeyC') {
+      e.preventDefault();
+      setIsAddColumnFormVisible(true);
+    }
   };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   const handleColumnAdd = useCallback(
     name => {
@@ -66,14 +51,6 @@ const BoardControl = () => {
     },
     [emitBoardChange]
   );
-
-  const handleCardDelete = (from, cardId) => {
-    const action = deleteCard(from, cardId);
-
-    boardDispatch(action);
-
-    emitBoardChange(action);
-  };
 
   const handleColumnMove = e => {
     e.preventDefault();
@@ -111,14 +88,12 @@ const BoardControl = () => {
         <BoardColumn
           key={columnId}
           columnId={columnId}
-          onCardMove={handleCardMove}
-          onCardAdd={handleCardAdd}
-          onCardDelete={handleCardDelete}
           onColumnDragOver={handleColumnDragOver}
         />
       ))}
       {isAddColumnFormVisible ? (
         <StyledElementCreator
+          autoFocus
           name='columnName'
           placeholder='Type column name here'
           buttonText='Add column'

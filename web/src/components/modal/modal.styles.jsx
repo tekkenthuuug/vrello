@@ -13,6 +13,7 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   padding-bottom: 10vh;
+  z-index: 100;
 
   @keyframes appearModal {
     from {

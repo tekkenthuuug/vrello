@@ -6,9 +6,9 @@ import {
   DeleteContainer,
   DeleteIcon,
   Description,
-} from './column-card.styles';
+} from './task-card.styles';
 
-const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
+const TaskCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
   const handleDragStart = e => {
     e.stopPropagation();
 
@@ -37,7 +37,7 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
       onDragEnd={handleDragEnd}
     >
       <Controls>
-        <Color />
+        <Color color={cardData.color} />
         <DeleteContainer onClick={handleDeleteClick}>
           <DeleteIcon />
         </DeleteContainer>
@@ -47,4 +47,4 @@ const ColumnCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
   );
 };
 
-export default ColumnCard;
+export default TaskCard;

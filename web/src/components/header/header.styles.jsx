@@ -2,8 +2,9 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const HeaderContainer = styled.header`
+  position: relative;
   height: 40px;
-  background-color: #026aa7;
+  background-color: ${props => props.boardColor || '#026aa7'};
   color: white;
 
   padding: 0 12px;

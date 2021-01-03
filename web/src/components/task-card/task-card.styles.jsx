@@ -31,7 +31,7 @@ export const Controls = styled.div`
 `;
 
 export const Color = styled.div`
-  background-color: blue;
+  background-color: ${props => props.color || 'blue'};
   border-radius: 4px;
   width: 40px;
   height: 22px;

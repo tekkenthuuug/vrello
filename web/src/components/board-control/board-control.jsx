@@ -37,12 +37,12 @@ const BoardControl = () => {
   }, []);
 
   const handleColumnAdd = useCallback(
-    name => {
-      if (!name.length) {
+    ({ text }) => {
+      if (!text.length) {
         return;
       }
 
-      const action = addColumn({ name });
+      const action = addColumn({ name: text });
 
       // send changes to server
       emitBoardChange(action);

@@ -3,7 +3,7 @@ import ElementCreator from '../element-creator/element-creator';
 
 export const ColumnsContainer = styled.div`
   display: flex;
-  margin-top: 48px;
+  margin-top: 24px;
   overflow-x: auto;
   padding-bottom: 20vh;
 

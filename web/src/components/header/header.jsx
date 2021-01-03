@@ -14,8 +14,12 @@ import useUserContext from '../../hooks/useUserContext';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { Link } from 'react-router-dom';
 import { ShortUsernameContainer } from '../../shared-styles/user.styles';
+import { useSelector } from 'react-redux';
+import { selectBoardBackgroundColor } from '../../redux/board/board.selectors';
 
 const Header = () => {
+  const boardColor = useSelector(selectBoardBackgroundColor);
+
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const { user } = useUserContext();
   const dropdownRef = useRef(null);
@@ -25,7 +29,7 @@ const Header = () => {
   });
 
   return (
-    <HeaderContainer>
+    <HeaderContainer boardColor={boardColor}>
       <Navigation>
         <NavigationList>
           {user && (

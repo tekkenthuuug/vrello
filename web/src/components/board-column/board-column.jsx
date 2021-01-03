@@ -3,7 +3,7 @@ import { MdAdd } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { selectColumn } from '../../redux/board/board.selectors';
-import ColumnCard from '../column-card/column-card';
+import TaskCard from '../task-card/task-card';
 import ElementCreator from '../element-creator/element-creator';
 import {
   AddBtn,
@@ -62,12 +62,12 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
     [dispatch, emitBoardChange]
   );
 
-  const handleCardAdd = description => {
-    if (!description.length) {
+  const handleCardAdd = ({ text, color }) => {
+    if (!text.length) {
       return;
     }
 
-    const action = addCard(columnData.id, { description });
+    const action = addCard(columnData.id, { description: text, color });
 
     emitBoardChange(action);
 
@@ -86,7 +86,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
       <ColumnContent>
         <CardsContainer onDrop={handleCardDrop} onDragOver={handleDragOver}>
           {columnData.cards.map(card => (
-            <ColumnCard
+            <TaskCard
               key={card.id}
               cardData={card}
               columnId={columnData.id}
@@ -99,6 +99,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
           <ElementCreator
             autoFocus
             asTextArea
+            withColor
             name='description'
             placeholder='Type card description here'
             buttonText='Add card'

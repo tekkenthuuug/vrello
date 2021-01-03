@@ -6,16 +6,27 @@ import {
   CloseIcon,
   DescriptionInput,
   DescriptionTextArea,
-  TextAreaContainer,
+  FieldContainerContainer,
+  StyledColorSelector,
 } from './element-creator.styles';
+import { BOARD_COLORS } from '../../utils/constants';
 
 /* eslint react/display-name: 0 */
 const ElementCreator = React.forwardRef(
   (
-    { onClose, onSubmit, asTextArea, className, buttonText, ...inputProps },
+    {
+      onClose,
+      onSubmit,
+      asTextArea,
+      className,
+      buttonText,
+      withColor,
+      ...inputProps
+    },
     ref
   ) => {
     const [inputText, setInputText] = useState('');
+    const [color, setColor] = useState(withColor ? BOARD_COLORS[0] : undefined);
 
     let textAreaHeight = null;
 
@@ -27,7 +38,7 @@ const ElementCreator = React.forwardRef(
 
     const onSubmitPreventDefault = e => {
       e.preventDefault();
-      onSubmit(inputText);
+      onSubmit({ text: inputText, color });
     };
 
     const InputComponent = asTextArea ? DescriptionTextArea : DescriptionInput;
@@ -38,14 +49,19 @@ const ElementCreator = React.forwardRef(
         onSubmit={onSubmitPreventDefault}
         ref={ref}
       >
-        <TextAreaContainer>
+        <FieldContainerContainer>
           <InputComponent
             value={inputText}
             height={textAreaHeight}
             onChange={e => setInputText(e.target.value)}
             {...inputProps}
           />
-        </TextAreaContainer>
+        </FieldContainerContainer>
+        {withColor && (
+          <FieldContainerContainer>
+            <StyledColorSelector value={color} onSelect={setColor} />
+          </FieldContainerContainer>
+        )}
         <Buttons>
           <AddCardBtn type='submit'>{buttonText}</AddCardBtn>
           <CloseIcon onClick={onClose} />

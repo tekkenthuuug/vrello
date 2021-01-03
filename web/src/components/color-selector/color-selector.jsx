@@ -6,11 +6,18 @@ import {
 } from './color-selector.styles';
 import { InputLabel } from '../../shared-styles/input.styles';
 import { MdDone } from 'react-icons/md';
+import { BOARD_COLORS } from '../../utils/constants';
 
-const ColorSelector = ({ colors, value, onSelect, label }) => {
+const ColorSelector = ({
+  colors = BOARD_COLORS,
+  value = BOARD_COLORS[0],
+  onSelect,
+  label,
+  ...otherProps
+}) => {
   return (
-    <ColorSelectorContainer>
-      <InputLabel>{label}</InputLabel>
+    <ColorSelectorContainer {...otherProps}>
+      {label && <InputLabel>{label}</InputLabel>}
       <ColorsContainer>
         {colors.map(color => (
           <ColorItem key={color} color={color} onClick={() => onSelect(color)}>

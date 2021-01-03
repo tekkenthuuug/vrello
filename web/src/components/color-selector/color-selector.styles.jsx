@@ -22,11 +22,10 @@ export const ColorItem = styled.div`
   font-size: 20px;
 
   cursor: pointer;
-
-  margin-bottom: 1.2em;
 `;
 
 export const ColorSelectorContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 1.2em;
 `;

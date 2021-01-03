@@ -1,4 +1,5 @@
 import { MdClose } from 'react-icons/md';
+import ColorSelector from '../color-selector/color-selector';
 import styled from 'styled-components';
 
 export const CardCreatorContainer = styled.form`
@@ -8,13 +9,14 @@ export const CardCreatorContainer = styled.form`
   height: fit-content;
 `;
 
-export const TextAreaContainer = styled.div`
+export const FieldContainerContainer = styled.div`
   background-color: white;
   color: black;
   width: 100%;
   padding: 8px;
   box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
   border-radius: 3px;
+  margin-bottom: 8px;
 `;
 
 export const DescriptionTextArea = styled.textarea`
@@ -43,7 +45,7 @@ export const DescriptionInput = styled.input`
 `;
 
 export const Buttons = styled.div`
-  margin-top: 12px;
+  margin-top: 4px;
   display: flex;
   align-items: center;
 `;
@@ -75,4 +77,8 @@ export const CloseIcon = styled(MdClose)`
     color: #fff;
     background-color: rgba(0, 0, 0, 0.3);
   }
+`;
+
+export const StyledColorSelector = styled(ColorSelector)`
+  margin-bottom: 0px;
 `;

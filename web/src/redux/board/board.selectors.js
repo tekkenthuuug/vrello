@@ -17,6 +17,11 @@ export const selectBoardName = createSelector(
   board => board.name
 );
 
+export const selectBoardColor = createSelector(
+  [selectBoard],
+  board => board.backgroundColor
+);
+
 export const selectInitialBoardEditValues = createSelector(
   [selectBoard],
   board => ({ name: board.name, backgroundColor: board.backgroundColor })

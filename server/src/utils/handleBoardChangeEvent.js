@@ -2,12 +2,14 @@ const Board = require('../models/Board.model');
 const Column = require('../models/Column.model');
 const Card = require('../models/Card.model');
 
-const handleBoardChangeEvent = io => async ({ boardId, action }) => {
+const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
   const { type, payload } = action;
+  let sendToSender = false;
 
   switch (type) {
     case 'ADD_CARD': {
       const { toColumn, card } = payload;
+      sendToSender = true;
 
       const newCard = new Card({ ...card, columnId: toColumn });
 
@@ -23,6 +25,8 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
     }
     case 'ADD_COLUMN': {
       const { column } = payload;
+      sendToSender = true;
+
       const newColumn = new Column({ ...column, boardId });
 
       const board = await Board.findById(boardId);
@@ -64,6 +68,10 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
       if (targetColumnId === undefined) {
         const column = await Column.findById(columnIdToMove);
 
+        const board = await Board.findById(column.boardId);
+
+        await board.removeColumn(column._id);
+
         await column.deleteOne();
 
         break;
@@ -96,10 +104,23 @@ const handleBoardChangeEvent = io => async ({ boardId, action }) => {
 
       break;
     }
+    case 'RENAME_COLUMN': {
+      const { columnId, newColumnName } = payload;
+
+      await Column.updateOne({ _id: columnId }, { name: newColumnName });
+
+      break;
+    }
   }
 
-  // send to users in this room
-  io.to(boardId).emit('board-change', action);
+  // send to all users in this room except sender
+  socket.broadcast.to(boardId).emit('board-change', action);
+
+  if (sendToSender) {
+    console.log('sender');
+    // send to sender if needed
+    socket.emit('board-change', action);
+  }
 };
 
 module.exports = handleBoardChangeEvent;

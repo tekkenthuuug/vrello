@@ -1,10 +1,10 @@
 import React from 'react';
-import { List, ListItem } from '../../shared-styles/dropdown.styles';
-import { StyledDropdownContainer } from './column-dropdown-menu.styles';
-import { MdEdit, MdDelete } from 'react-icons/md';
+import { MdDelete } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
 import { moveColumn } from '../../redux/board/board.actions';
+import { List, ListItem } from '../../shared-styles/dropdown.styles';
+import { StyledDropdownContainer } from './column-dropdown-menu.styles';
 
 const ColumnDropdownMenu = ({ onItemClick, columnId }) => {
   const dispatch = useDispatch();
@@ -21,12 +21,6 @@ const ColumnDropdownMenu = ({ onItemClick, columnId }) => {
   return (
     <StyledDropdownContainer>
       <List onClick={onItemClick}>
-        <ListItem>
-          <MdEdit />
-          Edit column
-        </ListItem>
-      </List>
-      <List>
         <ListItem onClick={handleDeleteColumn}>
           <MdDelete />
           Delete column

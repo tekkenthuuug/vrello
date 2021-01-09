@@ -12,8 +12,8 @@ const TaskCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
   const handleDragStart = e => {
     e.stopPropagation();
 
-    e.dataTransfer.setData('from', columnId);
-    e.dataTransfer.setData('id', cardData.id);
+    e.dataTransfer.setData('from_column', columnId);
+    e.dataTransfer.setData('card_id', cardData.id);
 
     setTimeout(() => {
       e.target.style.display = 'none';

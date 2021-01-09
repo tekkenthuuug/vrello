@@ -6,6 +6,7 @@ const BoardActionTypes = {
   MOVE_COLUMN: 'MOVE_COLUMN',
   CHANGE_BG: 'CHANGE_BG',
   RENAME: 'RENAME',
+  RENAME_COLUMN: 'RENAME_COLUMN',
   RESET: 'RESET',
 };
 

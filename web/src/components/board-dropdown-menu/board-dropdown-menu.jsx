@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { List, ListItem } from '../../shared-styles/dropdown.styles';
-import { StyledDropdownContainer } from './board-dropdown-menu.styles';
-import CreateOrEditBoardModal from '../create-or-edit-board-modal/create-or-edit-board-modal';
-import { changeBackgroundColor, rename } from '../../redux/board/board.actions';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import { MdDelete, MdEdit } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectInitialBoardEditValues } from '../../redux/board/board.selectors';
-import { MdEdit, MdDelete } from 'react-icons/md';
+import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import { changeBackgroundColor, rename } from '../../redux/board/board.actions';
+import {
+  selectBoardBackgroundColor,
+  selectBoardName,
+} from '../../redux/board/board.selectors';
+import { List, ListItem } from '../../shared-styles/dropdown.styles';
+import CreateOrEditBoardModal from '../create-or-edit-board-modal/create-or-edit-board-modal';
+import { StyledDropdownContainer } from './board-dropdown-menu.styles';
 
 const BoardDropdownMenu = ({ onItemClick }) => {
   const dispatch = useDispatch();
-  const initialBoardEditValues = useSelector(selectInitialBoardEditValues);
+
+  const initialName = useSelector(selectBoardName);
+  const initialColor = useSelector(selectBoardBackgroundColor);
 
   const emitBoardChange = useBoardEventsEmmiter();
 
@@ -32,7 +37,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
       return;
     }
 
-    if (backgroundColor !== initialBoardEditValues.backgroundColor) {
+    if (backgroundColor !== initialColor) {
       const action = changeBackgroundColor(backgroundColor);
 
       dispatch(action);
@@ -40,7 +45,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
       emitBoardChange(action);
     }
 
-    if (name !== initialBoardEditValues.name) {
+    if (name !== initialName) {
       const action = rename(name);
 
       dispatch(action);
@@ -72,7 +77,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
         <CreateOrEditBoardModal
           type='edit'
           onSubmit={handleBoardEdit}
-          initialValues={initialBoardEditValues}
+          initialValues={{ name: initialName, backgroundColor: initialColor }}
           onClose={() => {
             setIsEditModalOpened(false);
             onItemClick();

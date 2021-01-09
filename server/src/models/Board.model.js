@@ -63,6 +63,10 @@ BoardSchema.methods.moveColumn = async function (
   await this.updateOne({ $set: { columns: newColumns } }).exec();
 };
 
+BoardSchema.methods.removeColumn = async function (columnId) {
+  this.updateOne({ $pull: { columns: columnId } }).exec();
+};
+
 BoardSchema.pre('deleteOne', { document: true }, async function (next) {
   const columns = await Column.find({ boardId: this._id });
 

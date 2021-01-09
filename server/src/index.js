@@ -7,6 +7,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const session = require('express-session');
 const Redis = require('ioredis');
+const IOMiddlewareWrapper = require('./middleware/IOMiddlewareWrapper');
 require('dotenv').config();
 
 const createSessionConfig = require('./utils/createSessionConfig');
@@ -31,8 +32,6 @@ app.set('trust proxy', 1);
 
 const redis = new Redis(process.env.REDIS_URL);
 
-app.use(session(createSessionConfig(redis)));
-
 const server = http.createServer(app);
 
 const io = socketIo(server);
@@ -46,27 +45,39 @@ const io = socketIo(server);
   });
 })();
 
+const sessionMiddleware = session(createSessionConfig(redis));
+
+io.use(IOMiddlewareWrapper(sessionMiddleware));
+
+app.use(sessionMiddleware);
+
 app.use(require('./routes'));
 
 io.on('connection', socket => {
   socket.emit('connected');
-
   socket.on('join', async boardId => {
-    const board = await Board.findById(boardId)
-      .populate({
-        path: 'columns',
-        populate: {
-          path: 'cards',
-        },
-      })
-      .exec();
+    // check if user has access to this board
+    const board = await Board.findById(boardId);
 
-    socket.emit('joined', board);
+    if (String(board.creatorId) === socket.request.session.userId) {
+      const populatedBoard = await board
+        .populate({
+          path: 'columns',
+          populate: {
+            path: 'cards',
+          },
+        })
+        .execPopulate();
 
-    socket.join(boardId);
+      socket.emit('joined', populatedBoard);
+
+      socket.join(boardId);
+    } else {
+      socket.emit('no-access');
+    }
   });
 
-  socket.on('board-change', handleBoardChangeEvent(io));
+  socket.on('board-change', handleBoardChangeEvent(io, socket));
 });
 
 server.listen(port, () => {

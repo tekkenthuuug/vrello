@@ -8,10 +8,11 @@ import {
 import { MdAdd } from 'react-icons/md';
 import BoardColumn from '../board-column/board-column';
 import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectColumnsIds } from '../../redux/board/board.selectors';
 
 const BoardControl = () => {
+  const dispatch = useDispatch();
   const emitBoardChange = useBoardEventsEmmiter();
 
   const columnsIds = useSelector(selectColumnsIds);
@@ -52,18 +53,24 @@ const BoardControl = () => {
     [emitBoardChange]
   );
 
-  const handleColumnMove = e => {
+  const handleColumnDrop = e => {
     e.preventDefault();
 
-    const columnId = e.dataTransfer.getData('id');
+    const columnId = e.dataTransfer.getData('column_id');
 
-    if (!dragOverColumnId.current || dragOverColumnId.current === columnId) {
+    if (
+      !columnId ||
+      !dragOverColumnId.current ||
+      dragOverColumnId.current === columnId
+    ) {
       return;
     }
 
     const action = moveColumn(columnId, dragOverColumnId.current);
 
     emitBoardChange(action);
+
+    dispatch(action);
 
     dragOverColumnId.current = null;
   };
@@ -81,7 +88,7 @@ const BoardControl = () => {
 
   return (
     <ColumnsContainer
-      onDrop={handleColumnMove}
+      onDrop={handleColumnDrop}
       onDragOver={e => e.preventDefault()}
     >
       {columnsIds.map(columnId => (

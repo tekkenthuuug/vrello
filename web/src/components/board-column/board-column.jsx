@@ -1,25 +1,25 @@
 import React, { createRef, memo, useCallback, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
+import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
+import { addCard, deleteCard, moveCard } from '../../redux/board/board.actions';
 import { selectColumn } from '../../redux/board/board.selectors';
-import TaskCard from '../task-card/task-card';
+import ColumnHeader from '../column-header/column-header';
 import ElementCreator from '../element-creator/element-creator';
+import TaskCard from '../task-card/task-card';
 import {
   AddBtn,
   CardsContainer,
   ColumnContainer,
   ColumnContent,
 } from './board-column.styles';
-import ColumnHeader from '../column-header/column-header';
-import { addCard, deleteCard, moveCard } from '../../redux/board/board.actions';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
 
 const BoardColumn = ({ columnId, onColumnDragOver }) => {
   const dispatch = useDispatch();
   const emitBoardChange = useBoardEventsEmmiter();
 
-  const columnData = useSelector(selectColumn(columnId));
+  const columnInfo = useSelector(selectColumn(columnId));
 
   const [isAddingCard, setIsAddingCard] = useState(false);
 
@@ -31,12 +31,15 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
 
   const handleCardDrop = e => {
     e.preventDefault();
-    e.stopPropagation();
 
-    const initialColumnId = e.dataTransfer.getData('from');
-    const cardId = e.dataTransfer.getData('id');
+    const initialColumnId = e.dataTransfer.getData('from_column');
+    const cardId = e.dataTransfer.getData('card_id');
 
-    const action = moveCard(initialColumnId, columnData.id, cardId);
+    if (!cardId || !initialColumnId) {
+      return;
+    }
+
+    const action = moveCard(initialColumnId, columnInfo.id, cardId);
 
     dispatch(action);
 
@@ -48,7 +51,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
   };
 
   const handleColumnDragStart = e => {
-    e.dataTransfer.setData('id', columnData.id);
+    e.dataTransfer.setData('column_id', columnInfo.id);
   };
 
   const handleCardDelete = useCallback(
@@ -67,7 +70,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
       return;
     }
 
-    const action = addCard(columnData.id, { description: text, color });
+    const action = addCard(columnInfo.id, { description: text, color });
 
     emitBoardChange(action);
 
@@ -78,18 +81,18 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
     <ColumnContainer
       onDragStart={handleColumnDragStart}
       onDragOver={e => {
-        onColumnDragOver(e, columnData.id);
+        onColumnDragOver(e, columnInfo.id);
       }}
       draggable
     >
       <ColumnHeader columnId={columnId} />
       <ColumnContent>
         <CardsContainer onDrop={handleCardDrop} onDragOver={handleDragOver}>
-          {columnData.cards.map(card => (
+          {columnInfo.cards.map(card => (
             <TaskCard
               key={card.id}
               cardData={card}
-              columnId={columnData.id}
+              columnId={columnInfo.id}
               onDeleteClick={handleCardDelete}
               draggable
             />

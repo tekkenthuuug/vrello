@@ -1,60 +1,70 @@
-import { reorderColumns, reorderCards } from './board.utils';
+import { reorderColumns, reorderCards, findColumn } from './board.utils';
 import BoardActionTypes from './board.types';
+import { Map, fromJS, List } from 'immutable';
 
-const initialState = {
+const initialState = Map({
   id: null,
   name: null,
   backgroundColor: null,
   columns: null,
   creatorId: null,
   isLoading: true,
-};
+});
 
 const boardReducer = (state = initialState, { payload, type }) => {
   switch (type) {
     case BoardActionTypes.INIT: {
-      return { ...state, ...payload, isLoading: false };
+      if (!payload) {
+        return state.set('isLoading', false);
+      }
+
+      const immutablePayload = fromJS(payload);
+
+      return state.merge(immutablePayload).set('isLoading', false);
     }
     case BoardActionTypes.MOVE_CARD: {
       const { fromColumn, toColumn, cardId } = payload;
-      return {
-        ...state,
-        columns: reorderCards(state.columns, fromColumn, toColumn, cardId),
-      };
+
+      return state.set(
+        'columns',
+        reorderCards(state.get('columns'), fromColumn, toColumn, cardId)
+      );
     }
     case BoardActionTypes.MOVE_COLUMN: {
       const { columnIdToMove, targetColumnId } = payload;
 
-      return {
-        ...state,
-        columns: reorderColumns(state.columns, columnIdToMove, targetColumnId),
-      };
+      return state.set(
+        'columns',
+        reorderColumns(state.get('columns'), columnIdToMove, targetColumnId)
+      );
     }
     case BoardActionTypes.ADD_CARD: {
       const { toColumn, card } = payload;
-      const newState = { ...state };
 
-      newState.columns.find(column => column.id === toColumn).cards.push(card);
+      const [, columnIndex] = findColumn(state.get('columns'), toColumn);
 
-      return newState;
+      return state.updateIn(['columns', columnIndex, 'cards'], cards =>
+        cards.push(Map(card))
+      );
     }
     case BoardActionTypes.ADD_COLUMN: {
       const { column } = payload;
-      const newState = { ...state };
-      newState.columns.push(column);
-      return newState;
+      column.cards = List();
+
+      return state.update('columns', columns => columns.push(Map(column)));
     }
     case BoardActionTypes.CHANGE_BG: {
-      return {
-        ...state,
-        backgroundColor: payload,
-      };
+      return state.set('backgroundColor', payload);
     }
     case BoardActionTypes.RENAME: {
-      return {
-        ...state,
-        name: payload,
-      };
+      return state.set('name', payload);
+    }
+    case BoardActionTypes.RENAME_COLUMN: {
+      const { newColumnName, columnId } = payload;
+
+      const [, index] = findColumn(state.get('columns'), columnId);
+
+      return state.setIn(['columns', index, 'name'], newColumnName);
     }
     case BoardActionTypes.RESET: {
       return initialState;

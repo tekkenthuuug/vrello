@@ -1,13 +1,10 @@
 import React, { createContext, useState, useCallback } from 'react';
 import useFetch from '../hooks/useFetch';
 import { API_ROUTES } from '../utils/constants';
-import { useHistory } from 'react-router-dom';
 
 export const UserStateContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const history = useHistory();
-
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,7 +27,6 @@ export const UserProvider = ({ children }) => {
 
   const signOut = async () => {
     setUser(null);
-    history.push('/signin');
     await signOutRequest();
   };
 

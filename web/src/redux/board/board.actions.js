@@ -51,6 +51,11 @@ export const changeBackgroundColor = newBackgroundColor => ({
   payload: newBackgroundColor,
 });
 
+export const renameColumn = (columnId, newColumnName) => ({
+  type: BoardActionTypes.RENAME_COLUMN,
+  payload: { columnId, newColumnName },
+});
+
 export const reset = () => ({
   type: BoardActionTypes.RESET,
 });

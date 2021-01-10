@@ -30,3 +30,7 @@ export const selectColumn = columnId =>
           .toJS()
       : null;
   });
+
+export const selectBoardIsDeleted = createSelector([selectBoard], board =>
+  board.get('isDeleted')
+);

@@ -8,6 +8,7 @@ const BoardActionTypes = {
   RENAME: 'RENAME',
   RENAME_COLUMN: 'RENAME_COLUMN',
   RESET: 'RESET',
+  DELETE_BOARD: 'DELETE_BOARD',
 };
 
 export default BoardActionTypes;

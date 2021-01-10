@@ -9,6 +9,7 @@ const initialState = Map({
   columns: null,
   creatorId: null,
   isLoading: true,
+  isDeleted: false,
 });
 
 const boardReducer = (state = initialState, { payload, type }) => {
@@ -65,6 +66,9 @@ const boardReducer = (state = initialState, { payload, type }) => {
       const [, index] = findColumn(state.get('columns'), columnId);
 
       return state.setIn(['columns', index, 'name'], newColumnName);
+    }
+    case BoardActionTypes.DELETE_BOARD: {
+      return state.set('isDeleted', true);
     }
     case BoardActionTypes.RESET: {
       return initialState;

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import BoardControl from '../../components/board-control/board-control';
 import BoardHeader from '../../components/board-header/board-header';
 import { BoardContainer } from './board.styles';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   selectBoardBackgroundColor,
   selectBoardIsLoading,
+  selectBoardIsDeleted,
 } from '../../redux/board/board.selectors';
 import { initializeBoard, reset } from '../../redux/board/board.actions';
 import socketIOClient from 'socket.io-client';
@@ -20,6 +21,7 @@ const Board = () => {
 
   const backgroundColor = useSelector(selectBoardBackgroundColor);
   const isLoading = useSelector(selectBoardIsLoading);
+  const isDeleted = useSelector(selectBoardIsDeleted);
 
   const [hasAccess, setHasAccess] = useState(false);
   const socket = useRef(null);
@@ -55,10 +57,10 @@ const Board = () => {
     });
 
     return () => {
-      dispatch(reset());
       if (socket.current) {
         socket.current.disconnect();
       }
+      dispatch(reset());
     };
   }, [boardId, dispatch, history]);
 
@@ -71,6 +73,10 @@ const Board = () => {
     },
     [socket, boardId]
   );
+
+  if (isDeleted) {
+    return <Redirect to='/app' />;
+  }
 
   if (isLoading) {
     return <LoadingScreen />;

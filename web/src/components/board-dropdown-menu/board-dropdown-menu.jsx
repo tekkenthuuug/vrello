@@ -10,6 +10,8 @@ import {
 import { List, ListItem } from '../../shared-styles/dropdown.styles';
 import CreateOrEditBoardModal from '../create-or-edit-board-modal/create-or-edit-board-modal';
 import { StyledDropdownContainer } from './board-dropdown-menu.styles';
+import { deleteBoard } from '../../redux/board/board.actions';
+import DeleteBoardModal from '../delete-board-modal/delete-board-modal';
 
 const BoardDropdownMenu = ({ onItemClick }) => {
   const dispatch = useDispatch();
@@ -20,10 +22,16 @@ const BoardDropdownMenu = ({ onItemClick }) => {
   const emitBoardChange = useBoardEventsEmmiter();
 
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
+  const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
 
   const onEditClick = e => {
     e.stopPropagation();
     setIsEditModalOpened(true);
+  };
+
+  const onDeleteClick = e => {
+    e.stopPropagation();
+    setIsDeleteModalOpened(true);
   };
 
   const handleBoardEdit = (
@@ -58,7 +66,11 @@ const BoardDropdownMenu = ({ onItemClick }) => {
   };
 
   const handleBoardDelete = () => {
-    emitBoardChange({ type: 'DELETE_BOARD' });
+    const action = deleteBoard();
+
+    emitBoardChange(action);
+
+    dispatch(action);
   };
 
   return (
@@ -68,11 +80,21 @@ const BoardDropdownMenu = ({ onItemClick }) => {
           <MdEdit />
           Edit board
         </ListItem>
-        <ListItem onClick={handleBoardDelete}>
+        <ListItem onClick={onDeleteClick}>
           <MdDelete />
           Delete board
         </ListItem>
       </List>
+      {isDeleteModalOpened && (
+        <DeleteBoardModal
+          boardName={initialName}
+          onSubmit={handleBoardDelete}
+          onClose={() => {
+            setIsEditModalOpened(false);
+            onItemClick();
+          }}
+        />
+      )}
       {isEditModalOpened && (
         <CreateOrEditBoardModal
           type='edit'

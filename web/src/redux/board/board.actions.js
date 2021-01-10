@@ -59,3 +59,7 @@ export const renameColumn = (columnId, newColumnName) => ({
 export const reset = () => ({
   type: BoardActionTypes.RESET,
 });
+
+export const deleteBoard = () => ({
+  type: BoardActionTypes.DELETE_BOARD,
+});

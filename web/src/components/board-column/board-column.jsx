@@ -35,7 +35,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
     const initialColumnId = e.dataTransfer.getData('from_column');
     const cardId = e.dataTransfer.getData('card_id');
 
-    if (!cardId || !initialColumnId) {
+    if (!cardId || !initialColumnId || initialColumnId === columnId) {
       return;
     }
 

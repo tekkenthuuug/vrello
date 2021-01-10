@@ -117,7 +117,6 @@ const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
   socket.broadcast.to(boardId).emit('board-change', action);
 
   if (sendToSender) {
-    console.log('sender');
     // send to sender if needed
     socket.emit('board-change', action);
   }

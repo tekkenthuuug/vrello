@@ -42,17 +42,7 @@ const UserSchema = new mongoose.Schema(
 UserSchema.plugin(uniqueValidator, { message: 'Is already taken' });
 
 UserSchema.methods.generateShortUsername = function () {
-  const splitUsername = this.username.split(' ');
-
-  let result = null;
-
-  if (splitUsername.length > 1) {
-    result = splitUsername[0][0] + splitUsername[1][0];
-  } else {
-    result = splitUsername[0][0];
-  }
-
-  this.shortUsername = result.toUpperCase();
+  this.shortUsername = this.username.slice(0, 2).toUpperCase();
 };
 
 UserSchema.methods.setPassword = async function (password) {

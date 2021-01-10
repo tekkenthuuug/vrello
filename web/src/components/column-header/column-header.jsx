@@ -24,7 +24,7 @@ const ColumnHeader = ({ columnId }) => {
 
   const { name: columnName } = useSelector(selectColumn(columnId));
 
-  const [nameText, setNameText] = useState(columnName);
+  const [columnNameInputText, setColumnNameInputText] = useState(columnName);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [byEnter, setByEnter] = useState(false);
 
@@ -36,12 +36,12 @@ const ColumnHeader = ({ columnId }) => {
 
   useEffect(() => {
     // set when new column name received
-    setNameText(columnName);
+    setColumnNameInputText(columnName);
   }, [columnName]);
 
   const changeColumnName = () => {
-    if (nameText !== columnName) {
-      const action = renameColumn(columnId, nameText);
+    if (columnNameInputText !== columnName) {
+      const action = renameColumn(columnId, columnNameInputText);
       dispatch(action);
       emitBoardChange(action);
     }
@@ -69,15 +69,25 @@ const ColumnHeader = ({ columnId }) => {
     }
   };
 
+  const handleNameFieldMouseDown = e => {
+    e.preventDefault();
+  };
+
+  const handleNameFieldMouseUp = e => {
+    e.target.focus();
+  };
+
   useOnClickOutside(dropdownContainerRef, handleHideDropdown);
 
   return (
     <ColumnHeaderContainer>
       <ColumnName
-        value={nameText}
-        onChange={e => setNameText(e.target.value)}
+        value={columnNameInputText}
+        onChange={e => setColumnNameInputText(e.target.value)}
         onKeyPress={handleNameFieldKeyPress}
         onBlur={handleNameFieldBlur}
+        onMouseDown={handleNameFieldMouseDown}
+        onMouseUp={handleNameFieldMouseUp}
       />
       <MoreContainer
         ref={dropdownContainerRef}

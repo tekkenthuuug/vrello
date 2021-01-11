@@ -11,8 +11,11 @@ import {
 
 const Modal = ({ children, onClose, name }) => {
   return ReactDOM.createPortal(
-    <ModalOverlay onClick={onClose}>
-      <ModalContainer onClick={e => e.stopPropagation()}>
+    <ModalOverlay onMouseDown={onClose}>
+      <ModalContainer
+        onMouseDown={e => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
+      >
         <Header>
           <Heading>{name}</Heading>
           <CloseIcon onClick={onClose} />

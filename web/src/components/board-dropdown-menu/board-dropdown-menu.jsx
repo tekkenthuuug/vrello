@@ -2,27 +2,26 @@ import React, { useState } from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import { List, ListItem } from '../../shared-styles/dropdown.styles';
+import CreateOrEditBoardModal from '../create-or-edit-board-modal/create-or-edit-board-modal';
+import { StyledDropdownContainer } from './board-dropdown-menu.styles';
 import { changeBackgroundColor, rename } from '../../redux/board/board.actions';
+import DeleteBoardModal from '../delete-board-modal/delete-board-modal';
 import {
   selectBoardBackgroundColor,
   selectBoardName,
 } from '../../redux/board/board.selectors';
-import { List, ListItem } from '../../shared-styles/dropdown.styles';
-import CreateOrEditBoardModal from '../create-or-edit-board-modal/create-or-edit-board-modal';
-import { StyledDropdownContainer } from './board-dropdown-menu.styles';
-import { deleteBoard } from '../../redux/board/board.actions';
-import DeleteBoardModal from '../delete-board-modal/delete-board-modal';
 
 const BoardDropdownMenu = ({ onItemClick }) => {
   const dispatch = useDispatch();
-
-  const initialName = useSelector(selectBoardName);
-  const initialColor = useSelector(selectBoardBackgroundColor);
 
   const emitBoardChange = useBoardEventsEmmiter();
 
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
+
+  const currentBoardColor = useSelector(selectBoardBackgroundColor);
+  const currentBoardName = useSelector(selectBoardName);
 
   const onEditClick = e => {
     e.stopPropagation();
@@ -34,27 +33,24 @@ const BoardDropdownMenu = ({ onItemClick }) => {
     setIsDeleteModalOpened(true);
   };
 
-  const handleBoardEdit = (
-    { name, backgroundColor },
-    { setErrors, setSubmitting }
-  ) => {
-    if (name.length < 1) {
+  const handleBoardEdit = (values, { setErrors, setSubmitting }) => {
+    if (values.name.length < 1) {
       setErrors({ name: 'Required' });
 
       setSubmitting(false);
       return;
     }
 
-    if (backgroundColor !== initialColor) {
-      const action = changeBackgroundColor(backgroundColor);
+    if (values.backgroundColor !== currentBoardColor) {
+      const action = changeBackgroundColor(values.backgroundColor);
 
       dispatch(action);
 
       emitBoardChange(action);
     }
 
-    if (name !== initialName) {
-      const action = rename(name);
+    if (values.name !== currentBoardName) {
+      const action = rename(values.name);
 
       dispatch(action);
 
@@ -63,14 +59,6 @@ const BoardDropdownMenu = ({ onItemClick }) => {
 
     setIsEditModalOpened(false);
     onItemClick();
-  };
-
-  const handleBoardDelete = () => {
-    const action = deleteBoard();
-
-    emitBoardChange(action);
-
-    dispatch(action);
   };
 
   return (
@@ -87,8 +75,6 @@ const BoardDropdownMenu = ({ onItemClick }) => {
       </List>
       {isDeleteModalOpened && (
         <DeleteBoardModal
-          boardName={initialName}
-          onSubmit={handleBoardDelete}
           onClose={() => {
             setIsEditModalOpened(false);
             onItemClick();
@@ -99,7 +85,10 @@ const BoardDropdownMenu = ({ onItemClick }) => {
         <CreateOrEditBoardModal
           type='edit'
           onSubmit={handleBoardEdit}
-          initialValues={{ name: initialName, backgroundColor: initialColor }}
+          initialValues={{
+            name: currentBoardName,
+            backgroundColor: currentBoardColor,
+          }}
           onClose={() => {
             setIsEditModalOpened(false);
             onItemClick();

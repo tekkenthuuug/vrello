@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const insertIntoArray = require('../utils/insertIntoArray');
 const normalizeTransform = require('../utils/normalizeTransform');
 const Column = require('./Column.model');
+const BoardMember = require('./BoardMember.model');
 
 const BoardSchema = new mongoose.Schema(
   {
@@ -17,6 +18,12 @@ const BoardSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Column',
+      },
+    ],
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BoardMember',
       },
     ],
     creatorId: {
@@ -65,6 +72,14 @@ BoardSchema.methods.moveColumn = async function (
 
 BoardSchema.methods.removeColumn = async function (columnId) {
   this.updateOne({ $pull: { columns: columnId } }).exec();
+};
+
+BoardSchema.methods.addMember = async function (userId) {
+  await this.updateOne({ $push: { members: userId } }).exec();
+
+  const boardMember = new BoardMember({ board: this._id, member: userId });
+
+  await boardMember.save();
 };
 
 BoardSchema.pre('deleteOne', { document: true }, async function (next) {

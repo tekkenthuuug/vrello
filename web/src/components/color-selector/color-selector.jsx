@@ -1,12 +1,12 @@
 import React from 'react';
+import { MdDone } from 'react-icons/md';
+import { InputLabel } from '../../shared-styles/input.styles';
+import { BOARD_COLORS } from '../../utils/constants';
 import {
-  ColorsContainer,
   ColorItem,
+  ColorsContainer,
   ColorSelectorContainer,
 } from './color-selector.styles';
-import { InputLabel } from '../../shared-styles/input.styles';
-import { MdDone } from 'react-icons/md';
-import { BOARD_COLORS } from '../../utils/constants';
 
 const ColorSelector = ({
   colors = BOARD_COLORS,

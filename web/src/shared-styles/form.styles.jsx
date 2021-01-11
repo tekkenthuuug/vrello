@@ -32,7 +32,7 @@ export const SubmitBtn = styled.button`
 
   &:disabled {
     opacity: 0.5;
-    cursor: wait;
+    cursor: ${props => props.disabledCursor || 'wait'};
   }
 
   &:hover {

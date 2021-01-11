@@ -1,11 +1,11 @@
-import React from 'react';
-import Modal from '../modal/modal';
-import InputField from '../input-field/input-field';
-import ColorSelector from '../color-selector/color-selector';
 import { Formik } from 'formik';
-import { StyledForm } from './create-or-edit-board-modal.styles';
+import React from 'react';
 import { SubmitBtn } from '../../shared-styles/form.styles';
 import { BOARD_COLORS } from '../../utils/constants';
+import ColorSelector from '../color-selector/color-selector';
+import InputField from '../input-field/input-field';
+import Modal from '../modal/modal';
+import { StyledForm } from './create-or-edit-board-modal.styles';
 
 const createBoardFormInitialState = {
   name: '',
@@ -23,7 +23,10 @@ const CreateBoardModal = ({
   return (
     <Modal name={actionName} onClose={onClose}>
       <Formik
-        initialValues={{ ...createBoardFormInitialState, ...initialValues }}
+        initialValues={{
+          ...createBoardFormInitialState,
+          ...initialValues,
+        }}
         onSubmit={onSubmit}
       >
         {({ isSubmitting, setValues, values }) => (
@@ -37,7 +40,6 @@ const CreateBoardModal = ({
             />
             <ColorSelector
               label='Board background'
-              colors={BOARD_COLORS}
               value={values.backgroundColor}
               onSelect={backgroundColor =>
                 setValues({ ...values, backgroundColor })

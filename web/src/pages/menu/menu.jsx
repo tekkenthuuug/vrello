@@ -38,19 +38,21 @@ const Menu = () => {
   };
 
   useEffect(() => {
-    fetchBoards();
+    (async () => {
+      await fetchBoards();
+    })();
   }, [fetchBoards]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  const { boards } = response.data;
+  const { boards, memberBoards } = response.data;
 
   return (
     <MenuPage>
       <MenuContainer>
-        <SectionHeading>Personal boards</SectionHeading>
+        <SectionHeading>Your boards</SectionHeading>
         <BoardsContainer>
           {boards.map(board => (
             <BoardCard key={board.id} board={board} />
@@ -59,6 +61,12 @@ const Menu = () => {
             <AddIcon />
             Create board
           </CreateBoardBtn>
+        </BoardsContainer>
+        <SectionHeading>Boards you are member in</SectionHeading>
+        <BoardsContainer>
+          {memberBoards.map(board => (
+            <BoardCard key={board.id} board={board} />
+          ))}
         </BoardsContainer>
         {isModalOpened && (
           <CreateOrEditBoardModal

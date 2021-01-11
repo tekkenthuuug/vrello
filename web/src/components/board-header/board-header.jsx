@@ -10,11 +10,13 @@ import useOnClickOutside from '../../hooks/useOnClickOutside';
 import BoardDropdownMenu from '../board-dropdown-menu/board-dropdown-menu';
 import { useSelector } from 'react-redux';
 import { selectBoardName } from '../../redux/board/board.selectors';
+import AddMemberModal from '../add-member-modal/add-member-modal';
 
 const BoardHeader = () => {
   const name = useSelector(selectBoardName);
 
   const [isMenuOpened, setIsMenuOpened] = useState(false);
+  const [isAddMemberModalOpened, setIsAddMemberModalOpened] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -26,10 +28,13 @@ const BoardHeader = () => {
     <HeaderContainer>
       <ItemsContainer>
         <Name>{name}</Name>
-        <HeaderButton>
+        <HeaderButton onClick={() => setIsAddMemberModalOpened(true)}>
           <MdPersonAdd />
           Invite
         </HeaderButton>
+        {isAddMemberModalOpened && (
+          <AddMemberModal onClose={() => setIsAddMemberModalOpened(false)} />
+        )}
       </ItemsContainer>
       <ItemsContainer>
         <div ref={dropdownRef}>

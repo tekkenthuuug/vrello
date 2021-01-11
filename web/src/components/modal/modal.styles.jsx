@@ -30,7 +30,6 @@ export const ModalOverlay = styled.div`
 export const ModalContainer = styled.div`
   background-color: #fff;
   border-radius: 12px;
-  overflow: hidden;
 `;
 
 export const Header = styled.header`

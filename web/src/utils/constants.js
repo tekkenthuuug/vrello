@@ -20,9 +20,11 @@ export const API_ROUTES = {
     me: () => `${API_BASE_URL}/auth/me`,
   },
   user: {
-    boards: uid => `${API_BASE_URL}/user/${uid}/boards`,
+    boards: uid => `${API_BASE_URL}/users/${uid}/boards`,
+    search: email => `${API_BASE_URL}/users/search?email=${email}`,
   },
   board: {
     create: () => `${API_BASE_URL}/board/create`,
+    addMember: boardId => `${API_BASE_URL}/board/${boardId}/add-member`,
   },
 };

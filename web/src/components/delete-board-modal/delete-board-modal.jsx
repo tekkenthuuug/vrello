@@ -4,15 +4,34 @@ import InputField from '../input-field/input-field';
 import { Formik } from 'formik';
 import { StyledForm, Description } from './delete-board-modal.styles';
 import { SubmitBtn } from '../../shared-styles/form.styles';
+import { selectBoardName } from '../../redux/board/board.selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteBoard } from '../../redux/board/board.actions';
+import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
 
-const DeleteBoardModal = ({ boardName, onClose, onSubmit }) => {
+const DeleteBoardModal = ({ onClose }) => {
+  const currentBoardName = useSelector(selectBoardName);
+
+  const dispatch = useDispatch();
+
+  const emitBoardChange = useBoardEventsEmmiter();
+
+  const handleBoardDelete = () => {
+    const action = deleteBoard();
+
+    emitBoardChange(action);
+
+    dispatch(action);
+  };
+
   return (
     <Modal name='Delete board' onClose={onClose}>
-      <Formik initialValues={{ name: '' }} onSubmit={onSubmit}>
+      <Formik initialValues={{ name: '' }} onSubmit={handleBoardDelete}>
         {({ isSubmitting, values }) => (
           <StyledForm>
             <Description>
-              Please type <span>{boardName}</span> to confirm delete action
+              Please type <span>{currentBoardName}</span> to confirm delete
+              action
             </Description>
             <InputField
               autoComplete='off'
@@ -22,9 +41,9 @@ const DeleteBoardModal = ({ boardName, onClose, onSubmit }) => {
 
             <SubmitBtn
               type='submit'
-              disabled={isSubmitting || values.name !== boardName}
+              disabled={isSubmitting || values.name !== currentBoardName}
             >
-              Delete {boardName}
+              Delete {currentBoardName}
             </SubmitBtn>
           </StyledForm>
         )}

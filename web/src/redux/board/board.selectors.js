@@ -6,6 +6,10 @@ export const selectBoardBackgroundColor = createSelector([selectBoard], board =>
   board.get('backgroundColor')
 );
 
+export const selectBoardId = createSelector([selectBoard], board =>
+  board.get('id')
+);
+
 export const selectBoardIsLoading = createSelector([selectBoard], board =>
   board.get('isLoading')
 );

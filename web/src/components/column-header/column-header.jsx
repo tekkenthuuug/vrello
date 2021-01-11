@@ -69,14 +69,6 @@ const ColumnHeader = ({ columnId }) => {
     }
   };
 
-  const handleNameFieldMouseDown = e => {
-    e.preventDefault();
-  };
-
-  const handleNameFieldMouseUp = e => {
-    e.target.focus();
-  };
-
   useOnClickOutside(dropdownContainerRef, handleHideDropdown);
 
   return (
@@ -86,8 +78,6 @@ const ColumnHeader = ({ columnId }) => {
         onChange={e => setColumnNameInputText(e.target.value)}
         onKeyPress={handleNameFieldKeyPress}
         onBlur={handleNameFieldBlur}
-        onMouseDown={handleNameFieldMouseDown}
-        onMouseUp={handleNameFieldMouseUp}
       />
       <MoreContainer
         ref={dropdownContainerRef}

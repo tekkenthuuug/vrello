@@ -5,6 +5,7 @@ import {
   StyledInputControl,
   InputErrorMessage,
   Input,
+  InputContainer,
 } from './input-field.styles';
 import { InputLabel } from '../../shared-styles/input.styles';
 
@@ -13,19 +14,24 @@ const InputField = ({
   invisibleLabel,
   passwordMeter,
   size: _,
+  children,
+  className,
   ...props
 }) => {
   const [field, { error }] = useField(props);
 
   return (
-    <StyledInputControl hasErrored={!!error}>
+    <StyledInputControl hasErrored={!!error} className={className}>
       {!invisibleLabel && <InputLabel htmlFor={field.name}>{label}</InputLabel>}
-      <Input
-        {...field}
-        {...props}
-        id={field.name}
-        aria-label={invisibleLabel ? label : undefined}
-      />
+      <InputContainer>
+        <Input
+          {...field}
+          {...props}
+          id={field.name}
+          aria-label={invisibleLabel ? label : undefined}
+        />
+        {children}
+      </InputContainer>
       {props.type === 'password' && passwordMeter && (
         <PasswordStrength password={field.value} />
       )}

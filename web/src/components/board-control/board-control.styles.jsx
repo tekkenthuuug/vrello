@@ -5,7 +5,30 @@ export const ColumnsContainer = styled.div`
   display: flex;
   margin-top: 24px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding-bottom: 20vh;
+  height: 80vh;
+
+  ::-webkit-scrollbar-button {
+    display: block;
+    height: 4px;
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track-piece {
+    background: rgba(0, 0, 0, 0.15);
+  }
+  ::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
 
   & > * {
     margin-left: 12px;

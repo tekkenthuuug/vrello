@@ -12,9 +12,35 @@ export const ColumnContainer = styled.div`
   height: fit-content;
 `;
 
-export const CardsContainer = styled.div`
+export const TasksContainer = styled.div`
   margin-top: 12px;
   min-height: 71px;
+  max-height: 60vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar-button {
+    display: block;
+    height: 4px;
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track-piece {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  ::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
 `;
 
 export const ColumnContent = styled.div`

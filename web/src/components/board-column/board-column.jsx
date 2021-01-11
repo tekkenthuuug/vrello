@@ -10,7 +10,7 @@ import ElementCreator from '../element-creator/element-creator';
 import TaskCard from '../task-card/task-card';
 import {
   AddBtn,
-  CardsContainer,
+  TasksContainer,
   ColumnContainer,
   ColumnContent,
 } from './board-column.styles';
@@ -87,7 +87,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
     >
       <ColumnHeader columnId={columnId} />
       <ColumnContent>
-        <CardsContainer onDrop={handleCardDrop} onDragOver={handleDragOver}>
+        <TasksContainer onDrop={handleCardDrop} onDragOver={handleDragOver}>
           {columnInfo.cards.map(card => (
             <TaskCard
               key={card.id}
@@ -97,7 +97,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
               draggable
             />
           ))}
-        </CardsContainer>
+        </TasksContainer>
         {isAddingCard ? (
           <ElementCreator
             autoFocus

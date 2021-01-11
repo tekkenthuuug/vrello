@@ -62,12 +62,16 @@ const Menu = () => {
             Create board
           </CreateBoardBtn>
         </BoardsContainer>
-        <SectionHeading>Boards you are member in</SectionHeading>
-        <BoardsContainer>
-          {memberBoards.map(board => (
-            <BoardCard key={board.id} board={board} />
-          ))}
-        </BoardsContainer>
+        {memberBoards.length ? (
+          <>
+            <SectionHeading>Boards you are member in</SectionHeading>
+            <BoardsContainer>
+              {memberBoards.map(board => (
+                <BoardCard key={board.id} board={board} />
+              ))}
+            </BoardsContainer>
+          </>
+        ) : undefined}
         {isModalOpened && (
           <CreateOrEditBoardModal
             onClose={() => setIsModalOpened(false)}

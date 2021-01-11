@@ -1,9 +1,12 @@
 const Board = require('../models/Board.model');
 const Column = require('../models/Column.model');
 const Card = require('../models/Card.model');
+const Action = require('../models/Action.model');
 
 const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
   const { type, payload } = action;
+  const { session } = socket.request;
+
   let sendToSender = false;
 
   switch (type) {
@@ -120,6 +123,15 @@ const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
     // send to sender if needed
     socket.emit('board-change', action);
   }
+
+  const dbAction = new Action({
+    type: action.type,
+    payload: action.payload,
+    board: boardId,
+    user: session.userId,
+  });
+
+  dbAction.save();
 };
 
 module.exports = handleBoardChangeEvent;

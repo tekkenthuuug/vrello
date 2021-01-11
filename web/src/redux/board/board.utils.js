@@ -58,7 +58,11 @@ export const reorderColumns = (columnsArray, columnId, targetColumnId) => {
     return columnsArray;
   }
 
-  return columnsArray
-    .splice(columnToMoveIndex, 1)
-    .splice(targetColumnIndex, 0, columnToMove);
+  const arrayWithRemovedColumn = columnsArray.splice(columnToMoveIndex, 1);
+
+  if (targetColumnIndex !== null) {
+    return arrayWithRemovedColumn.splice(targetColumnIndex, 0, columnToMove);
+  }
+
+  return arrayWithRemovedColumn;
 };

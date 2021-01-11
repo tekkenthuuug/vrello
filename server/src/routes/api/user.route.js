@@ -31,9 +31,11 @@ router.get('/:uid/boards', async (req, res, next) => {
 
 router.get('/search', async (req, res, next) => {
   const { email } = req.query;
+  const { userId } = req.session;
   try {
     const users = await User.find({
       email: new RegExp(email, 'i'),
+      _id: { $ne: userId },
     }).limit(5);
 
     return res.json(

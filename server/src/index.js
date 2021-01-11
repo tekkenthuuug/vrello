@@ -13,6 +13,7 @@ require('dotenv').config();
 const createSessionConfig = require('./utils/createSessionConfig');
 
 const Board = require('./models/Board.model');
+const BoardMember = require('./models/BoardMember.model');
 
 const handleBoardChangeEvent = require('./utils/handleBoardChangeEvent');
 
@@ -57,9 +58,15 @@ io.on('connection', socket => {
   socket.emit('connected');
   socket.on('join', async boardId => {
     // check if user has access to this board
+    const { session } = socket.request;
     const board = await Board.findById(boardId);
 
-    if (String(board.creatorId) === socket.request.session.userId) {
+    const userToBoardRel = await BoardMember.findOne({
+      board: boardId,
+      member: session.userId,
+    });
+
+    if (String(board.creatorId) === session.userId || userToBoardRel) {
       const populatedBoard = await board
         .populate({
           path: 'columns',

@@ -16,11 +16,11 @@ import {
 } from './column-header.styles';
 import ColumnDropdownMenu from '../column-dropdown-menu/column-dropdown-menu';
 import { renameColumn } from '../../redux/board/board.actions';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 
 const ColumnHeader = ({ columnId }) => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmmiter();
+  const emitBoardChange = useBoardEventsEmitter();
 
   const { name: columnName } = useSelector(selectColumn(columnId));
 

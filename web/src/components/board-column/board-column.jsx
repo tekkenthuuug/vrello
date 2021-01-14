@@ -1,7 +1,7 @@
 import React, { createRef, memo, useCallback, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import { addCard, deleteCard, moveCard } from '../../redux/board/board.actions';
 import { selectColumn } from '../../redux/board/board.selectors';
@@ -17,7 +17,7 @@ import {
 
 const BoardColumn = ({ columnId, onColumnDragOver }) => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmmiter();
+  const emitBoardChange = useBoardEventsEmitter();
 
   const columnInfo = useSelector(selectColumn(columnId));
 

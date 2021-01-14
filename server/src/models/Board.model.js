@@ -43,16 +43,7 @@ const BoardSchema = new mongoose.Schema(
   }
 );
 
-BoardSchema.methods.toJSONWithoutColumns = function () {
-  const { columns, __v, ...otherBoardProperties } = this._doc;
-
-  return {
-    ...otherBoardProperties,
-    id: otherBoardProperties._id,
-  };
-};
-
-BoardSchema.methods.generateSlug = function () {
+BoardSchema.methods.updateSlug = function () {
   this.slug = slugify(this.name);
 };
 
@@ -91,9 +82,8 @@ BoardSchema.methods.addMember = async function (userId) {
   await boardMember.save();
 };
 
-// ???
-BoardSchema.methods.updateName = async function (boardId, name) {
-  await Board.updateOne({ _id: boardId }, { name, slug: slugify(name) });
+BoardSchema.statics.updateName = async function (boardId, name) {
+  await this.updateOne({ _id: boardId }, { name, slug: slugify(name) });
 };
 
 BoardSchema.pre(/delete/i, async function (next) {
@@ -105,7 +95,7 @@ BoardSchema.pre(/delete/i, async function (next) {
 });
 
 BoardSchema.pre('validate', { document: true }, function (next) {
-  this.generateSlug();
+  this.updateSlug();
 
   next();
 });

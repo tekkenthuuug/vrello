@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 import { List, ListItem } from '../../shared-styles/dropdown.styles';
 import CreateOrEditBoardModal from '../create-or-edit-board-modal/create-or-edit-board-modal';
 import { StyledDropdownContainer } from './board-dropdown-menu.styles';
@@ -15,7 +15,7 @@ import {
 const BoardDropdownMenu = ({ onItemClick }) => {
   const dispatch = useDispatch();
 
-  const emitBoardChange = useBoardEventsEmmiter();
+  const emitBoardChange = useBoardEventsEmitter();
 
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);

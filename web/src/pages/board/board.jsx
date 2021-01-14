@@ -3,25 +3,27 @@ import { Redirect, useHistory, useParams } from 'react-router-dom';
 import BoardControl from '../../components/board-control/board-control';
 import BoardHeader from '../../components/board-header/board-header';
 import { BoardContainer } from './board.styles';
-import BoardEventsEmmiterContext from '../../contexts/boardEventsEmmiterContext';
+import BoardEventsEmitterContext from '../../contexts/boardEventsEmitterContext';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectBoardBackgroundColor,
   selectBoardIsLoading,
   selectBoardIsDeleted,
+  selectBoardId,
 } from '../../redux/board/board.selectors';
 import { initializeBoard, reset } from '../../redux/board/board.actions';
 import socketIOClient from 'socket.io-client';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
 
 const Board = () => {
-  const { boardId } = useParams();
+  const { boardSlug, creatorSlug } = useParams();
 
   const history = useHistory();
 
   const backgroundColor = useSelector(selectBoardBackgroundColor);
   const isLoading = useSelector(selectBoardIsLoading);
   const isDeleted = useSelector(selectBoardIsDeleted);
+  const boardId = useSelector(selectBoardId);
 
   const [hasAccess, setHasAccess] = useState(false);
   const socket = useRef(null);
@@ -33,7 +35,7 @@ const Board = () => {
     });
 
     socket.current.on('connected', () => {
-      socket.current.emit('join', boardId);
+      socket.current.emit('join', { boardSlug, creatorSlug });
     });
 
     socket.current.on('joined', boardData => {
@@ -57,7 +59,7 @@ const Board = () => {
       }
       dispatch(reset());
     };
-  }, [boardId, dispatch, history]);
+  }, [boardSlug, creatorSlug, dispatch, history]);
 
   const emitBoardChange = useCallback(
     action => {
@@ -82,12 +84,12 @@ const Board = () => {
   }
 
   return (
-    <BoardEventsEmmiterContext.Provider value={emitBoardChange}>
+    <BoardEventsEmitterContext.Provider value={emitBoardChange}>
       <BoardContainer backgroundColor={backgroundColor}>
         <BoardHeader />
         <BoardControl />
       </BoardContainer>
-    </BoardEventsEmmiterContext.Provider>
+    </BoardEventsEmitterContext.Provider>
   );
 };
 

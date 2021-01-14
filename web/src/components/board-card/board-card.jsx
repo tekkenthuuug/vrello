@@ -6,9 +6,12 @@ import {
   BoardName,
 } from './board-card.styles';
 
-const BoardCard = ({ board }) => {
+const BoardCard = ({ board, userSlug }) => {
   return (
-    <Link to={`/app/board/${board.id}`} key={board.id}>
+    <Link
+      to={`/app/${board.creator?.slug || userSlug}/${board.slug}`}
+      key={board.id}
+    >
       <BoardCardContainer backgroundColor={board.backgroundColor}>
         <BoardCardOverlay />
         <BoardName>{board.name}</BoardName>

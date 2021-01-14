@@ -46,7 +46,7 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.plugin(uniqueValidator, { message: 'Is already taken' });
 
-UserSchema.methods.generateShortUsername = function () {
+UserSchema.methods.updateShortUsername = function () {
   const { username } = this;
   const usernameSplit = username.split(' ');
 
@@ -58,7 +58,7 @@ UserSchema.methods.generateShortUsername = function () {
   this.shortUsername = this.shortUsername.toUpperCase();
 };
 
-UserSchema.methods.generateSlug = function () {
+UserSchema.methods.updateSlug = function () {
   this.slug = slugify(this.username);
 };
 
@@ -71,8 +71,8 @@ UserSchema.methods.isPasswordValid = async function (password) {
 };
 
 UserSchema.pre('validate', { document: true }, function (next) {
-  this.generateShortUsername();
-  this.generateSlug();
+  this.updateShortUsername();
+  this.updateSlug();
 
   next();
 });

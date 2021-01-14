@@ -7,14 +7,14 @@ import { SubmitBtn } from '../../shared-styles/form.styles';
 import { selectBoardName } from '../../redux/board/board.selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBoard } from '../../redux/board/board.actions';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 
 const DeleteBoardModal = ({ onClose }) => {
   const currentBoardName = useSelector(selectBoardName);
 
   const dispatch = useDispatch();
 
-  const emitBoardChange = useBoardEventsEmmiter();
+  const emitBoardChange = useBoardEventsEmitter();
 
   const handleBoardDelete = () => {
     const action = deleteBoard();

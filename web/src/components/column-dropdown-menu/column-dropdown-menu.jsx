@@ -1,14 +1,14 @@
 import React from 'react';
 import { MdDelete } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 import { moveColumn } from '../../redux/board/board.actions';
 import { List, ListItem } from '../../shared-styles/dropdown.styles';
 import { StyledDropdownContainer } from './column-dropdown-menu.styles';
 
 const ColumnDropdownMenu = ({ onItemClick, columnId }) => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmmiter();
+  const emitBoardChange = useBoardEventsEmitter();
 
   const handleDeleteColumn = () => {
     const action = moveColumn(columnId);

@@ -56,7 +56,7 @@ const Menu = () => {
         <SectionHeading>Your boards</SectionHeading>
         <BoardsContainer>
           {boards.map(board => (
-            <BoardCard key={board.id} board={board} />
+            <BoardCard key={board.id} board={board} userSlug={user.slug} />
           ))}
           <CreateBoardBtn onClick={() => setIsModalOpened(s => !s)}>
             <AddIcon />

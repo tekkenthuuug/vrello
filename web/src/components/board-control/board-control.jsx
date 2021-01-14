@@ -7,13 +7,13 @@ import {
 } from './board-control.styles';
 import { MdAdd } from 'react-icons/md';
 import BoardColumn from '../board-column/board-column';
-import useBoardEventsEmmiter from '../../hooks/useBoardEventsEmmiter';
+import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectColumnsIds } from '../../redux/board/board.selectors';
 
 const BoardControl = () => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmmiter();
+  const emitBoardChange = useBoardEventsEmitter();
 
   const columnsIds = useSelector(selectColumnsIds);
 

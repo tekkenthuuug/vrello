@@ -4,6 +4,7 @@ const IOMiddlewareWrapper = require('../middleware/IOMiddlewareWrapper');
 
 const Board = require('../models/Board.model');
 const BoardMember = require('../models/BoardMember.model');
+const User = require('../models/User.model');
 
 const initializeSocket = (server, expressSessionMiddleware) => {
   // Socket setup
@@ -19,13 +20,22 @@ const initializeSocket = (server, expressSessionMiddleware) => {
   namespace.boards.on('connection', socket => {
     socket.emit('connected');
 
-    socket.on('join', async boardId => {
+    socket.on('join', async ({ boardSlug, creatorSlug }) => {
+      // find board
+      const { id: creatorId } = await User.findOne(
+        { slug: creatorSlug },
+        '_id'
+      );
+      const board = await Board.findOne({
+        slug: boardSlug,
+        creator: creatorId,
+      });
+
       // check if user has access to this board
       const { session } = socket.request;
-      const board = await Board.findById(boardId);
 
       const boardMembership = await BoardMember.findOne({
-        board: boardId,
+        board: board._id,
         member: session.userId,
       });
 
@@ -41,7 +51,7 @@ const initializeSocket = (server, expressSessionMiddleware) => {
 
         socket.emit('joined', populatedBoard);
 
-        socket.join(boardId);
+        socket.join(board.boardId);
       } else {
         socket.emit('no-access');
       }

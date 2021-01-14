@@ -14,7 +14,7 @@ const Application = ({ match }) => {
   return (
     <Switch>
       <Route exact path={match.path} component={Menu} />
-      <Route path={`${match.path}/board/:boardId`} component={Board} />
+      <Route path={`${match.path}/:creatorSlug/:boardSlug`} component={Board} />
     </Switch>
   );
 };

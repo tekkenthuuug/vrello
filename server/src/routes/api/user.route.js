@@ -8,20 +8,21 @@ router.get('/:uid/boards', async (req, res, next) => {
   const { uid } = req.params;
 
   try {
-    const boards = await Board.find({ creator: uid });
+    const boards = await Board.find({ creator: uid }, '-members -columns');
 
     const boardMemberships = await BoardMember.find({ member: uid }).populate({
       path: 'board',
+      select: '-members -columns',
+      populate: {
+        path: 'creator',
+        select: 'slug -_id',
+      },
     });
-
-    const memberBoards = boardMemberships.map(rel =>
-      rel.board.toJSONWithoutColumns()
-    );
 
     return res.json(
       new SuccessResponse({
-        boards: boards.map(board => board.toJSONWithoutColumns()),
-        memberBoards,
+        boards,
+        memberBoards: boardMemberships.map(rel => rel.board),
       })
     );
   } catch (error) {

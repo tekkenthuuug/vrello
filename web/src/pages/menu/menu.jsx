@@ -7,6 +7,7 @@ import {
   AddIcon,
 } from './menu.styles';
 import { CreateBoardBtn } from './menu.styles';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
 import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
 import BoardCard from '../../components/board-card/board-card';
 import useUserContext from '../../hooks/useUserContext';
@@ -44,7 +45,7 @@ const Menu = () => {
   }, [fetchBoards]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   const { boards, memberBoards } = response.data;

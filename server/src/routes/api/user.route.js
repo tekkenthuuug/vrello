@@ -8,13 +8,13 @@ router.get('/:uid/boards', async (req, res, next) => {
   const { uid } = req.params;
 
   try {
-    const boards = await Board.find({ creatorId: uid }).exec();
+    const boards = await Board.find({ creator: uid });
 
-    const userToBoardRels = await BoardMember.find({ member: uid }).populate({
+    const boardMemberships = await BoardMember.find({ member: uid }).populate({
       path: 'board',
     });
 
-    const memberBoards = userToBoardRels.map(rel =>
+    const memberBoards = boardMemberships.map(rel =>
       rel.board.toJSONWithoutColumns()
     );
 
@@ -32,11 +32,16 @@ router.get('/:uid/boards', async (req, res, next) => {
 router.get('/search', async (req, res, next) => {
   const { email } = req.query;
   const { userId } = req.session;
+
   try {
-    const users = await User.find({
-      email: new RegExp(email, 'i'),
-      _id: { $ne: userId },
-    }).limit(5);
+    const filter = { email: new RegExp(email, 'i') };
+
+    // if user authenticated exclude him from search
+    if (userId) {
+      filter._id = { $ne: userId };
+    }
+
+    const users = await User.find(filter).limit(5);
 
     return res.json(
       new SuccessResponse({

@@ -56,6 +56,7 @@ const SignIn = () => {
               label='Username'
               invisibleLabel
               disabled={isSubmitting}
+              required
             />
             <InputField
               name='password'
@@ -63,6 +64,7 @@ const SignIn = () => {
               label='Password'
               type='password'
               invisibleLabel
+              required
               disabled={isSubmitting}
             />
             <SubmitBtn type='submit' disabled={isSubmitting}>

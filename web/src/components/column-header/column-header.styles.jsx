@@ -3,7 +3,7 @@ import { MdMoreHoriz } from 'react-icons/md';
 
 export const ColumnHeaderContainer = styled.div`
   padding: 4px 6px;
-  box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
 `;

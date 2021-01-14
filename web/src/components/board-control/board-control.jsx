@@ -21,11 +21,13 @@ const BoardControl = () => {
   const dragOverColumnId = useRef(null);
 
   const handleKeyPress = e => {
-    if (e.target !== document.body) {
+    const { target, keyCode, code, altKey, ctrlKey, shiftKey } = e;
+
+    if (target !== document.body || altKey || ctrlKey || shiftKey) {
       return;
     }
 
-    if (e.keyCode === 99 || e.code === 'KeyC') {
+    if (keyCode === 99 || code === 'KeyC') {
       e.preventDefault();
       setIsAddColumnFormVisible(true);
     }

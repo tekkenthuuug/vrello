@@ -7,7 +7,7 @@ const initialState = Map({
   name: null,
   backgroundColor: null,
   columns: null,
-  creatorId: null,
+  creator: null,
   isLoading: true,
   isDeleted: false,
 });

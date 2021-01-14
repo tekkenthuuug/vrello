@@ -50,6 +50,7 @@ const SignUp = () => {
               label='Username'
               disabled={isSubmitting}
               invisibleLabel
+              required
             />
             <InputField
               name='email'
@@ -58,6 +59,7 @@ const SignUp = () => {
               type='email'
               disabled={isSubmitting}
               invisibleLabel
+              required
             />
             <InputField
               name='password'
@@ -67,6 +69,7 @@ const SignUp = () => {
               invisibleLabel
               disabled={isSubmitting}
               passwordMeter
+              required
             />
             <TOSParagraph>
               By signing up, you confirm that you've read and accepted our{' '}

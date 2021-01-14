@@ -4,7 +4,7 @@ export const ColumnContainer = styled.div`
   position: relative;
 
   background-color: #ebecf0;
-  border-radius: 8px;
+  border-radius: 4px;
   color: black;
   overflow: hidden;
   width: 256px;
@@ -49,11 +49,11 @@ export const ColumnContent = styled.div`
 
 export const AddBtn = styled.button`
   width: 100%;
-  border-radius: 6px;
+  border-radius: 4px;
   height: 48px;
   font-size: 16px;
   font-weight: 800;
-  border: 3px dashed rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(0, 0, 0, 0.12);
   color: rgba(0, 0, 0, 0.2);
 
   transition: all 0.3s ease;

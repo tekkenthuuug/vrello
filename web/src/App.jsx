@@ -3,6 +3,7 @@ import Application from './pages/application/application';
 import Home from './pages//home/home';
 import SignIn from './pages/signin/signin';
 import SignUp from './pages/signup/signup';
+import LoadingScreen from './components/loading-screen/loading-screen';
 import Header from './components/header/header';
 import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -14,7 +15,7 @@ const App = () => {
   useEffect(checkUserSession, [checkUserSession]);
 
   if (isLoading) {
-    return <div>LOADING...</div>;
+    return <LoadingScreen />;
   }
 
   return (

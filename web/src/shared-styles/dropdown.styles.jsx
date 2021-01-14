@@ -13,7 +13,7 @@ export const DropdownContainer = styled.div`
   padding: 12px 0;
   font-size: 14px;
   transform-origin: top right;
-  z-index: 1;
+  z-index: 100;
 
   @keyframes appearDropdown {
     from {

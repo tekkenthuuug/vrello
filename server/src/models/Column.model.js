@@ -28,19 +28,15 @@ const ColumnSchema = new mongoose.Schema(
 );
 
 ColumnSchema.methods.appendCard = async function (cardId) {
-  await this.updateOne({ $push: { cards: cardId } }).exec();
+  await this.updateOne({ $push: { cards: cardId } });
 };
 
 ColumnSchema.methods.removeCard = async function (cardId) {
-  await this.updateOne({ $pull: { cards: cardId } }).exec();
+  await this.updateOne({ $pull: { cards: cardId } });
 };
 
-ColumnSchema.pre('deleteOne', { document: true }, async function (next) {
-  const cards = await Card.find({ columnId: this._id });
-
-  for (const card of cards) {
-    await card.deleteOne();
-  }
+ColumnSchema.pre(/delete/i, async function (next) {
+  await Card.deleteMany({ _id: { $in: this.cards } });
 
   next();
 });

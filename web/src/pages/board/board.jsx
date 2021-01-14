@@ -28,7 +28,7 @@ const Board = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socket.current = socketIOClient('http://localhost:5000', {
+    socket.current = socketIOClient('http://localhost:5000/boards', {
       transports: ['websocket'],
     });
 
@@ -47,11 +47,6 @@ const Board = () => {
     });
 
     socket.current.on('board-change', action => {
-      if (action.type === 'DELETE_BOARD') {
-        history.push('/app');
-        return;
-      }
-
       // handle changes received from server
       dispatch(action);
     });

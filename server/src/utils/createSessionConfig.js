@@ -1,13 +1,12 @@
 const { SESSION_COOKIE_NAME, __prod__ } = require('./constants');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-require('dotenv').config();
 
-const createSessionConfig = redis => {
+const createSessionConfig = redisClient => {
   return {
     name: SESSION_COOKIE_NAME,
     store: new RedisStore({
-      client: redis,
+      client: redisClient,
       disableTouch: true,
     }),
     cookie: {

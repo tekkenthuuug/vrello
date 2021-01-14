@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Board = require('../../models/Board.model');
 const BoardMember = require('../../models/BoardMember.model');
+const slugify = require('../../utils/slugify');
 const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
 
 router.post('/create', async (req, res, next) => {
@@ -8,7 +9,11 @@ router.post('/create', async (req, res, next) => {
   const { userId } = req.session;
 
   try {
-    const board = new Board({ name, backgroundColor, creatorId: userId });
+    const board = new Board({
+      name,
+      backgroundColor,
+      creator: userId,
+    });
 
     await board.save();
 
@@ -24,24 +29,24 @@ router.post('/:boardId/add-member', async (req, res, next) => {
   const { userId: userIdToAdd } = req.body;
 
   try {
-    const board = await Board.findById(boardId).exec();
+    const board = await Board.findById(boardId);
 
     if (!board) {
       return res.status(404).json(new ErrorResponse("Board doesn't exist"));
     }
 
-    if (String(board.creatorId) !== userId) {
+    if (String(board.creator) !== userId) {
       return res
         .status(401)
         .json(new ErrorResponse('You are not the owner of the board'));
     }
 
-    const conflictingUserToBoardRel = await BoardMember.findOne({
+    const conflictingBoardMembership = await BoardMember.findOne({
       board: boardId,
       member: userIdToAdd,
     });
 
-    if (conflictingUserToBoardRel) {
+    if (conflictingBoardMembership) {
       return res
         .status(400)
         .json(new ErrorResponse('User is already a member'));
@@ -49,7 +54,7 @@ router.post('/:boardId/add-member', async (req, res, next) => {
 
     await board.addMember(userIdToAdd);
 
-    return res.json(new SuccessResponse(undefined));
+    return res.json(new SuccessResponse());
   } catch (error) {
     next(error);
   }

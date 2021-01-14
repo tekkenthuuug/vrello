@@ -4,17 +4,13 @@ const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
 
 const User = require('../../models/User.model');
 
-router.post('/signup', async (req, res, next) => {
+router.post('/sign-up', async (req, res, next) => {
   const { username, password, email } = req.body;
 
   try {
     const user = new User({ username, email });
 
-    user.generateShortUsername();
-
-    if (password) {
-      await user.setPassword(password);
-    }
+    await user.setPassword(password);
 
     await user.save();
 
@@ -27,11 +23,11 @@ router.post('/signup', async (req, res, next) => {
   }
 });
 
-router.post('/signin', async (req, res, next) => {
+router.post('/sign-in', async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username }).exec();
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(401).json(new ErrorResponse('Wrong credentials'));
@@ -53,7 +49,7 @@ router.post('/signin', async (req, res, next) => {
 
 router.get('/me', async (req, res, next) => {
   try {
-    const user = await User.findById(req.session.userId).exec();
+    const user = await User.findById(req.session.userId);
 
     if (user) {
       return res.json(new SuccessResponse({ user }));
@@ -65,7 +61,7 @@ router.get('/me', async (req, res, next) => {
   }
 });
 
-router.post('/signout', async (req, res, next) => {
+router.post('/sign-out', async (req, res, next) => {
   try {
     req.session.destroy(error => {
       res.clearCookie(SESSION_COOKIE_NAME);

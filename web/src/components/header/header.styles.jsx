@@ -12,6 +12,7 @@ export const HeaderContainer = styled.header`
   left: 0;
   top: 0;
   width: 100%;
+  z-index: 10;
 `;
 
 export const Navigation = styled.nav`

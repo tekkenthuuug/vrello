@@ -1,9 +1,8 @@
 const Board = require('../models/Board.model');
 const Column = require('../models/Column.model');
 const Card = require('../models/Card.model');
-const Action = require('../models/Action.model');
 
-const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
+const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   const { type, payload } = action;
   const { session } = socket.request;
 
@@ -91,7 +90,7 @@ const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
       break;
     }
     case 'RENAME': {
-      await Board.updateOne({ _id: boardId }, { name: payload });
+      await Board.updateName(boardId, payload);
 
       break;
     }
@@ -101,9 +100,7 @@ const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
       break;
     }
     case 'DELETE_BOARD': {
-      const board = await Board.findById(boardId);
-
-      await board.deleteOne();
+      await Board.findByIdAndDelete(boardId);
 
       break;
     }
@@ -123,15 +120,6 @@ const handleBoardChangeEvent = (io, socket) => async ({ boardId, action }) => {
     // send to sender if needed
     socket.emit('board-change', action);
   }
-
-  const dbAction = new Action({
-    type: action.type,
-    payload: action.payload,
-    board: boardId,
-    user: session.userId,
-  });
-
-  dbAction.save();
 };
 
 module.exports = handleBoardChangeEvent;

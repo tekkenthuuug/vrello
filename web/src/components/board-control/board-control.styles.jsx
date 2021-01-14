@@ -6,7 +6,6 @@ export const ColumnsContainer = styled.div`
   margin-top: 24px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 20vh;
   height: 80vh;
 
   ::-webkit-scrollbar-button {

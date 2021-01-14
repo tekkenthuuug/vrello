@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Board = require('../../models/Board.model');
 const BoardMember = require('../../models/BoardMember.model');
-const slugify = require('../../utils/slugify');
 const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
 
 router.post('/create', async (req, res, next) => {

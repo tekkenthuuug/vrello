@@ -1,6 +1,6 @@
-const Board = require('../models/Board.model');
-const Column = require('../models/Column.model');
-const Card = require('../models/Card.model');
+const Board = require('../../../models/Board.model');
+const Column = require('../../../models/Column.model');
+const Card = require('../../../models/Card.model');
 
 const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   const { type, payload } = action;
@@ -114,11 +114,11 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   }
 
   // send to all users in this room except sender
-  socket.broadcast.to(boardId).emit('board-change', action);
+  socket.broadcast.to(boardId).emit('boardChange', action);
 
   if (sendToSender) {
     // send to sender if needed
-    socket.emit('board-change', action);
+    socket.emit('boardChange', action);
   }
 };
 

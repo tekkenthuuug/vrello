@@ -43,6 +43,8 @@ const BoardSchema = new mongoose.Schema(
   }
 );
 
+BoardSchema.index({ creator: 1, slug: 1 }, { unique: true });
+
 BoardSchema.methods.updateSlug = function () {
   this.slug = slugify(this.name);
 };
@@ -80,6 +82,15 @@ BoardSchema.methods.addMember = async function (userId) {
   const boardMember = new BoardMember({ board: this._id, member: userId });
 
   await boardMember.save();
+};
+
+BoardSchema.methods.populateData = async function () {
+  return await this.populate({
+    path: 'columns',
+    populate: {
+      path: 'cards',
+    },
+  }).execPopulate();
 };
 
 BoardSchema.statics.updateName = async function (boardId, name) {

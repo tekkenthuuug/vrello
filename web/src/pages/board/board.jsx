@@ -48,7 +48,7 @@ const Board = () => {
       dispatch(initializeBoard());
     });
 
-    socket.current.on('board-change', action => {
+    socket.current.on('boardChange', action => {
       // handle changes received from server
       dispatch(action);
     });
@@ -63,7 +63,7 @@ const Board = () => {
 
   const emitBoardChange = useCallback(
     action => {
-      socket.current.emit('board-change', {
+      socket.current.emit('boardChange', {
         boardId: boardId,
         action,
       });

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Board = require('../../models/Board.model');
+const User = require('../../models/User.model');
 const BoardMember = require('../../models/BoardMember.model');
 const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
 
@@ -8,6 +9,8 @@ router.post('/create', async (req, res, next) => {
   const { userId } = req.session;
 
   try {
+    const creator = await User.findById(userId).select({ slug: 1 });
+
     const board = new Board({
       name,
       backgroundColor,
@@ -16,7 +19,11 @@ router.post('/create', async (req, res, next) => {
 
     await board.save();
 
-    return res.json(new SuccessResponse({ board }));
+    return res.json(
+      new SuccessResponse({
+        board: { slug: board.slug, creator },
+      })
+    );
   } catch (error) {
     next(error);
   }

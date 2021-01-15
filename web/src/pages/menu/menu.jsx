@@ -32,8 +32,8 @@ const Menu = () => {
     if (response.success) {
       const { board } = response.data;
       setIsModalOpened(false);
-      // @TODO fix
-      history.push(`/app/board/${board.id}`);
+
+      history.push(`/app/${board.creator.slug}/${board.slug}`);
     } else {
       setErrors(response.error);
     }

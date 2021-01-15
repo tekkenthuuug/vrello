@@ -1,68 +1,52 @@
 export const findColumn = (columnsArray, columnId) => {
-  for (let i = 0; i < columnsArray.size; i++) {
-    if (columnsArray.getIn([i, 'id']) === columnId) {
-      return [columnsArray.get(i), i];
+  for (let i = 0; i < columnsArray.length; i++) {
+    if (columnsArray[i].id === columnId) {
+      return [columnsArray[i], i];
     }
   }
   return [null, null];
 };
 
-export const reorderCards = (columnsArray, from, to, cardId) => {
-  const [fromColumn, fromIndex] = findColumn(columnsArray, from);
+export const reorderCards = (draft, fromColumn, toColumn, cardId) => {
+  const [fromColumnRef, fromIndex] = findColumn(draft.columns, fromColumn);
 
-  const [toColumn, toIndex] = to ? findColumn(columnsArray, to) : [null, null];
+  const [, toIndex] = findColumn(draft.columns, toColumn);
 
-  let newFromColumn = null;
-  let newToColumn = null;
+  for (let i = 0; i < fromColumnRef.cards.length; i++) {
+    const currentCard = fromColumnRef.cards[i];
 
-  for (let i = 0; i < fromColumn.get('cards').size; i++) {
-    const currentCard = fromColumn.getIn(['cards', i]);
-
-    if (currentCard?.get('id') === cardId) {
+    if (currentCard?.id === cardId) {
       const cardToMove = currentCard;
 
-      newFromColumn = fromColumn.update('cards', cards => cards.splice(i, 1));
+      draft.columns[fromIndex].cards.splice(i, 1);
+
       // no 'to' means delete
-      if (toColumn) {
-        // cardToMove already immutable
-        newToColumn = toColumn.update('cards', cards => cards.push(cardToMove));
+      if (toIndex !== null) {
+        draft.columns[toIndex].cards.push(cardToMove);
       }
 
       break;
     }
   }
 
-  // task not found in column
-  if (fromIndex === null || newFromColumn === null) {
-    return columnsArray;
-  }
-
-  let newColumnsArray = columnsArray.set(fromIndex, newFromColumn);
-
-  // in case we delete task
-  if (toIndex !== null && newToColumn !== null) {
-    newColumnsArray = newColumnsArray.set(toIndex, newToColumn);
-  }
-
-  return newColumnsArray;
+  return;
 };
 
-export const reorderColumns = (columnsArray, columnId, targetColumnId) => {
-  let [columnToMove, columnToMoveIndex] = findColumn(columnsArray, columnId);
+export const reorderColumns = (draft, columnIdToMove, targetColumnId) => {
+  let [columnToMove, columnToMoveIndex] = findColumn(
+    draft.columns,
+    columnIdToMove
+  );
 
-  let [, targetColumnIndex] = targetColumnId
-    ? findColumn(columnsArray, targetColumnId)
-    : [null, null];
+  let [, targetColumnIndex] = findColumn(draft.columns, targetColumnId);
 
   if (targetColumnIndex === columnToMoveIndex) {
-    return columnsArray;
+    return;
   }
 
-  const arrayWithRemovedColumn = columnsArray.splice(columnToMoveIndex, 1);
+  draft.columns.splice(columnToMoveIndex, 1);
 
   if (targetColumnIndex !== null) {
-    return arrayWithRemovedColumn.splice(targetColumnIndex, 0, columnToMove);
+    draft.columns.splice(targetColumnIndex, 0, columnToMove);
   }
-
-  return arrayWithRemovedColumn;
 };

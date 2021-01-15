@@ -2,43 +2,40 @@ import { createSelector } from 'reselect';
 
 const selectBoard = state => state.board;
 
-export const selectBoardBackgroundColor = createSelector([selectBoard], board =>
-  board.get('backgroundColor')
+export const selectBoardBackgroundColor = createSelector(
+  [selectBoard],
+  board => board.backgroundColor
 );
 
-export const selectBoardId = createSelector([selectBoard], board =>
-  board.get('id')
+export const selectBoardId = createSelector([selectBoard], board => board.id);
+
+export const selectBoardIsLoading = createSelector(
+  [selectBoard],
+  board => board.isLoading
 );
 
-export const selectBoardIsLoading = createSelector([selectBoard], board =>
-  board.get('isLoading')
+export const selectBoardName = createSelector(
+  [selectBoard],
+  board => board.name
 );
 
-export const selectBoardName = createSelector([selectBoard], board =>
-  board.get('name')
-);
-
-export const selectBoardCreator = createSelector([selectBoard], board =>
-  board.get('creator').toJS()
+export const selectBoardCreator = createSelector(
+  [selectBoard],
+  board => board.creator
 );
 
 export const selectColumnsIds = createSelector([selectBoard], board =>
-  board
-    .get('columns')
-    .map(column => column.get('id'))
-    .toJS()
+  board.columns.map(column => column.id)
 );
 
 export const selectColumn = columnId =>
   createSelector([selectBoard], board => {
-    return board.get('columns')
-      ? board
-          .get('columns')
-          .find(column => column.get('id') === columnId)
-          .toJS()
+    return board.columns
+      ? board.columns.find(column => column.id === columnId)
       : null;
   });
 
-export const selectBoardIsDeleted = createSelector([selectBoard], board =>
-  board.get('isDeleted')
+export const selectBoardIsDeleted = createSelector(
+  [selectBoard],
+  board => board.isDeleted
 );

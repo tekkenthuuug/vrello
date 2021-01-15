@@ -1,82 +1,91 @@
 import { reorderColumns, reorderCards, findColumn } from './board.utils';
 import BoardActionTypes from './board.types';
-import { Map, fromJS, List } from 'immutable';
+import produce from 'immer';
 
-const initialState = Map({
+const initialState = {
   id: null,
   name: null,
   backgroundColor: null,
   columns: null,
   creator: null,
   isLoading: true,
-  isDeleted: false,
-});
-
-const boardReducer = (state = initialState, { payload, type }) => {
-  switch (type) {
-    case BoardActionTypes.INIT: {
-      if (!payload) {
-        return state.set('isLoading', false);
-      }
-
-      const immutablePayload = fromJS(payload);
-
-      return state.merge(immutablePayload).set('isLoading', false);
-    }
-    case BoardActionTypes.MOVE_CARD: {
-      const { fromColumn, toColumn, cardId } = payload;
-
-      return state.set(
-        'columns',
-        reorderCards(state.get('columns'), fromColumn, toColumn, cardId)
-      );
-    }
-    case BoardActionTypes.MOVE_COLUMN: {
-      const { columnIdToMove, targetColumnId } = payload;
-
-      return state.set(
-        'columns',
-        reorderColumns(state.get('columns'), columnIdToMove, targetColumnId)
-      );
-    }
-    case BoardActionTypes.ADD_CARD: {
-      const { toColumn, card } = payload;
-
-      const [, columnIndex] = findColumn(state.get('columns'), toColumn);
-
-      return state.updateIn(['columns', columnIndex, 'cards'], cards =>
-        cards.push(Map(card))
-      );
-    }
-    case BoardActionTypes.ADD_COLUMN: {
-      const { column } = payload;
-      column.cards = List();
-
-      return state.update('columns', columns => columns.push(Map(column)));
-    }
-    case BoardActionTypes.CHANGE_BG: {
-      return state.set('backgroundColor', payload);
-    }
-    case BoardActionTypes.RENAME: {
-      return state.set('name', payload);
-    }
-    case BoardActionTypes.RENAME_COLUMN: {
-      const { newColumnName, columnId } = payload;
-
-      const [, index] = findColumn(state.get('columns'), columnId);
-
-      return state.setIn(['columns', index, 'name'], newColumnName);
-    }
-    case BoardActionTypes.DELETE_BOARD: {
-      return state.set('isDeleted', true);
-    }
-    case BoardActionTypes.RESET: {
-      return initialState;
-    }
-    default: {
-      return state;
-    }
-  }
 };
+
+const boardReducer = (state = initialState, { payload, type }) =>
+  produce(state, draft => {
+    switch (type) {
+      case BoardActionTypes.INIT: {
+        draft.backgroundColor = payload.backgroundColor;
+        draft.id = payload.id;
+        draft.name = payload.name;
+        draft.columns = payload.columns;
+        draft.creator = payload.creator;
+        draft.isLoading = false;
+
+        return;
+      }
+      case BoardActionTypes.MOVE_CARD: {
+        const { fromColumn, toColumn, cardId } = payload;
+
+        reorderCards(draft, fromColumn, toColumn, cardId);
+
+        return;
+      }
+      case BoardActionTypes.MOVE_COLUMN: {
+        const { columnIdToMove, targetColumnId } = payload;
+
+        reorderColumns(draft, columnIdToMove, targetColumnId);
+
+        return;
+      }
+      case BoardActionTypes.ADD_CARD: {
+        const { toColumn, card } = payload;
+
+        const [, columnIndex] = findColumn(draft.columns, toColumn);
+
+        draft.columns[columnIndex].cards.push(card);
+
+        return;
+      }
+      case BoardActionTypes.ADD_COLUMN: {
+        const { column } = payload;
+        column.cards = [];
+
+        draft.columns.push(column);
+
+        return;
+      }
+      case BoardActionTypes.CHANGE_BG: {
+        draft.backgroundColor = payload;
+
+        return;
+      }
+      case BoardActionTypes.RENAME: {
+        draft.name = payload;
+
+        return;
+      }
+      case BoardActionTypes.RENAME_COLUMN: {
+        const { newColumnName, columnId } = payload;
+
+        const [, index] = findColumn(state.columns, columnId);
+
+        draft.columns[index].name = newColumnName;
+
+        return;
+      }
+      case BoardActionTypes.DELETE_BOARD: {
+        draft.isDeleted = true;
+
+        return;
+      }
+      case BoardActionTypes.RESET: {
+        return initialState;
+      }
+      default: {
+        return;
+      }
+    }
+  });
 
 export default boardReducer;

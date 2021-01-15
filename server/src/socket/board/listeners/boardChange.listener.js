@@ -8,6 +8,9 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
 
   let sendToSender = false;
 
+  const board = await Board.findById(boardId);
+  await board.updateOne({ updatedAt: Date.now() });
+
   switch (type) {
     case 'ADD_CARD': {
       const { toColumn, card } = payload;
@@ -30,8 +33,6 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
       sendToSender = true;
 
       const newColumn = new Column({ ...column, boardId });
-
-      const board = await Board.findById(boardId);
 
       await board.appendColumn(newColumn._id);
 
@@ -70,8 +71,6 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
       if (targetColumnId === undefined) {
         const column = await Column.findById(columnIdToMove);
 
-        const board = await Board.findById(column.boardId);
-
         await board.removeColumn(column._id);
 
         await column.deleteOne();
@@ -83,24 +82,22 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
         return;
       }
 
-      const board = await Board.findById(boardId);
-
       await board.moveColumn(columnIdToMove, targetColumnId);
 
       break;
     }
     case 'RENAME': {
-      await Board.updateName(boardId, payload);
+      await board.updateName(payload);
 
       break;
     }
     case 'CHANGE_BG': {
-      await Board.updateOne({ _id: boardId }, { backgroundColor: payload });
+      await board.updateOne({ backgroundColor: payload });
 
       break;
     }
     case 'DELETE_BOARD': {
-      await Board.findByIdAndDelete(boardId);
+      await board.deleteOne();
 
       break;
     }

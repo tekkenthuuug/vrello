@@ -18,8 +18,17 @@ export const BoardName = styled.div`
   color: #fff;
 `;
 
+export const CreatedAt = styled.div`
+  font-size: 12px;
+  color: #fff;
+`;
+
 export const BoardCardContainer = styled.div`
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   background-color: ${props => props.backgroundColor};
 

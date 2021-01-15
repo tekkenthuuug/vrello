@@ -40,9 +40,11 @@ const BoardSchema = new mongoose.Schema(
     toJSON: {
       transform: normalizeTransform,
     },
+    timestamps: true,
   }
 );
 
+// TODO: index probably not working as expected
 BoardSchema.index({ creator: 1, slug: 1 }, { unique: true });
 
 BoardSchema.methods.updateSlug = function () {
@@ -93,8 +95,8 @@ BoardSchema.methods.populateData = async function () {
   }).execPopulate();
 };
 
-BoardSchema.statics.updateName = async function (boardId, name) {
-  await this.updateOne({ _id: boardId }, { name, slug: slugify(name) });
+BoardSchema.methods.updateName = async function (name) {
+  await this.updateOne({ name, slug: slugify(name) });
 };
 
 BoardSchema.pre(/delete/i, async function (next) {

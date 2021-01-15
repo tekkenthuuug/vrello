@@ -15,6 +15,7 @@ export const HeaderContainer = styled.header`
 
 export const Name = styled.h1`
   font-size: 18px;
+  font-weight: normal;
 `;
 
 export const HeaderButton = styled.button`

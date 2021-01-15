@@ -18,6 +18,10 @@ export const selectBoardName = createSelector([selectBoard], board =>
   board.get('name')
 );
 
+export const selectBoardCreator = createSelector([selectBoard], board =>
+  board.get('creator').toJS()
+);
+
 export const selectColumnsIds = createSelector([selectBoard], board =>
   board
     .get('columns')

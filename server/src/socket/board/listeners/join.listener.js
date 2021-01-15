@@ -3,13 +3,13 @@ const User = require('../../../models/User.model');
 
 module.exports = socket => async ({ boardSlug, creatorSlug }) => {
   // find board
-  const { id: creatorId } = await User.findOne({
+  const creator = await User.findOne({
     slug: creatorSlug,
-  }).select({ _id: 1 });
+  }).select({ slug: 1, username: 1 });
 
   const board = await Board.findOne({
     slug: boardSlug,
-    creator: creatorId,
+    creator: creator._id,
   });
 
   // check if user has access to this board
@@ -21,6 +21,8 @@ module.exports = socket => async ({ boardSlug, creatorSlug }) => {
 
   if (hasAccess) {
     const boardData = await board.populateData();
+
+    boardData.creator = creator;
 
     socket.emit('joined', boardData);
 

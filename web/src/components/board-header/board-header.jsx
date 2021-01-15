@@ -9,11 +9,15 @@ import { MdMoreHoriz, MdPersonAdd } from 'react-icons/md';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
 import BoardDropdownMenu from '../board-dropdown-menu/board-dropdown-menu';
 import { useSelector } from 'react-redux';
-import { selectBoardName } from '../../redux/board/board.selectors';
+import {
+  selectBoardCreator,
+  selectBoardName,
+} from '../../redux/board/board.selectors';
 import AddMemberModal from '../add-member-modal/add-member-modal';
 
 const BoardHeader = () => {
   const name = useSelector(selectBoardName);
+  const boardCreator = useSelector(selectBoardCreator);
 
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const [isAddMemberModalOpened, setIsAddMemberModalOpened] = useState(false);
@@ -27,7 +31,9 @@ const BoardHeader = () => {
   return (
     <HeaderContainer>
       <ItemsContainer>
-        <Name>{name}</Name>
+        <Name>
+          {boardCreator.username} / <strong>{name}</strong>
+        </Name>
         <HeaderButton onClick={() => setIsAddMemberModalOpened(true)}>
           <MdPersonAdd />
           Invite

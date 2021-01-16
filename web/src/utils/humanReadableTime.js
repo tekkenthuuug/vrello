@@ -6,7 +6,8 @@ import {
   differenceInMinutes as findDifferenceInMinutes,
 } from 'date-fns';
 
-const humanReadableTime = comparisonDate => {
+const humanReadableTime = comparisonTimestamp => {
+  const comparisonDate = new Date(comparisonTimestamp);
   const today = new Date();
 
   const yesterday = subDays(today, 1);

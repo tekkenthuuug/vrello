@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import humanReadableTime from '../../utils/humanReadableTime';
-import TimeUpdater from '../time-updater/time-updater';
+import DateUpdater from '../date-updater/date-updater';
 import {
   BoardCardContainer,
   BoardCardOverlay,
@@ -20,7 +20,7 @@ const BoardCard = ({ board, userSlug }) => {
         <BoardName>{board.name}</BoardName>
         <CreatedAt>
           Updated{' '}
-          <TimeUpdater
+          <DateUpdater
             value={board.updatedAt}
             interval={10000}
             formatFn={humanReadableTime}

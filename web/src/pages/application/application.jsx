@@ -8,8 +8,13 @@ const Application = ({ match, location }) => {
   const { user } = useUserContext();
 
   if (!user) {
-    // TODO: add next param to url
-    return <Redirect to='/signin' />;
+    const params = new URLSearchParams();
+
+    if (location.pathname !== '/app') {
+      params.set('next', location.pathname);
+    }
+
+    return <Redirect to={`/signin?${params.toString()}`} />;
   }
 
   return (

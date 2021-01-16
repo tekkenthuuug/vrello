@@ -1,18 +1,19 @@
-import InputField from '../../components/input-field/input-field';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import InputField from '../../components/input-field/input-field';
+import useFetch from '../../hooks/useFetch';
+import useSearchParams from '../../hooks/useSearchParams';
+import useUserContext from '../../hooks/useUserContext';
 import {
   FormError,
-  SubmitBtn,
-  FormPageContainer,
-  StyledForm,
-  Heading,
   FormLink,
+  FormPageContainer,
+  Heading,
+  StyledForm,
+  SubmitBtn,
 } from '../../shared-styles/form.styles';
-import useFetch from '../../hooks/useFetch';
-import useUserContext from '../../hooks/useUserContext';
 import { API_ROUTES } from '../../utils/constants';
-import { Redirect } from 'react-router-dom';
 
 const SignInFormInitialState = {
   username: '',
@@ -20,6 +21,8 @@ const SignInFormInitialState = {
 };
 
 const SignIn = () => {
+  const searchParams = useSearchParams();
+
   const [formError, setFormError] = useState(null);
 
   const { user, setUser } = useUserContext();
@@ -38,8 +41,10 @@ const SignIn = () => {
     }
   };
 
+  const nextRoute = searchParams.get('next');
+
   if (user) {
-    return <Redirect to='/app' />;
+    return <Redirect to={nextRoute || '/app'} />;
   }
 
   return (

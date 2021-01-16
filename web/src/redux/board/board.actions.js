@@ -63,3 +63,8 @@ export const reset = () => ({
 export const deleteBoard = () => ({
   type: BoardActionTypes.DELETE_BOARD,
 });
+
+export const noAccess = boardId => ({
+  type: BoardActionTypes.NO_ACCESS,
+  payload: boardId,
+});

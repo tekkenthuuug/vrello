@@ -30,6 +30,8 @@ export const SubmitBtn = styled.button`
 
   transition: all 0.2s ease;
 
+  // TODO: isLoading & disabled
+
   &:disabled {
     opacity: 0.5;
     cursor: ${props => props.disabledCursor || 'wait'};

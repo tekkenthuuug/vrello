@@ -32,6 +32,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Required'],
     },
+    boardsOwned: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Board',
+      },
+    ],
   },
   {
     toJSON: {
@@ -41,6 +47,7 @@ const UserSchema = new mongoose.Schema(
         delete ret.password;
       },
     },
+    timestamps: true,
   }
 );
 

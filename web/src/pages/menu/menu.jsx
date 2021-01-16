@@ -26,6 +26,12 @@ const Menu = () => {
   );
   const [createBoard] = useFetch(API_ROUTES.board.create(), { method: 'POST' });
 
+  useEffect(() => {
+    (async () => {
+      await fetchBoards();
+    })();
+  }, [fetchBoards]);
+
   const handleCreateBoardModalSubmit = async (values, { setErrors }) => {
     const response = await createBoard(values);
 
@@ -38,12 +44,6 @@ const Menu = () => {
       setErrors(response.error);
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      await fetchBoards();
-    })();
-  }, [fetchBoards]);
 
   if (isLoading) {
     return <LoadingScreen />;

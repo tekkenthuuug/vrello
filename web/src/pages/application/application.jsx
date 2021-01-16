@@ -4,10 +4,11 @@ import useUserContext from '../../hooks/useUserContext';
 import Board from '../board/board';
 import Menu from '../menu/menu';
 
-const Application = ({ match }) => {
+const Application = ({ match, location }) => {
   const { user } = useUserContext();
 
   if (!user) {
+    // TODO: add next param to url
     return <Redirect to='/signin' />;
   }
 

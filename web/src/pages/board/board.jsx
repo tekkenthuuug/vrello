@@ -1,19 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
 import BoardControl from '../../components/board-control/board-control';
 import BoardHeader from '../../components/board-header/board-header';
-import { BoardContainer } from './board.styles';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
+import NoBoardAccess from '../../components/no-board-access/no-board-access';
 import BoardEventsEmitterContext from '../../contexts/boardEventsEmitterContext';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  initializeBoard,
+  noAccess,
+  reset,
+} from '../../redux/board/board.actions';
 import {
   selectBoardBackgroundColor,
-  selectBoardIsLoading,
-  selectBoardIsDeleted,
   selectBoardId,
+  selectBoardIsDeleted,
+  selectBoardIsLoading,
+  selectHasAccess,
 } from '../../redux/board/board.selectors';
-import { initializeBoard, reset } from '../../redux/board/board.actions';
-import socketIOClient from 'socket.io-client';
-import LoadingScreen from '../../components/loading-screen/loading-screen';
+import { BoardContainer } from './board.styles';
 
 const Board = () => {
   const { boardSlug, creatorSlug } = useParams();
@@ -24,8 +30,8 @@ const Board = () => {
   const isLoading = useSelector(selectBoardIsLoading);
   const isDeleted = useSelector(selectBoardIsDeleted);
   const boardId = useSelector(selectBoardId);
+  const hasAccess = useSelector(selectHasAccess);
 
-  const [hasAccess, setHasAccess] = useState(false);
   const socket = useRef(null);
   const dispatch = useDispatch();
 
@@ -39,13 +45,11 @@ const Board = () => {
     });
 
     socket.current.on('joined', boardData => {
-      setHasAccess(true);
       dispatch(initializeBoard(boardData));
     });
 
-    socket.current.on('no-access', () => {
-      setHasAccess(false);
-      dispatch(initializeBoard());
+    socket.current.on('noAccess', boardId => {
+      dispatch(noAccess(boardId));
     });
 
     socket.current.on('boardChange', action => {
@@ -71,16 +75,16 @@ const Board = () => {
     [socket, boardId]
   );
 
-  if (isDeleted) {
-    return <Redirect to='/app' />;
-  }
-
   if (isLoading) {
     return <LoadingScreen />;
   }
 
   if (!hasAccess) {
-    return <h1>You don't have access to this board</h1>;
+    return <NoBoardAccess />;
+  }
+
+  if (isDeleted) {
+    return <Redirect to='/app' />;
   }
 
   return (

@@ -3,6 +3,8 @@ const insertIntoArray = require('../utils/insertIntoArray');
 const normalizeTransform = require('../utils/normalizeTransform');
 const Column = require('./Column.model');
 const BoardMember = require('./BoardMember.model');
+const BoardRequest = require('./BoardRequest.model');
+const User = require('./User.model');
 const slugify = require('../utils/slugify');
 
 const BoardSchema = new mongoose.Schema(
@@ -28,7 +30,13 @@ const BoardSchema = new mongoose.Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'BoardMember',
+        ref: 'User',
+      },
+    ],
+    requests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BoardRequest',
       },
     ],
     creator: {
@@ -86,6 +94,14 @@ BoardSchema.methods.addMember = async function (userId) {
   await boardMember.save();
 };
 
+BoardSchema.methods.addRequest = async function (userId) {
+  const boardRequest = new BoardRequest({ board: this._id, sender: userId });
+
+  await this.updateOne({ $push: { requests: boardRequest._id } });
+
+  await boardRequest.save();
+};
+
 BoardSchema.methods.populateData = async function () {
   return await this.populate({
     path: 'columns',
@@ -99,10 +115,24 @@ BoardSchema.methods.updateName = async function (name) {
   await this.updateOne({ name, slug: slugify(name) });
 };
 
-BoardSchema.pre(/delete/i, async function (next) {
+BoardSchema.pre(/delete/i, { document: true }, async function (next) {
   await Column.deleteMany({ boardId: this._id });
 
   await BoardMember.deleteMany({ board: this._id });
+
+  await User.updateOne(
+    { _id: this.creator },
+    { $pull: { boardsOwned: this._id } }
+  );
+
+  next();
+});
+
+BoardSchema.pre(/save/i, { document: true }, async function (next) {
+  await User.updateOne(
+    { _id: this.creator },
+    { $push: { boardsOwned: this._id } }
+  );
 
   next();
 });

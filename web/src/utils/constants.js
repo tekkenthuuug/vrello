@@ -26,5 +26,6 @@ export const API_ROUTES = {
   board: {
     create: () => `${API_BASE_URL}/board/create`,
     addMember: boardId => `${API_BASE_URL}/board/${boardId}/add-member`,
+    requestAccess: boardId => `${API_BASE_URL}/board/${boardId}/request-access`,
   },
 };

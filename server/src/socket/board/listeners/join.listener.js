@@ -28,6 +28,6 @@ module.exports = socket => async ({ boardSlug, creatorSlug }) => {
 
     socket.join(board._id);
   } else {
-    socket.emit('no-access');
+    socket.emit('noAccess', board._id);
   }
 };

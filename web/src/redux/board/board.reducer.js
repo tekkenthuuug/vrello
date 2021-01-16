@@ -9,6 +9,7 @@ const initialState = {
   columns: null,
   creator: null,
   isLoading: true,
+  hasAccess: true,
 };
 
 const boardReducer = (state = initialState, { payload, type }) =>
@@ -81,6 +82,13 @@ const boardReducer = (state = initialState, { payload, type }) =>
       }
       case BoardActionTypes.RESET: {
         return initialState;
+      }
+      case BoardActionTypes.NO_ACCESS: {
+        draft.isLoading = false;
+        draft.hasAccess = false;
+        draft.id = payload;
+
+        return;
       }
       default: {
         return;

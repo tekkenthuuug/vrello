@@ -19,6 +19,11 @@ export const selectBoardName = createSelector(
   board => board.name
 );
 
+export const selectHasAccess = createSelector(
+  [selectBoard],
+  board => board.name
+);
+
 export const selectBoardCreator = createSelector(
   [selectBoard],
   board => board.creator

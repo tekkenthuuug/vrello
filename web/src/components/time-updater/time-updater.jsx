@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 const TimeUpdater = ({ value, interval, formatFn }) => {
+  // TODO: refactor
+
   const [time, setTime] = useState({ value: value });
 
   useEffect(() => {

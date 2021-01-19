@@ -8,8 +8,12 @@ import { selectBoardName } from '../../redux/board/board.selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBoard } from '../../redux/board/board.actions';
 import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
+import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
 const DeleteBoardModal = ({ onClose }) => {
+  const history = useHistory();
+
   const currentBoardName = useSelector(selectBoardName);
 
   const dispatch = useDispatch();
@@ -17,11 +21,21 @@ const DeleteBoardModal = ({ onClose }) => {
   const emitBoardChange = useBoardEventsEmitter();
 
   const handleBoardDelete = () => {
+    const name = currentBoardName;
+
     const action = deleteBoard();
 
     emitBoardChange(action);
 
+    history.push('/app');
+
     dispatch(action);
+
+    toast.success(
+      <div>
+        Board <strong>{name}</strong> was deleted
+      </div>
+    );
   };
 
   return (

@@ -14,6 +14,7 @@ import {
 } from './add-member-modal.styles';
 import { useSelector } from 'react-redux';
 import { selectBoardId } from '../../redux/board/board.selectors';
+import { toast } from 'react-toastify';
 
 const AddMemberModal = ({ onClose }) => {
   const boardId = useSelector(selectBoardId);
@@ -38,6 +39,11 @@ const AddMemberModal = ({ onClose }) => {
     const response = await addUserToBoard();
 
     if (response.success) {
+      toast.success(
+        <div>
+          <strong>{selectedUser.username}</strong> was added to this board
+        </div>
+      );
       onClose();
     }
   };

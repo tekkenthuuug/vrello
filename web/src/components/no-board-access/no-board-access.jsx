@@ -13,6 +13,7 @@ import { selectBoardId } from '../../redux/board/board.selectors';
 import useFetch from '../../hooks/useFetch';
 import { API_ROUTES } from '../../utils/constants';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const NoBoardAccess = () => {
   const history = useHistory();
@@ -27,7 +28,7 @@ const NoBoardAccess = () => {
     const response = await sendRequest();
 
     if (response.success) {
-      // TODO: toast notification
+      toast.success('Your access request was sent to the owner of the board.');
       history.push('/app');
     }
   };

@@ -20,6 +20,7 @@ import {
   selectHasAccess,
 } from '../../redux/board/board.selectors';
 import { BoardContainer } from './board.styles';
+import { toast } from 'react-toastify';
 
 const Board = () => {
   const { boardSlug, creatorSlug } = useParams();
@@ -84,6 +85,7 @@ const Board = () => {
   }
 
   if (isDeleted) {
+    toast.warning('Board you was currently in was deleted');
     return <Redirect to='/app' />;
   }
 

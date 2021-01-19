@@ -6,6 +6,7 @@ const BoardMember = require('./BoardMember.model');
 const BoardRequest = require('./BoardRequest.model');
 const User = require('./User.model');
 const slugify = require('../utils/slugify');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const BoardSchema = new mongoose.Schema(
   {
@@ -52,8 +53,9 @@ const BoardSchema = new mongoose.Schema(
   }
 );
 
-// TODO: index probably not working as expected
-BoardSchema.index({ creator: 1, slug: 1 }, { unique: true });
+BoardSchema.index({ creator: 1, name: 1 }, { unique: true });
+
+BoardSchema.plugin(uniqueValidator, { message: 'Already exists' });
 
 BoardSchema.methods.updateSlug = function () {
   this.slug = slugify(this.name);

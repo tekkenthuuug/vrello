@@ -4,6 +4,7 @@ const User = require('../../models/User.model');
 const BoardMember = require('../../models/BoardMember.model');
 const BoardRequest = require('../../models/BoardRequest.model');
 const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
+const requireBoardAdmin = require('../../middleware/requireBoardAdmin');
 
 router.post('/create', async (req, res, next) => {
   const { name, backgroundColor } = req.body;
@@ -30,42 +31,33 @@ router.post('/create', async (req, res, next) => {
   }
 });
 
-router.post('/:boardId/add-member', async (req, res, next) => {
-  const { boardId } = req.params;
-  const { userId } = req.session;
-  const { userId: userIdToAdd } = req.body;
+router.post(
+  '/:boardId/add-member',
+  requireBoardAdmin,
+  async (req, res, next) => {
+    const { userId: userIdToAdd } = req.body;
+    const { board } = res.locals;
 
-  try {
-    const board = await Board.findById(boardId);
+    try {
+      const conflictingBoardMembership = await BoardMember.findOne({
+        board: board._id,
+        member: userIdToAdd,
+      });
 
-    if (!board) {
-      return res.status(404).json(new ErrorResponse("Board doesn't exist"));
+      if (conflictingBoardMembership) {
+        return res
+          .status(400)
+          .json(new ErrorResponse('User is already a member'));
+      }
+
+      await board.addMember(userIdToAdd);
+
+      return res.json(new SuccessResponse());
+    } catch (error) {
+      next(error);
     }
-
-    if (String(board.creator) !== userId) {
-      return res
-        .status(401)
-        .json(new ErrorResponse('You are not the owner of the board'));
-    }
-
-    const conflictingBoardMembership = await BoardMember.findOne({
-      board: boardId,
-      member: userIdToAdd,
-    });
-
-    if (conflictingBoardMembership) {
-      return res
-        .status(400)
-        .json(new ErrorResponse('User is already a member'));
-    }
-
-    await board.addMember(userIdToAdd);
-
-    return res.json(new SuccessResponse());
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 router.post('/:boardId/request-access', async (req, res, next) => {
   const { boardId } = req.params;

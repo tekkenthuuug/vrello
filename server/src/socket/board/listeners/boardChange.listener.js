@@ -6,15 +6,21 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   const { type, payload } = action;
   const { session } = socket.request;
 
-  let sendToSender = false;
+  let emitToSender = false;
 
   const board = await Board.findById(boardId);
+
   await board.updateOne({ updatedAt: Date.now() });
 
+  const isBoardAdmin = session.userId === String(board.creator);
+
+  let matchedMemberAction = true;
+
+  // all member actions
   switch (type) {
     case 'ADD_CARD': {
       const { toColumn, card } = payload;
-      sendToSender = true;
+      emitToSender = true;
 
       const newCard = new Card({ ...card, columnId: toColumn });
 
@@ -30,7 +36,7 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
     }
     case 'ADD_COLUMN': {
       const { column } = payload;
-      sendToSender = true;
+      emitToSender = true;
 
       const newColumn = new Column({ ...column, boardId });
 
@@ -86,21 +92,6 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
 
       break;
     }
-    case 'RENAME': {
-      await board.updateName(payload);
-
-      break;
-    }
-    case 'CHANGE_BG': {
-      await board.updateOne({ backgroundColor: payload });
-
-      break;
-    }
-    case 'DELETE_BOARD': {
-      await board.deleteOne();
-
-      break;
-    }
     case 'RENAME_COLUMN': {
       const { columnId, newColumnName } = payload;
 
@@ -108,12 +99,40 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
 
       break;
     }
+    default: {
+      matchedMemberAction = false;
+    }
+  }
+
+  // admin actions
+  if (!matchedMemberAction && isBoardAdmin) {
+    switch (type) {
+      case 'RENAME': {
+        await board.updateName(payload);
+
+        break;
+      }
+      case 'CHANGE_BG': {
+        await board.updateOne({ backgroundColor: payload });
+
+        break;
+      }
+      case 'DELETE_BOARD': {
+        await board.deleteOne();
+
+        break;
+      }
+    }
+  } else {
+    // user is not allowed to use this action or sends wrong action
+    socket.disconnect();
+    return;
   }
 
   // send to all users in this room except sender
   socket.broadcast.to(boardId).emit('boardChange', action);
 
-  if (sendToSender) {
+  if (emitToSender) {
     // send to sender if needed
     socket.emit('boardChange', action);
   }

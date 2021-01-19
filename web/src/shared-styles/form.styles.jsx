@@ -1,6 +1,6 @@
 import { Form } from 'formik';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const FormPageContainer = styled.div`
   width: 100%;
@@ -31,10 +31,16 @@ export const SubmitBtn = styled.button`
   transition: all 0.2s ease;
 
   // TODO: isLoading & disabled
+  ${props =>
+    props.isLoading &&
+    css`
+      opacity: 0.5 !important;
+      cursor: wait !important;
+    `}
 
   &:disabled {
     opacity: 0.5;
-    cursor: ${props => props.disabledCursor || 'wait'};
+    cursor: not-allowed;
   }
 
   &:hover {

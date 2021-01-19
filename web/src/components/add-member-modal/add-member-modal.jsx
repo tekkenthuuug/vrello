@@ -55,7 +55,7 @@ const AddMemberModal = ({ onClose }) => {
   return (
     <Modal name='Invite user' onClose={onClose}>
       <Formik initialValues={{ email: '' }} onSubmit={handleSubmit}>
-        {({ handleChange }) => (
+        {({ handleChange, isSubmitting }) => (
           <StyledForm>
             <StyledInputField
               autoComplete='off'
@@ -96,7 +96,7 @@ const AddMemberModal = ({ onClose }) => {
             <SubmitBtn
               type='submit'
               disabled={!selectedUser}
-              disabledCursor='not-allowed'
+              isLoading={isSubmitting}
             >
               Add{selectedUser && ` ${selectedUser.username}`} to board
             </SubmitBtn>

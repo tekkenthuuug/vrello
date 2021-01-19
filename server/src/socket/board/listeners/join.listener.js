@@ -26,7 +26,7 @@ module.exports = socket => async ({ boardSlug, creatorSlug }) => {
 
     socket.emit('joined', boardData);
 
-    socket.join(board._id);
+    socket.join(String(board._id));
   } else {
     socket.emit('noAccess', board._id);
   }

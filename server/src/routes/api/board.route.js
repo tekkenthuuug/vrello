@@ -3,7 +3,7 @@ const Board = require('../../models/Board.model');
 const User = require('../../models/User.model');
 const BoardMember = require('../../models/BoardMember.model');
 const BoardRequest = require('../../models/BoardRequest.model');
-const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
+const ErrorResponse = require('../../utils/ErrorResponse');
 const requireBoardAdmin = require('../../middleware/requireBoardAdmin');
 
 router.post('/create', async (req, res, next) => {
@@ -21,11 +21,9 @@ router.post('/create', async (req, res, next) => {
 
     await board.save();
 
-    return res.json(
-      new SuccessResponse({
-        board: { slug: board.slug, creator },
-      })
-    );
+    return res.json({
+      board: { slug: board.slug, creator },
+    });
   } catch (error) {
     next(error);
   }
@@ -45,14 +43,12 @@ router.post(
       });
 
       if (conflictingBoardMembership) {
-        return res
-          .status(400)
-          .json(new ErrorResponse('User is already a member'));
+        return next(new ErrorResponse('User is already a member', 400));
       }
 
       await board.addMember(userIdToAdd);
 
-      return res.json(new SuccessResponse());
+      return res.sendStatus(200);
     } catch (error) {
       next(error);
     }
@@ -67,27 +63,25 @@ router.post('/:boardId/request-access', async (req, res, next) => {
     const board = await Board.findById(boardId);
 
     if (!board) {
-      return res.status(404).json(new ErrorResponse("Board doesn't exist"));
+      return next(new ErrorResponse("Board doesn't exist", 404));
     }
 
     if (String(board.creator) === userId) {
-      return res
-        .status(401)
-        .json(new ErrorResponse('You are the owner of the board'));
+      return next(new ErrorResponse('You are the owner of the board', 400));
     }
 
-    const conflictingBoardRequest = await BoardRequest.findOne({
+    const existingBoardRequest = await BoardRequest.findOne({
       board: boardId,
       sender: userId,
     });
 
-    if (conflictingBoardRequest) {
-      return res.json(new SuccessResponse());
+    if (existingBoardRequest) {
+      return res.sendStatus(200);
     }
 
     await board.addRequest(userId);
 
-    return res.json(new SuccessResponse());
+    return res.sendStatus(200);
   } catch (error) {
     next(error);
   }

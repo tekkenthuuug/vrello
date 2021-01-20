@@ -2,7 +2,6 @@ const router = require('express').Router();
 const Board = require('../../models/Board.model');
 const User = require('../../models/User.model');
 const BoardMember = require('../../models/BoardMember.model');
-const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
 
 router.get('/:uid/boards', async (req, res, next) => {
   const { uid } = req.params;
@@ -19,12 +18,10 @@ router.get('/:uid/boards', async (req, res, next) => {
       },
     });
 
-    return res.json(
-      new SuccessResponse({
-        boards,
-        memberBoards: boardMemberships.map(rel => rel.board),
-      })
-    );
+    return res.json({
+      boards,
+      memberBoards: boardMemberships.map(rel => rel.board),
+    });
   } catch (error) {
     next(error);
   }
@@ -44,11 +41,9 @@ router.get('/search', async (req, res, next) => {
 
     const users = await User.find(filter).limit(5);
 
-    return res.json(
-      new SuccessResponse({
-        users,
-      })
-    );
+    return res.json({
+      users,
+    });
   } catch (error) {
     next(error);
   }

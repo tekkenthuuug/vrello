@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { SESSION_COOKIE_NAME } = require('../../utils/constants');
-const { SuccessResponse, ErrorResponse } = require('../../utils/Responses');
+const ErrorResponse = require('../../utils/ErrorResponse');
 
 const User = require('../../models/User.model');
 
@@ -16,9 +16,8 @@ router.post('/sign-up', async (req, res, next) => {
 
     req.session.userId = user._id;
 
-    res.json(new SuccessResponse({ user }));
+    res.json({ user });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
@@ -30,7 +29,7 @@ router.post('/sign-in', async (req, res, next) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.status(401).json(new ErrorResponse('Wrong credentials'));
+      return next(new ErrorResponse('Wrong credentials', 422));
     }
 
     const isValid = await user.isPasswordValid(password);
@@ -38,12 +37,12 @@ router.post('/sign-in', async (req, res, next) => {
     if (isValid) {
       req.session.userId = user._id;
 
-      return res.json(new SuccessResponse({ user }));
+      return res.json({ user });
     } else {
-      return res.status(401).json(new ErrorResponse('Wrong credentials'));
+      return next(new ErrorResponse('Wrong credentials', 422));
     }
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -52,9 +51,9 @@ router.get('/me', async (req, res, next) => {
     const user = await User.findById(req.session.userId);
 
     if (user) {
-      return res.json(new SuccessResponse({ user }));
+      return res.json({ user });
     } else {
-      return res.status(401).json(new ErrorResponse());
+      return res.json({ user: null });
     }
   } catch (error) {
     next(error);
@@ -67,9 +66,9 @@ router.post('/sign-out', async (req, res, next) => {
       res.clearCookie(SESSION_COOKIE_NAME);
 
       if (error) {
-        return res.status(401).json(new ErrorResponse());
+        return res.sendStatus(500);
       } else {
-        return res.json(new SuccessResponse());
+        return res.sendStatus(200);
       }
     });
   } catch (error) {

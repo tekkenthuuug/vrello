@@ -1,8 +1,8 @@
-const { ErrorResponse } = require('../utils/Responses');
+const ErrorResponse = require('../utils/ErrorResponse');
 
 const requireAuth = (req, res, next) => {
   if (!req.session.userId) {
-    return res.status(401).json(new ErrorResponse('Unauthorized'));
+    return next(new ErrorResponse('Unauthorized', 401));
   }
 
   return next();

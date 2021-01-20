@@ -1,7 +1,8 @@
 import { Form } from 'formik';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import InputField from '../input-field/input-field';
 import UserProfileCard from '../user-profile-card/user-profile-card';
+import { SubmitBtn } from '../../shared-styles/form.styles';
 
 export const StyledForm = styled(Form)`
   width: 400px;
@@ -36,5 +37,13 @@ export const SelectedUserCard = styled(UserProfileCard)`
 
   border: 1px solid #dfe1e6;
 
-  margin-bottom: 1.2em;
+  ${props =>
+    props.hasError &&
+    css`
+      border: 1px solid rgba(255, 0, 0, 0.3);
+    `}
+`;
+
+export const StyledSubmitBtn = styled(SubmitBtn)`
+  margin-top: 12px;
 `;

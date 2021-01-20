@@ -25,10 +25,7 @@ const Menu = () => {
 
   const { data: boardsData, isLoading: isLoadingBoards } = useQuery(
     queryKey,
-    getUserBoards,
-    {
-      staleTime: 60000,
-    }
+    getUserBoards
   );
 
   const userBoardMutation = useMutation(postUserBoard, {
@@ -38,15 +35,15 @@ const Menu = () => {
   const [isModalOpened, setIsModalOpened] = useState(false);
 
   const handleCreateBoardModalSubmit = async (values, { setErrors }) => {
-    const response = await userBoardMutation.mutateAsync(values);
-
-    if (response.success) {
-      const { board } = response.data;
+    try {
+      const result = await userBoardMutation.mutateAsync(values);
       setIsModalOpened(false);
 
+      const board = result.data.board;
+
       history.push(`/app/${board.creator.slug}/${board.slug}`);
-    } else {
-      setErrors(response.error);
+    } catch (error) {
+      setErrors(error.response.data.errors);
     }
   };
 

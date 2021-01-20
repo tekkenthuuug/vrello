@@ -1,9 +1,6 @@
 import { Formik } from 'formik';
-import React, { useEffect, useState } from 'react';
-import useFetch from '../../hooks/useFetch';
+import React, { useState } from 'react';
 import useSuspendedState from '../../hooks/useSuspendedState';
-import { SubmitBtn } from '../../shared-styles/form.styles';
-import { API_ROUTES } from '../../utils/constants';
 import Modal from '../modal/modal';
 import {
   SelectedUserCard,
@@ -11,52 +8,52 @@ import {
   StyledInputField,
   StyledUserProfileCard,
   UsersDropdown,
+  StyledSubmitBtn,
 } from './add-member-modal.styles';
 import { useSelector } from 'react-redux';
 import { selectBoardId } from '../../redux/board/board.selectors';
 import { toast } from 'react-toastify';
+import { useMutation, useQuery } from 'react-query';
+import { InputErrorMessage } from '../../shared-styles/input.styles';
+import getUsersByEmail from '../../react-query/queries/getUsersByEmail';
+import postAddBoardMember from '../../react-query/mutations/postAddBoardMember';
 
 const AddMemberModal = ({ onClose }) => {
   const boardId = useSelector(selectBoardId);
 
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUserError, setSelectedUserError] = useState('');
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [, setEmailText, suspendedEmailText] = useSuspendedState('', 500);
 
-  const [fetchUsers, { response }] = useFetch(
-    API_ROUTES.user.search(suspendedEmailText),
+  const { data: usersData } = useQuery(
+    ['users', { email: suspendedEmailText }],
+    getUsersByEmail,
     {
-      method: 'GET',
+      enabled: suspendedEmailText.length > 2,
     }
   );
 
-  const [addUserToBoard] = useFetch(API_ROUTES.board.addMember(boardId), {
-    method: 'POST',
-    body: { userId: selectedUser?.id },
-  });
-
-  const handleSubmit = async () => {
-    const response = await addUserToBoard();
-
-    if (response.success) {
+  const addUserToBoardMutation = useMutation(postAddBoardMember(boardId), {
+    onSuccess: () => {
       toast.success(
         <div>
           <strong>{selectedUser.username}</strong> was added to this board
         </div>
       );
       onClose();
-    }
-  };
+    },
+    onError: error => {
+      setSelectedUserError(error.response.data.message);
+      setDropdownOpened(false);
+    },
+  });
 
-  useEffect(() => {
-    if (suspendedEmailText.length < 3) {
-      return;
-    }
-    (async () => {
-      await fetchUsers();
-    })();
-    // eslint-disable-next-line
-  }, [suspendedEmailText]);
+  const handleSubmit = async () => {
+    if (!selectedUser) return;
+
+    addUserToBoardMutation.mutate(selectedUser.id);
+  };
 
   return (
     <Modal name='Invite user' onClose={onClose}>
@@ -75,9 +72,9 @@ const AddMemberModal = ({ onClose }) => {
               }}
               disabled={selectedUser}
             >
-              {response?.data.users.length && dropdownOpened ? (
+              {usersData?.data.users.length && dropdownOpened ? (
                 <UsersDropdown>
-                  {response?.data.users.map(user => (
+                  {usersData?.data.users.map(user => (
                     <StyledUserProfileCard
                       key={user.id}
                       user={user}
@@ -92,20 +89,29 @@ const AddMemberModal = ({ onClose }) => {
             </StyledInputField>
 
             {selectedUser && (
-              <SelectedUserCard
-                user={selectedUser}
-                withClose
-                onClose={() => setSelectedUser(null)}
-              />
+              <>
+                <SelectedUserCard
+                  user={selectedUser}
+                  withClose
+                  onClose={() => {
+                    setSelectedUserError('');
+                    setSelectedUser(null);
+                  }}
+                  hasError={!!selectedUserError}
+                />
+                {selectedUserError && (
+                  <InputErrorMessage>{selectedUserError}</InputErrorMessage>
+                )}
+              </>
             )}
 
-            <SubmitBtn
+            <StyledSubmitBtn
               type='submit'
               disabled={!selectedUser}
               isLoading={isSubmitting}
             >
               Add{selectedUser && ` ${selectedUser.username}`} to board
-            </SubmitBtn>
+            </StyledSubmitBtn>
           </StyledForm>
         )}
       </Formik>

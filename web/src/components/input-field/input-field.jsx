@@ -3,11 +3,11 @@ import { useField } from 'formik';
 import React from 'react';
 import {
   StyledInputControl,
-  InputErrorMessage,
   Input,
   InputContainer,
 } from './input-field.styles';
 import { InputLabel } from '../../shared-styles/input.styles';
+import { InputErrorMessage } from '../../shared-styles/input.styles';
 
 const InputField = ({
   label,

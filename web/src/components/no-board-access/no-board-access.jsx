@@ -10,27 +10,24 @@ import {
 import { ReactComponent as RestrictedIllustration } from '../../assets/pending_approval.svg';
 import { useSelector } from 'react-redux';
 import { selectBoardId } from '../../redux/board/board.selectors';
-import useFetch from '../../hooks/useFetch';
-import { API_ROUTES } from '../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useMutation } from 'react-query';
+import postRequestBoardAccess from '../../react-query/mutations/postRequestBoardAccess';
 
 const NoBoardAccess = () => {
   const history = useHistory();
   const boardId = useSelector(selectBoardId);
 
-  const [sendRequest, { isLoading }] = useFetch(
-    API_ROUTES.board.requestAccess(boardId),
-    { method: 'POST' }
-  );
-
-  const handleRequestAccessClick = async () => {
-    const response = await sendRequest();
-
-    if (response.success) {
+  const sendRequestMutation = useMutation(postRequestBoardAccess, {
+    onSuccess: () => {
       toast.success('Your access request was sent to the owner of the board.');
       history.push('/app');
-    }
+    },
+  });
+
+  const handleRequestAccessClick = () => {
+    sendRequestMutation.mutate(boardId);
   };
 
   return (
@@ -44,7 +41,7 @@ const NoBoardAccess = () => {
             <>
               <RequestAccessBtn
                 onClick={handleRequestAccessClick}
-                disabled={!isLoading}
+                disabled={sendRequestMutation.isLoading}
               >
                 Request access
               </RequestAccessBtn>

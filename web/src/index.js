@@ -5,10 +5,11 @@ import { Provider } from 'react-redux';
 import App from './App';
 import { UserProvider } from './contexts/userContext';
 import store from './redux/store';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import createQueryClient from './utils/createQueryClient';
 
-const queryClient = new QueryClient();
+const queryClient = createQueryClient();
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>

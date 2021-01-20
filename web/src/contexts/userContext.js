@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
 
   const signOutMutation = useMutation(postSignOut);
 
-  const { isLoading } = useQuery('me', getMe, {
+  const { isLoading: isLoadingMe } = useQuery('me', getMe, {
     onSuccess: result => {
       setUser(result.data.user);
     },
@@ -25,7 +25,14 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserStateContext.Provider value={{ user, setUser, isLoading, signOut }}>
+    <UserStateContext.Provider
+      value={{
+        user,
+        setUser,
+        isLoading: isLoadingMe || signOutMutation.isLoading,
+        signOut,
+      }}
+    >
       {children}
     </UserStateContext.Provider>
   );

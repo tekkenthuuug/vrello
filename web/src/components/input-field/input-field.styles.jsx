@@ -36,12 +36,3 @@ export const StyledInputControl = styled(InputControl)`
       }
     `}
 `;
-
-export const InputErrorMessage = styled.div`
-  color: red;
-  margin-top: 4px;
-  &::before {
-    content: '*';
-    margin-right: 4px;
-  }
-`;

@@ -105,7 +105,7 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   }
 
   // admin actions
-  if (!matchedMemberAction && isBoardAdmin) {
+  if (isBoardAdmin) {
     switch (type) {
       case 'RENAME': {
         await board.updateName(payload);
@@ -123,7 +123,7 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
         break;
       }
     }
-  } else {
+  } else if (!matchedMemberAction) {
     // user is not allowed to use this action or sends wrong action
     socket.disconnect();
     return;

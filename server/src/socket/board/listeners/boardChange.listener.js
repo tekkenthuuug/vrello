@@ -10,9 +10,17 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
 
   const board = await Board.findById(boardId);
 
-  await board.updateOne({ updatedAt: Date.now() });
+  const isMember = board.members.includes(session.userId);
 
   const isBoardAdmin = session.userId === String(board.creator);
+
+  if (!isBoardAdmin && !isMember) {
+    socket.emit('noAccess', boardId);
+
+    return socket.disconnect();
+  }
+
+  await board.updateOne({ updatedAt: Date.now() });
 
   let matchedMemberAction = true;
 

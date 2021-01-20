@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MdDelete, MdEdit } from 'react-icons/md';
+import { MdDelete, MdEdit, MdGroup } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 import { List, ListItem } from '../../shared-styles/dropdown.styles';
@@ -11,33 +11,37 @@ import {
   selectBoardBackgroundColor,
   selectBoardName,
 } from '../../redux/board/board.selectors';
+import BoardMembersModal from '../board-members-modal/board-members-modal';
 
 const BoardDropdownMenu = ({ onItemClick }) => {
   const dispatch = useDispatch();
 
   const emitBoardChange = useBoardEventsEmitter();
 
-  const [isEditModalOpened, setIsEditModalOpened] = useState(false);
-  const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
+  const [selectedModal, setSelectedModal] = useState(null);
 
   const currentBoardColor = useSelector(selectBoardBackgroundColor);
   const currentBoardName = useSelector(selectBoardName);
 
   const onEditClick = e => {
     e.stopPropagation();
-    setIsEditModalOpened(true);
+    setSelectedModal('edit');
   };
 
   const onDeleteClick = e => {
     e.stopPropagation();
-    setIsDeleteModalOpened(true);
+    setSelectedModal('delete');
   };
 
-  const handleBoardEdit = (values, { setErrors, setSubmitting }) => {
+  const onBoardMembersClick = e => {
+    e.stopPropagation();
+    setSelectedModal('members');
+  };
+
+  const handleBoardEdit = async (values, { setErrors }) => {
     if (values.name.length < 1) {
       setErrors({ name: 'Required' });
 
-      setSubmitting(false);
       return;
     }
 
@@ -57,7 +61,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
       emitBoardChange(action);
     }
 
-    setIsEditModalOpened(false);
+    setSelectedModal(null);
     onItemClick();
   };
 
@@ -72,16 +76,12 @@ const BoardDropdownMenu = ({ onItemClick }) => {
           <MdDelete />
           Delete board
         </ListItem>
+        <ListItem onClick={onBoardMembersClick}>
+          <MdGroup />
+          Board members
+        </ListItem>
       </List>
-      {isDeleteModalOpened && (
-        <DeleteBoardModal
-          onClose={() => {
-            setIsEditModalOpened(false);
-            onItemClick();
-          }}
-        />
-      )}
-      {isEditModalOpened && (
+      {selectedModal === 'edit' ? (
         <CreateOrEditBoardModal
           type='edit'
           onSubmit={handleBoardEdit}
@@ -90,11 +90,25 @@ const BoardDropdownMenu = ({ onItemClick }) => {
             backgroundColor: currentBoardColor,
           }}
           onClose={() => {
-            setIsEditModalOpened(false);
+            setSelectedModal(null);
             onItemClick();
           }}
         />
-      )}
+      ) : selectedModal === 'delete' ? (
+        <DeleteBoardModal
+          onClose={() => {
+            setSelectedModal(null);
+            onItemClick();
+          }}
+        />
+      ) : selectedModal === 'members' ? (
+        <BoardMembersModal
+          onClose={() => {
+            setSelectedModal(null);
+            onItemClick();
+          }}
+        />
+      ) : undefined}
     </StyledDropdownContainer>
   );
 };

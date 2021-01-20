@@ -45,5 +45,5 @@ export const SelectedUserCard = styled(UserProfileCard)`
 `;
 
 export const StyledSubmitBtn = styled(SubmitBtn)`
-  margin-top: 12px;
+  margin-top: 1.2em;
 `;

@@ -96,6 +96,12 @@ BoardSchema.methods.addMember = async function (userId) {
   await boardMember.save();
 };
 
+BoardSchema.methods.deleteMember = async function (userId) {
+  await this.updateOne({ $pull: { members: userId } });
+
+  await BoardMember.findOneAndDelete({ board: this._id, member: userId });
+};
+
 BoardSchema.methods.addRequest = async function (userId) {
   const boardRequest = new BoardRequest({ board: this._id, sender: userId });
 

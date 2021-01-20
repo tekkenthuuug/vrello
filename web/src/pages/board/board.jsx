@@ -21,11 +21,15 @@ import {
 } from '../../redux/board/board.selectors';
 import { BoardContainer } from './board.styles';
 import { toast } from 'react-toastify';
+import { useQueryClient } from 'react-query';
+import useUserContext from '../../hooks/useUserContext';
 
 const Board = () => {
   const { boardSlug, creatorSlug } = useParams();
-
+  const dispatch = useDispatch();
   const history = useHistory();
+  const queryClient = useQueryClient();
+  const { user } = useUserContext();
 
   const backgroundColor = useSelector(selectBoardBackgroundColor);
   const isLoading = useSelector(selectBoardIsLoading);
@@ -34,7 +38,6 @@ const Board = () => {
   const hasAccess = useSelector(selectHasAccess);
 
   const socket = useRef(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.current = socketIOClient('http://localhost:5000/boards', {
@@ -51,6 +54,16 @@ const Board = () => {
 
     socket.current.on('noAccess', boardId => {
       dispatch(noAccess(boardId));
+
+      queryClient.setQueryData(['boards', user.id], old => {
+        if (!old) return old;
+
+        old.data.memberBoards = old.data.memberBoards.filter(
+          board => board.id !== boardId
+        );
+
+        return old;
+      });
     });
 
     socket.current.on('boardChange', action => {
@@ -64,7 +77,7 @@ const Board = () => {
       }
       dispatch(reset());
     };
-  }, [boardSlug, creatorSlug, dispatch, history]);
+  }, [boardSlug, creatorSlug, dispatch, history, queryClient, user.id]);
 
   const emitBoardChange = useCallback(
     action => {

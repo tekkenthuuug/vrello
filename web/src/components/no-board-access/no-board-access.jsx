@@ -35,7 +35,7 @@ const NoBoardAccess = () => {
       <RestrictedIllustration />
       <MessageContainer>
         <h1>Ooops... It seems like there is a problem</h1>
-        <h2>Your don't have access to this board</h2>
+        <h2>You don't have access to this board</h2>
         <OptionsContainer>
           {boardId && (
             <>

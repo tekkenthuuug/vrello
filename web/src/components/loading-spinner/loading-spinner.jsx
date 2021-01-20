@@ -1,9 +1,9 @@
 import React from 'react';
 import { LoadingSpinnerContainer } from './loading-spinner.styles';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ color }) => {
   return (
-    <LoadingSpinnerContainer>
+    <LoadingSpinnerContainer customColor={color}>
       <div></div>
       <div></div>
     </LoadingSpinnerContainer>

@@ -7,6 +7,7 @@ export const ProfileCardContainer = styled.div`
   padding: 6px 12px;
   font-weight: normal;
   display: flex;
+  width: 100%;
 `;
 
 export const InfoContainer = styled.div`

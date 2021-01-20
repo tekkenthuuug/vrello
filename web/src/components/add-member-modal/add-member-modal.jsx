@@ -13,13 +13,14 @@ import {
 import { useSelector } from 'react-redux';
 import { selectBoardId } from '../../redux/board/board.selectors';
 import { toast } from 'react-toastify';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { InputErrorMessage } from '../../shared-styles/input.styles';
 import getUsersByEmail from '../../react-query/queries/getUsersByEmail';
 import postAddBoardMember from '../../react-query/mutations/postAddBoardMember';
 
 const AddMemberModal = ({ onClose }) => {
   const boardId = useSelector(selectBoardId);
+  const queryClient = useQueryClient();
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedUserError, setSelectedUserError] = useState('');
@@ -36,6 +37,7 @@ const AddMemberModal = ({ onClose }) => {
 
   const addUserToBoardMutation = useMutation(postAddBoardMember(boardId), {
     onSuccess: () => {
+      queryClient.invalidateQueries(['boardMembers', boardId]);
       toast.success(
         <div>
           <strong>{selectedUser.username}</strong> was added to this board
@@ -88,21 +90,19 @@ const AddMemberModal = ({ onClose }) => {
               ) : undefined}
             </StyledInputField>
 
-            {selectedUser && (
-              <>
-                <SelectedUserCard
-                  user={selectedUser}
-                  withClose
-                  onClose={() => {
-                    setSelectedUserError('');
-                    setSelectedUser(null);
-                  }}
-                  hasError={!!selectedUserError}
-                />
-                {selectedUserError && (
-                  <InputErrorMessage>{selectedUserError}</InputErrorMessage>
-                )}
-              </>
+            <SelectedUserCard
+              user={selectedUser}
+              withClose
+              onClose={() => {
+                if (!selectedUser) return;
+
+                setSelectedUserError('');
+                setSelectedUser(null);
+              }}
+              hasError={!!selectedUserError}
+            />
+            {selectedUserError && (
+              <InputErrorMessage>{selectedUserError}</InputErrorMessage>
             )}
 
             <StyledSubmitBtn

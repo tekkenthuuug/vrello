@@ -11,10 +11,10 @@ import {
 const UserProfileCard = ({ user, withClose, onClose, ...otherProps }) => {
   return (
     <ProfileCardContainer {...otherProps}>
-      <ShortUsernameContainer>{user.shortUsername}</ShortUsernameContainer>
+      <ShortUsernameContainer>{user?.shortUsername}</ShortUsernameContainer>
       <InfoContainer>
-        <Username>{user.username}</Username>
-        <Email>{user.email}</Email>
+        <Username>{user?.username}</Username>
+        <Email>{user?.email}</Email>
       </InfoContainer>
       {withClose && <CloseIcon onClick={onClose} />}
     </ProfileCardContainer>

@@ -5,6 +5,7 @@ const BoardMember = require('../../models/BoardMember.model');
 const BoardRequest = require('../../models/BoardRequest.model');
 const ErrorResponse = require('../../utils/ErrorResponse');
 const requireBoardAdmin = require('../../middleware/requireBoardAdmin');
+const requireBoardMember = require('../../middleware/requireBoardMember');
 
 router.post('/create', async (req, res, next) => {
   const { name, backgroundColor } = req.body;
@@ -86,5 +87,39 @@ router.post('/:boardId/request-access', async (req, res, next) => {
     next(error);
   }
 });
+
+router.get('/:boardId/members', requireBoardAdmin, async (req, res, next) => {
+  const { board } = res.locals;
+
+  try {
+    const { members } = await board
+      .populate({
+        path: 'members',
+        select: 'id username email shortUsername',
+      })
+      .execPopulate();
+
+    return res.json({ members });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete(
+  '/:boardId/members/:userId',
+  requireBoardMember,
+  async (req, res, next) => {
+    const { board } = res.locals;
+    const { userId } = req.params;
+
+    try {
+      await board.deleteMember(userId);
+
+      return res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

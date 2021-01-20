@@ -11,29 +11,34 @@ import LoadingScreen from '../../components/loading-screen/loading-screen';
 import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
 import BoardCard from '../../components/board-card/board-card';
 import useUserContext from '../../hooks/useUserContext';
-import useFetch from '../../hooks/useFetch';
-import { API_ROUTES } from '../../utils/constants';
 import { useHistory } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import getUserBoards from '../../react-query/queries/getUserBoards';
+import postUserBoard from '../../react-query/mutations/postUserBoard';
 
 const Menu = () => {
   const history = useHistory();
+  const queryClient = useQueryClient();
   const { user } = useUserContext();
+
+  const queryKey = ['boards', user.id];
+
+  const { data: boardsData, isLoading: isLoadingBoards } = useQuery(
+    queryKey,
+    getUserBoards,
+    {
+      staleTime: 60000,
+    }
+  );
+
+  const mutation = useMutation(postUserBoard, {
+    onSuccess: () => queryClient.invalidateQueries(queryKey),
+  });
 
   const [isModalOpened, setIsModalOpened] = useState(false);
 
-  const [fetchBoards, { response, isLoading }] = useFetch(
-    API_ROUTES.user.boards(user.id)
-  );
-  const [createBoard] = useFetch(API_ROUTES.board.create(), { method: 'POST' });
-
-  useEffect(() => {
-    (async () => {
-      await fetchBoards();
-    })();
-  }, [fetchBoards]);
-
   const handleCreateBoardModalSubmit = async (values, { setErrors }) => {
-    const response = await createBoard(values);
+    const response = await mutation.mutateAsync(values);
 
     if (response.success) {
       const { board } = response.data;
@@ -45,11 +50,11 @@ const Menu = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoadingBoards) {
     return <LoadingScreen />;
   }
 
-  const { boards, memberBoards } = response.data;
+  const { boards, memberBoards } = boardsData.data;
 
   return (
     <MenuPage>

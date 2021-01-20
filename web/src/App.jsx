@@ -10,6 +10,7 @@ import { Route, Switch } from 'react-router-dom';
 import GlobalStyles from './GlobalStyles';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { DEFAULT_TOAST_PROPS } from './utils/constants';
 
 const App = () => {
   const { checkUserSession, isLoading } = useUserContext();
@@ -24,17 +25,7 @@ const App = () => {
     <>
       <GlobalStyles />
       <Header />
-      <ToastContainer
-        position='top-right'
-        autoClose={7500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover
-      />
+      <ToastContainer {...DEFAULT_TOAST_PROPS} />
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/signin' component={SignIn} />

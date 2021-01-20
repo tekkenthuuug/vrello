@@ -13,23 +13,22 @@ import {
   Heading,
   FormLink,
 } from '../../shared-styles/form.styles';
+import { useMutation } from 'react-query';
+import postUserSignUp from '../../react-query/mutations/postUserSignUp';
 
 const SignUpFormInitialState = { username: '', email: '', password: '' };
 
 const SignUp = () => {
   const { user, setUser } = useUserContext();
 
-  const [signUp] = useFetch(API_ROUTES.auth.signUp(), {
-    method: 'POST',
-  });
+  const signUpMutation = useMutation(postUserSignUp);
 
   const handleSubmit = async (values, { setErrors }) => {
-    const response = await signUp(values);
-
-    if (response.success) {
-      setUser(response.data.user);
-    } else {
-      setErrors(response.error);
+    try {
+      const result = await signUpMutation.mutateAsync(values);
+      setUser(result.data.user);
+    } catch (error) {
+      setErrors(error.response.data.errors);
     }
   };
 

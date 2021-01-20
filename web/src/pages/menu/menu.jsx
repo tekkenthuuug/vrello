@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import {
-  MenuPage,
-  BoardsContainer,
-  MenuContainer,
-  SectionHeading,
-  AddIcon,
-} from './menu.styles';
-import { CreateBoardBtn } from './menu.styles';
-import LoadingScreen from '../../components/loading-screen/loading-screen';
-import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
-import BoardCard from '../../components/board-card/board-card';
-import useUserContext from '../../hooks/useUserContext';
-import { useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import getUserBoards from '../../react-query/queries/getUserBoards';
+import { useHistory } from 'react-router-dom';
+import BoardCard from '../../components/board-card/board-card';
+import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
+import useUserContext from '../../hooks/useUserContext';
 import postUserBoard from '../../react-query/mutations/postUserBoard';
+import getUserBoards from '../../react-query/queries/getUserBoards';
+import {
+  AddIcon,
+  BoardsContainer,
+  CreateBoardBtn,
+  MenuContainer,
+  MenuPage,
+  SectionHeading,
+} from './menu.styles';
 
 const Menu = () => {
   const history = useHistory();
@@ -31,14 +31,14 @@ const Menu = () => {
     }
   );
 
-  const mutation = useMutation(postUserBoard, {
+  const userBoardMutation = useMutation(postUserBoard, {
     onSuccess: () => queryClient.invalidateQueries(queryKey),
   });
 
   const [isModalOpened, setIsModalOpened] = useState(false);
 
   const handleCreateBoardModalSubmit = async (values, { setErrors }) => {
-    const response = await mutation.mutateAsync(values);
+    const response = await userBoardMutation.mutateAsync(values);
 
     if (response.success) {
       const { board } = response.data;

@@ -25,12 +25,6 @@ export const BOARD_COLORS = [
 const API_BASE_URL = 'http://localhost:5000/api';
 
 export const API_ROUTES = {
-  auth: {
-    signIn: () => `${API_BASE_URL}/auth/sign-in`,
-    signUp: () => `${API_BASE_URL}/auth/sign-up`,
-    signOut: () => `${API_BASE_URL}/auth/sign-out`,
-    me: () => `${API_BASE_URL}/auth/me`,
-  },
   user: {
     boards: uid => `${API_BASE_URL}/users/${uid}/boards`,
     search: email => `${API_BASE_URL}/users/search?email=${email}`,

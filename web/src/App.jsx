@@ -1,21 +1,19 @@
-import useUserContext from './hooks/useUserContext';
-import Application from './pages/application/application';
-import Home from './pages//home/home';
-import SignIn from './pages/signin/signin';
-import SignUp from './pages/signup/signup';
-import LoadingScreen from './components/loading-screen/loading-screen';
-import Header from './components/header/header';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import GlobalStyles from './GlobalStyles';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import Header from './components/header/header';
+import LoadingScreen from './components/loading-screen/loading-screen';
+import GlobalStyles from './GlobalStyles';
+import useUserContext from './hooks/useUserContext';
+import Home from './pages//home/home';
+import Application from './pages/application/application';
+import SignIn from './pages/signin/signin';
+import SignUp from './pages/signup/signup';
 import { DEFAULT_TOAST_PROPS } from './utils/constants';
 
 const App = () => {
-  const { checkUserSession, isLoading } = useUserContext();
-
-  useEffect(checkUserSession, [checkUserSession]);
+  const { isLoading } = useUserContext();
 
   if (isLoading) {
     return <LoadingScreen />;

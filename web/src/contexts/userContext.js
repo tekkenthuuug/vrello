@@ -1,39 +1,31 @@
-import React, { createContext, useState, useCallback } from 'react';
-import useFetch from '../hooks/useFetch';
-import { API_ROUTES } from '../utils/constants';
+import React, { createContext, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import postSignOut from '../react-query/mutations/postSignOut';
+import getMe from '../react-query/queries/getMe';
 
 export const UserStateContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const [checkSession] = useFetch(API_ROUTES.auth.me());
-  const [signOutRequest] = useFetch(API_ROUTES.auth.signOut(), {
-    method: 'POST',
+  const signOutMutation = useMutation(postSignOut);
+
+  const { isLoading } = useQuery('me', getMe, {
+    onSuccess: result => {
+      setUser(result.data.user);
+    },
+    onError: () => {
+      setUser(null);
+    },
   });
-
-  const checkUserSession = useCallback(async () => {
-    setIsLoading(true);
-
-    const response = await checkSession();
-
-    if (response.success) {
-      setUser(response.data.user);
-    }
-
-    setIsLoading(false);
-  }, [checkSession]);
 
   const signOut = async () => {
     setUser(null);
-    await signOutRequest();
+    await signOutMutation.mutateAsync();
   };
 
   return (
-    <UserStateContext.Provider
-      value={{ user, checkUserSession, setUser, isLoading, signOut }}
-    >
+    <UserStateContext.Provider value={{ user, setUser, isLoading, signOut }}>
       {children}
     </UserStateContext.Provider>
   );

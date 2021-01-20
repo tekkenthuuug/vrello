@@ -1,20 +1,18 @@
-import InputField from '../../components/input-field/input-field';
 import { Formik } from 'formik';
-import useFetch from '../../hooks/useFetch';
-import useUserContext from '../../hooks/useUserContext';
 import React from 'react';
-import { Redirect } from 'react-router-dom';
-import { API_ROUTES } from '../../utils/constants';
-import { TOSParagraph } from './signup.styles';
-import {
-  SubmitBtn,
-  FormPageContainer,
-  StyledForm,
-  Heading,
-  FormLink,
-} from '../../shared-styles/form.styles';
 import { useMutation } from 'react-query';
+import { Redirect } from 'react-router-dom';
+import InputField from '../../components/input-field/input-field';
+import useUserContext from '../../hooks/useUserContext';
 import postUserSignUp from '../../react-query/mutations/postUserSignUp';
+import {
+  FormLink,
+  FormPageContainer,
+  Heading,
+  StyledForm,
+  SubmitBtn,
+} from '../../shared-styles/form.styles';
+import { TOSParagraph } from './signup.styles';
 
 const SignUpFormInitialState = { username: '', email: '', password: '' };
 

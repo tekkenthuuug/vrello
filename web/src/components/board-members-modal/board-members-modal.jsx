@@ -2,7 +2,10 @@ import React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import getBoardMembers from '../../react-query/queries/getBoardMembers';
-import { selectBoardId } from '../../redux/board/board.selectors';
+import {
+  selectBoardBackgroundColor,
+  selectBoardId,
+} from '../../redux/board/board.selectors';
 import LoadingSpinner from '../loading-spinner/loading-spinner';
 import Modal from '../modal/modal';
 import UserProfileCard from '../user-profile-card/user-profile-card';
@@ -13,6 +16,7 @@ const BoardMembersModal = ({ onClose }) => {
   const queryClient = useQueryClient();
 
   const boardId = useSelector(selectBoardId);
+  const boardBackgroundColor = useSelector(selectBoardBackgroundColor);
 
   const { data: boardMembersData, isLoading } = useQuery(
     ['boardMembers', boardId],
@@ -36,7 +40,7 @@ const BoardMembersModal = ({ onClose }) => {
     <Modal name='Board members' onClose={onClose}>
       <MembersContainer>
         {isLoading ? (
-          <LoadingSpinner color='#0079bf' />
+          <LoadingSpinner color={boardBackgroundColor} />
         ) : members.length ? (
           members.map(member => (
             <UserProfileCard

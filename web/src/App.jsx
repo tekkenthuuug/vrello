@@ -4,7 +4,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Header from './components/header/header';
 import LoadingScreen from './components/loading-screen/loading-screen';
-import GlobalStyles from './GlobalStyles';
 import useUserContext from './hooks/useUserContext';
 import Home from './pages//home/home';
 import Application from './pages/application/application';
@@ -21,7 +20,6 @@ const App = () => {
 
   return (
     <>
-      <GlobalStyles />
       <Header />
       <ToastContainer {...DEFAULT_TOAST_PROPS} />
       <Switch>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import BoardCard from '../../components/board-card/board-card';
+import SkeletonBoardCards from '../../components/skeleton-board-cards/skeleton-board-cards';
 import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
-import LoadingScreen from '../../components/loading-screen/loading-screen';
 import useUserContext from '../../hooks/useUserContext';
 import postUserBoard from '../../react-query/mutations/postUserBoard';
 import getUserBoards from '../../react-query/queries/getUserBoards';
@@ -47,42 +47,41 @@ const Menu = () => {
     }
   };
 
-  if (isLoadingBoards) {
-    return <LoadingScreen />;
-  }
+  let boardCards, boardMemberCards;
 
-  const { boards, memberBoards } = boardsData.data;
+  if (isLoadingBoards) {
+    boardCards = <SkeletonBoardCards numberOfCards={3} />;
+    boardMemberCards = <SkeletonBoardCards numberOfCards={2} />;
+  } else {
+    const { boards, memberBoards } = boardsData.data;
+    boardCards = boards.map(board => (
+      <BoardCard key={board.id} board={board} fallbackSlug={user.slug} />
+    ));
+    boardMemberCards = memberBoards.map(board => (
+      <BoardCard key={board.id} board={board} />
+    ));
+  }
 
   return (
     <MenuPage>
       <MenuContainer>
         <SectionHeading>Your boards</SectionHeading>
         <BoardsContainer>
-          {boards.map(board => (
-            <BoardCard key={board.id} board={board} userSlug={user.slug} />
-          ))}
+          {boardCards}
           <CreateBoardBtn onClick={() => setIsModalOpened(s => !s)}>
             <AddIcon />
             Create board
           </CreateBoardBtn>
         </BoardsContainer>
-        {memberBoards.length ? (
-          <>
-            <SectionHeading>Boards you are member in</SectionHeading>
-            <BoardsContainer>
-              {memberBoards.map(board => (
-                <BoardCard key={board.id} board={board} />
-              ))}
-            </BoardsContainer>
-          </>
-        ) : undefined}
-        {isModalOpened && (
-          <CreateOrEditBoardModal
-            onClose={() => setIsModalOpened(false)}
-            onSubmit={handleCreateBoardModalSubmit}
-          />
-        )}
+        <SectionHeading>Boards you are member in</SectionHeading>
+        <BoardsContainer>{boardMemberCards}</BoardsContainer>
       </MenuContainer>
+      {isModalOpened && (
+        <CreateOrEditBoardModal
+          onClose={() => setIsModalOpened(false)}
+          onSubmit={handleCreateBoardModalSubmit}
+        />
+      )}
     </MenuPage>
   );
 };

@@ -9,10 +9,10 @@ import {
   CreatedAt,
 } from './board-card.styles';
 
-const BoardCard = ({ board, userSlug }) => {
+const BoardCard = ({ board, fallbackSlug }) => {
   return (
     <Link
-      to={`/app/${board.creator?.slug || userSlug}/${board.slug}`}
+      to={`/app/${board.creator?.slug || fallbackSlug}/${board.slug}`}
       key={board.id}
     >
       <BoardCardContainer backgroundColor={board.backgroundColor}>

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
+import { BoardCardShapeCss } from '../../shared-styles/board-card.styles';
 
 export const MenuPage = styled.div`
   padding-top: 40px;
@@ -19,10 +20,8 @@ export const CreateBoardBtn = styled.button`
 
   font-weight: 600;
 
-  height: 90px;
-  width: 190px;
+  ${BoardCardShapeCss}
   font-size: 18px;
-  border-radius: 4px;
 
   transition: background-color 0.3s ease;
 

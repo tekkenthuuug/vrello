@@ -1,4 +1,9 @@
 import styled from 'styled-components';
+import {
+  BoardCardSpacingCss,
+  BoardCardDisplayCss,
+  BoardCardShapeCss,
+} from '../../shared-styles/board-card.styles';
 
 export const BoardCardOverlay = styled.div`
   position: absolute;
@@ -26,18 +31,13 @@ export const CreatedAt = styled.div`
 export const BoardCardContainer = styled.div`
   position: relative;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  ${BoardCardDisplayCss}
 
   background-color: ${props => props.backgroundColor};
 
-  height: 90px;
-  width: 190px;
-  border-radius: 4px;
+  ${BoardCardShapeCss}
 
-  padding: 8px 12px;
-  margin: 0 12px 12px 0;
+  ${BoardCardSpacingCss}
 
   &:hover {
     ${BoardCardOverlay} {

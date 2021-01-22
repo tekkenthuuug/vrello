@@ -8,12 +8,14 @@ import store from './redux/store';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import createQueryClient from './utils/createQueryClient';
+import GlobalStyles from './GlobalStyles';
 
 const queryClient = createQueryClient();
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <ReactQueryDevtools /> {/* excluded in production mode */}
+    <GlobalStyles />
     <Provider store={store}>
       <UserProvider>
         <Router>

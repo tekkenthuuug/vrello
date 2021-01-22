@@ -23,6 +23,7 @@ import { BoardContainer } from './board.styles';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 import useUserContext from '../../hooks/useUserContext';
+import removeBoardFromMemberBoardsCache from '../../react-query/updaters/removeBoardFromMemberBoardsCache';
 
 const Board = () => {
   const { boardSlug, creatorSlug } = useParams();
@@ -55,15 +56,10 @@ const Board = () => {
     socket.current.on('noAccess', boardId => {
       dispatch(noAccess(boardId));
 
-      queryClient.setQueryData(['boards', user.id], old => {
-        if (!old) return old;
-
-        old.data.memberBoards = old.data.memberBoards.filter(
-          board => board.id !== boardId
-        );
-
-        return old;
-      });
+      queryClient.setQueryData(
+        ['boards', user.id],
+        removeBoardFromMemberBoardsCache(boardId)
+      );
     });
 
     socket.current.on('boardChange', action => {

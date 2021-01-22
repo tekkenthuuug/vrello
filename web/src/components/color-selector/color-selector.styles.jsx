@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const ColorsContainer = styled.div`
   display: flex;
@@ -16,9 +17,7 @@ export const ColorItem = styled.div`
   margin: 0 4px 4px 0;
 
   color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
   font-size: 20px;
 
   cursor: pointer;

@@ -1,9 +1,8 @@
 import styled from 'styled-components';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const LoadingScreenContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
 
   height: 100vh;
   background-color: #0079bf;

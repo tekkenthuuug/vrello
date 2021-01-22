@@ -1,13 +1,12 @@
 import { Form } from 'formik';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import { FlexCenterCenterCss } from './util.styles';
 
 export const FormPageContainer = styled.div`
   width: 100%;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
   padding-bottom: 20vh;
   background-color: #f9fafc;
 `;

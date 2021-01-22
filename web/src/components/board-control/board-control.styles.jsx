@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 import ElementCreator from '../element-creator/element-creator';
 
 export const ColumnsContainer = styled.div`
@@ -51,9 +52,7 @@ export const AddBtn = styled.button`
 
   transition: all 0.3s ease;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
 
   color: #fff;
   background-color: rgba(255, 255, 255, 0.3);

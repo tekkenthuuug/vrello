@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexCenterCenterCss } from './util.styles';
 
 export const ShortUsernameContainer = styled.div`
   height: 32px;
@@ -6,9 +7,7 @@ export const ShortUsernameContainer = styled.div`
   font-size: 14px;
   border-radius: 50%;
   background-color: #dfe1e6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
   color: #172b4d;
   cursor: pointer;
   font-weight: bold;

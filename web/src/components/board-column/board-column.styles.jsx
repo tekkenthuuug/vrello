@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const ColumnContainer = styled.div`
   position: relative;
@@ -58,9 +59,7 @@ export const AddBtn = styled.button`
 
   transition: all 0.3s ease;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
 
   svg {
     margin-right: 8px;

@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const HeaderContainer = styled.header`
   position: relative;
@@ -33,17 +34,13 @@ export const RightContainer = styled.div`
 `;
 
 export const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
 `;
 
 const buttonsCss = css`
   height: 30px;
   padding: 0 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;

@@ -50,3 +50,9 @@ export const ClickableIconCss = css`
     background-color: rgba(0, 0, 0, 0.05);
   }
 `;
+
+export const FlexCenterCenterCss = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

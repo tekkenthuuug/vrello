@@ -1,5 +1,6 @@
 import { MdDelete } from 'react-icons/md';
 import styled from 'styled-components';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const DeleteIcon = styled(MdDelete)`
   color: rgba(255, 0, 0, 0.4);
@@ -9,9 +10,7 @@ export const DeleteIcon = styled(MdDelete)`
 export const DeleteContainer = styled.div`
   opacity: 0;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
 
   padding: 4px;
 

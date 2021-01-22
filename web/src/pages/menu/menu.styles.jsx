@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { MdAdd, MdUpdate } from 'react-icons/md';
 import { BoardCardShapeCss } from '../../shared-styles/board-card.styles';
-import { ClickableIconCss } from '../../shared-styles/util.styles';
+import {
+  ClickableIconCss,
+  FlexCenterCenterCss,
+} from '../../shared-styles/util.styles';
 
 export const MenuPage = styled.div`
   padding-top: 40px;
@@ -17,9 +20,8 @@ export const MenuContainer = styled.div`
 
 export const CreateBoardBtn = styled.button`
   background-color: rgba(9, 30, 66, 0.04);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+  ${FlexCenterCenterCss}
 
   font-weight: 600;
 

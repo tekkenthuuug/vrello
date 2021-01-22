@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { MdClose } from 'react-icons/md';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const ModalOverlay = styled.div`
   position: absolute;
@@ -9,9 +10,7 @@ export const ModalOverlay = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCenterCss}
   padding-bottom: 10vh;
   z-index: 100;
 

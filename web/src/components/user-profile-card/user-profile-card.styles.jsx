@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { MdClose } from 'react-icons/md';
+import { ClickableIconCss } from '../../shared-styles/util.styles';
 
 export const ProfileCardContainer = styled.div`
   position: relative;
@@ -25,13 +26,11 @@ export const Email = styled.div`
 
 export const CloseIcon = styled(MdClose)`
   position: absolute;
-  padding: 2px;
   font-size: 20px;
   top: 8px;
   right: 8px;
-  color: #b3bac5;
-  cursor: pointer;
-  border-radius: 4px;
+
+  ${ClickableIconCss}
 
   &:hover {
     color: #7d828a;

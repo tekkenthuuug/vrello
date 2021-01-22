@@ -38,3 +38,15 @@ export const SkeletonLoadingCss = css`
     }
   }
 `;
+
+export const ClickableIconCss = css`
+  padding: 2px;
+  color: #b3bac5;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    color: #7d828a;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+`;

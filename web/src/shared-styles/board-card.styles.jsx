@@ -2,7 +2,7 @@ import { css } from 'styled-components';
 
 export const BoardCardShapeCss = css`
   height: 90px;
-  width: 190px;
+  width: 199px;
   border-radius: 4px;
 `;
 

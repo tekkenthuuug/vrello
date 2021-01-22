@@ -13,7 +13,9 @@ import {
   CreateBoardBtn,
   MenuContainer,
   MenuPage,
-  SectionHeading,
+  UpdateIcon,
+  Section,
+  SectionHeader,
 } from './menu.styles';
 
 const Menu = () => {
@@ -23,10 +25,11 @@ const Menu = () => {
 
   const queryKey = ['boards', user.id];
 
-  const { data: boardsData, isLoading: isLoadingBoards } = useQuery(
-    queryKey,
-    getUserBoards
-  );
+  const {
+    data: boardsData,
+    isLoading: isLoadingBoards,
+    refetch: refetchBoards,
+  } = useQuery(queryKey, getUserBoards);
 
   const userBoardMutation = useMutation(postUserBoard, {
     onSuccess: () => queryClient.invalidateQueries(queryKey),
@@ -65,16 +68,25 @@ const Menu = () => {
   return (
     <MenuPage>
       <MenuContainer>
-        <SectionHeading>Your boards</SectionHeading>
-        <BoardsContainer>
-          {boardCards}
-          <CreateBoardBtn onClick={() => setIsModalOpened(s => !s)}>
-            <AddIcon />
-            Create board
-          </CreateBoardBtn>
-        </BoardsContainer>
-        <SectionHeading>Boards you are member in</SectionHeading>
-        <BoardsContainer>{boardMemberCards}</BoardsContainer>
+        <Section>
+          <SectionHeader>
+            <h1>Boards you own</h1>
+            <UpdateIcon onClick={refetchBoards} />
+          </SectionHeader>
+          <BoardsContainer>
+            {boardCards}
+            <CreateBoardBtn onClick={() => setIsModalOpened(s => !s)}>
+              <AddIcon />
+              Create board
+            </CreateBoardBtn>
+          </BoardsContainer>
+        </Section>
+        <Section>
+          <SectionHeader>
+            <h1>Boards you are member in</h1>
+          </SectionHeader>
+          <BoardsContainer>{boardMemberCards}</BoardsContainer>
+        </Section>
       </MenuContainer>
       {isModalOpened && (
         <CreateOrEditBoardModal

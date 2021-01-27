@@ -49,6 +49,18 @@ export const ClickableIconCss = css`
     color: #7d828a;
     background-color: rgba(0, 0, 0, 0.05);
   }
+
+  ${props =>
+    props.isActive &&
+    css`
+      color: #fff;
+      background-color: #027bc2;
+
+      &:hover {
+        color: #fff;
+        background-color: #026aa7;
+      }
+    `}
 `;
 
 export const FlexCenterCenterCss = css`

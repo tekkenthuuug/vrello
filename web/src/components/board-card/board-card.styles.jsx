@@ -7,14 +7,15 @@ import {
 
 export const BoardCardOverlay = styled.div`
   position: absolute;
-  display: none;
+  display: ${props => (props.isSelected ? 'block' : 'none')};
 
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 
-  background-color: rgba(0, 0, 0, 0.07);
+  background-color: ${props =>
+    props.isSelected ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.07)'};
 `;
 
 export const BoardName = styled.div`
@@ -30,6 +31,7 @@ export const CreatedAt = styled.div`
 
 export const BoardCardContainer = styled.div`
   position: relative;
+  cursor: pointer;
 
   ${BoardCardDisplayCss}
 

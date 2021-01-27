@@ -1,10 +1,7 @@
+import { MdAdd } from 'react-icons/md';
 import styled from 'styled-components';
-import { MdAdd, MdUpdate } from 'react-icons/md';
 import { BoardCardShapeCss } from '../../shared-styles/board-card.styles';
-import {
-  ClickableIconCss,
-  FlexCenterCenterCss,
-} from '../../shared-styles/util.styles';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const MenuPage = styled.div`
   padding-top: 40px;
@@ -35,39 +32,18 @@ export const CreateBoardBtn = styled.button`
   }
 `;
 
-export const BoardsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 12px;
-
-  & > a {
-    &:hover {
-      text-decoration: none;
-    }
-  }
-`;
-
 export const AddIcon = styled(MdAdd)`
   margin-right: 8px;
 `;
 
-export const UpdateIcon = styled(MdUpdate)`
-  font-size: 26px;
-  margin-left: 12px;
-
-  ${ClickableIconCss}
+export const SectionHeading = styled.h1`
+  font-family: 'Roboto';
+  font-weight: 400;
+  line-height: 22px;
 `;
 
-export const Section = styled.section`
-  margin-top: 24px;
-`;
-
-export const SectionHeader = styled.header`
+export const HeaderItemsContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-
-  h1 {
-    font-family: 'Roboto';
-    font-weight: 400;
-  }
 `;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import humanReadableTime from '../../utils/humanReadableTime';
 import DateUpdater from '../date-updater/date-updater';
 import {
@@ -9,14 +8,11 @@ import {
   CreatedAt,
 } from './board-card.styles';
 
-const BoardCard = ({ board, fallbackSlug }) => {
+const BoardCard = ({ board, isSelected, onClick }) => {
   return (
-    <Link
-      to={`/app/${board.creator?.slug || fallbackSlug}/${board.slug}`}
-      key={board.id}
-    >
+    <div onClick={() => onClick(board)}>
       <BoardCardContainer backgroundColor={board.backgroundColor}>
-        <BoardCardOverlay />
+        <BoardCardOverlay isSelected={isSelected} />
         <BoardName>{board.name}</BoardName>
         <CreatedAt>
           Updated{' '}
@@ -27,7 +23,7 @@ const BoardCard = ({ board, fallbackSlug }) => {
           />
         </CreatedAt>
       </BoardCardContainer>
-    </Link>
+    </div>
   );
 };
 

@@ -20,6 +20,11 @@ router.post('/create', async (req, res, next) => {
       creator: userId,
     });
 
+    await User.updateOne(
+      { _id: userId },
+      { $push: { boardsOwned: board._id } }
+    );
+
     await board.save();
 
     return res.json({
@@ -34,20 +39,24 @@ router.post(
   '/:boardId/add-member',
   requireBoardAdmin,
   async (req, res, next) => {
-    const { userId: userIdToAdd } = req.body;
+    const { userId } = req.body;
     const { board } = res.locals;
 
     try {
       const conflictingBoardMembership = await BoardMember.findOne({
         board: board._id,
-        member: userIdToAdd,
+        member: userId,
       });
 
       if (conflictingBoardMembership) {
         return next(new ErrorResponse('User is already a member', 400));
       }
+      const boardMember = new BoardMember({ board: board._id, member: userId });
 
-      await board.addMember(userIdToAdd);
+      board.addMember(userId);
+
+      await boardMember.save();
+      await board.save();
 
       return res.sendStatus(200);
     } catch (error) {
@@ -80,7 +89,13 @@ router.post('/:boardId/request-access', async (req, res, next) => {
       return res.sendStatus(200);
     }
 
-    await board.addRequest(userId);
+    const boardRequest = new BoardRequest({ board: board._id, sender: userId });
+
+    board.requests.push(boardRequest._id);
+
+    await boardRequest.save();
+
+    await board.save();
 
     return res.sendStatus(200);
   } catch (error) {
@@ -107,13 +122,21 @@ router.get('/:boardId/members', requireBoardAdmin, async (req, res, next) => {
 
 router.delete(
   '/:boardId/members/:userId',
-  requireBoardMember,
+  requireBoardAdmin,
   async (req, res, next) => {
     const { board } = res.locals;
     const { userId } = req.params;
 
     try {
-      await board.deleteMember(userId);
+      const boardMember = await BoardMember.findOne({
+        board: board._id,
+        member: userId,
+      });
+
+      board.deleteMember(userId);
+
+      await boardMember.delete();
+      await board.save();
 
       return res.sendStatus(200);
     } catch (error) {

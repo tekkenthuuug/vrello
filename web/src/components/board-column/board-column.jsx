@@ -1,4 +1,4 @@
-import React, { createRef, memo, useCallback, useState } from 'react';
+import React, { createRef, memo, useCallback, useRef, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
@@ -15,15 +15,17 @@ import {
   ColumnContent,
 } from './board-column.styles';
 
-const BoardColumn = ({ columnId, onColumnDragOver }) => {
+const BoardColumn = ({ columnId, onDragOver }) => {
   const dispatch = useDispatch();
   const emitBoardChange = useBoardEventsEmitter();
 
-  const columnInfo = useSelector(selectColumn(columnId));
+  const columnData = useSelector(selectColumn(columnId));
 
   const [isAddingCard, setIsAddingCard] = useState(false);
 
   const elementCreatorRef = createRef();
+
+  const dragOverCardId = useRef(null);
 
   useOnClickOutside(elementCreatorRef, () => {
     setIsAddingCard(false);
@@ -31,15 +33,19 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
 
   const handleCardDrop = e => {
     e.preventDefault();
+    const initialColumnId = e.dataTransfer.getData('initial_column_id');
+    const taskId = e.dataTransfer.getData('task_id');
 
-    const initialColumnId = e.dataTransfer.getData('from_column');
-    const cardId = e.dataTransfer.getData('card_id');
-
-    if (!cardId || !initialColumnId || initialColumnId === columnId) {
+    if (!taskId || !initialColumnId) {
       return;
     }
 
-    const action = moveCard(initialColumnId, columnInfo.id, cardId);
+    const action = moveCard(
+      initialColumnId,
+      columnData.id,
+      taskId,
+      dragOverCardId.current
+    );
 
     dispatch(action);
 
@@ -51,7 +57,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
   };
 
   const handleColumnDragStart = e => {
-    e.dataTransfer.setData('column_id', columnInfo.id);
+    e.dataTransfer.setData('column_id', columnData.id);
   };
 
   const handleCardDelete = useCallback(
@@ -70,7 +76,7 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
       return;
     }
 
-    const action = addCard(columnInfo.id, { description: text, color });
+    const action = addCard(columnData.id, { description: text, color });
 
     emitBoardChange(action);
 
@@ -81,18 +87,21 @@ const BoardColumn = ({ columnId, onColumnDragOver }) => {
     <ColumnContainer
       onDragStart={handleColumnDragStart}
       onDragOver={e => {
-        onColumnDragOver(e, columnInfo.id);
+        onDragOver(e, columnData.id);
       }}
       draggable
     >
       <ColumnHeader columnId={columnId} />
       <ColumnContent>
         <TasksContainer onDrop={handleCardDrop} onDragOver={handleDragOver}>
-          {columnInfo.cards.map(card => (
+          {columnData.cards.map(card => (
             <TaskCard
               key={card.id}
+              onDragOver={(_, taskId) => {
+                dragOverCardId.current = taskId;
+              }}
               cardData={card}
-              columnId={columnInfo.id}
+              columnId={columnData.id}
               onDeleteClick={handleCardDelete}
               draggable
             />

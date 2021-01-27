@@ -1,4 +1,8 @@
-import { reorderColumns, reorderCards, findColumn } from './board.utils';
+import {
+  reorderColumns,
+  reorderCards,
+  findByIdInObjArray,
+} from './board.utils';
 import BoardActionTypes from './board.types';
 import produce from 'immer';
 
@@ -26,9 +30,9 @@ const boardReducer = (state = initialState, { payload, type }) =>
         return;
       }
       case BoardActionTypes.MOVE_CARD: {
-        const { fromColumn, toColumn, cardId } = payload;
+        const { fromColumnId, toColumnId, cardId, targetCardId } = payload;
 
-        reorderCards(draft, fromColumn, toColumn, cardId);
+        reorderCards(draft, fromColumnId, toColumnId, cardId, targetCardId);
 
         return;
       }
@@ -40,9 +44,9 @@ const boardReducer = (state = initialState, { payload, type }) =>
         return;
       }
       case BoardActionTypes.ADD_CARD: {
-        const { toColumn, card } = payload;
+        const { toColumnId, card } = payload;
 
-        const [, columnIndex] = findColumn(draft.columns, toColumn);
+        const [, columnIndex] = findByIdInObjArray(draft.columns, toColumnId);
 
         draft.columns[columnIndex].cards.push(card);
 
@@ -69,7 +73,7 @@ const boardReducer = (state = initialState, { payload, type }) =>
       case BoardActionTypes.RENAME_COLUMN: {
         const { newColumnName, columnId } = payload;
 
-        const [, index] = findColumn(state.columns, columnId);
+        const [, index] = findByIdInObjArray(state.columns, columnId);
 
         draft.columns[index].name = newColumnName;
 

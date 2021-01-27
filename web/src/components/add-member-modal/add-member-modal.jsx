@@ -67,6 +67,7 @@ const AddMemberModal = ({ onClose }) => {
               label='Email'
               placeholder='Enter user email'
               name='email'
+              autoFocus
               onFocus={() => setDropdownOpened(true)}
               onChange={async e => {
                 handleChange(e);

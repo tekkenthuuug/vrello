@@ -20,7 +20,7 @@ module.exports = socket => async ({ boardSlug, creatorSlug }) => {
     board.members.includes(session.userId);
 
   if (hasAccess) {
-    const boardData = await board.populateData();
+    const boardData = await board.populateFullBoard();
 
     boardData.creator = creator;
 

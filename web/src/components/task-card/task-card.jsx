@@ -8,12 +8,18 @@ import {
   Description,
 } from './task-card.styles';
 
-const TaskCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
+const TaskCard = ({
+  cardData,
+  columnId,
+  onDeleteClick,
+  onDragOver,
+  ...otherProps
+}) => {
   const handleDragStart = e => {
     e.stopPropagation();
 
-    e.dataTransfer.setData('from_column', columnId);
-    e.dataTransfer.setData('card_id', cardData.id);
+    e.dataTransfer.setData('initial_column_id', columnId);
+    e.dataTransfer.setData('task_id', cardData.id);
 
     setTimeout(() => {
       e.target.style.display = 'none';
@@ -33,6 +39,9 @@ const TaskCard = ({ cardData, columnId, onDeleteClick, ...otherProps }) => {
   return (
     <CardContainer
       {...otherProps}
+      onDragOver={e => {
+        onDragOver(e, cardData.id);
+      }}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >

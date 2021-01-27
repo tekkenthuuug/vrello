@@ -27,12 +27,26 @@ const ColumnSchema = new mongoose.Schema(
   }
 );
 
-ColumnSchema.methods.appendCard = async function (cardId) {
-  await this.updateOne({ $push: { cards: cardId } });
+ColumnSchema.methods.appendCard = function (cardId) {
+  this.cards.push(cardId);
 };
 
 ColumnSchema.methods.removeCard = async function (cardId) {
-  await this.updateOne({ $pull: { cards: cardId } });
+  const cardIndex = this.cards.indexOf(cardId);
+
+  this.cards.splice(cardIndex, 1);
+};
+
+ColumnSchema.methods.moveCard = async function (cardId, targetTaskId) {
+  const { cards } = this;
+
+  const taskToMoveIndex = cards.indexOf(cardId);
+
+  const targetTaskIndex = cards.indexOf(targetTaskId);
+
+  cards.splice(taskToMoveIndex, 1);
+
+  cards.splice(targetTaskIndex + 1, 0, cardId);
 };
 
 ColumnSchema.pre(/delete/i, async function (next) {

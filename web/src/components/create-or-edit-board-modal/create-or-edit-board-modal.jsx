@@ -33,6 +33,7 @@ const CreateBoardModal = ({
           <StyledForm>
             <InputField
               autoComplete='off'
+              autoFocus={type === 'create'}
               name='name'
               placeholder='Enter board name'
               label='Board name'

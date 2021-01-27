@@ -8,7 +8,7 @@ router.post('/sign-up', async (req, res, next) => {
   const { username, password, email } = req.body;
 
   try {
-    const user = new User({ username, email });
+    const user = new User({ username, email, password });
 
     await user.setPassword(password);
 

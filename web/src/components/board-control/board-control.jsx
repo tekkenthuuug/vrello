@@ -97,7 +97,7 @@ const BoardControl = () => {
         <BoardColumn
           key={columnId}
           columnId={columnId}
-          onColumnDragOver={handleColumnDragOver}
+          onDragOver={handleColumnDragOver}
         />
       ))}
       {isAddColumnFormVisible ? (

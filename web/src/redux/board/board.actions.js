@@ -5,20 +5,21 @@ export const initializeBoard = boardData => ({
   payload: boardData,
 });
 
-export const addCard = (toColumn, card) => ({
+export const addCard = (toColumnId, card) => ({
   type: BoardActionTypes.ADD_CARD,
   payload: {
-    toColumn,
+    toColumnId,
     card,
   },
 });
 
-export const moveCard = (fromColumn, toColumn, cardId) => ({
+export const moveCard = (fromColumnId, toColumnId, cardId, targetCardId) => ({
   type: BoardActionTypes.MOVE_CARD,
   payload: {
-    fromColumn,
-    toColumn,
+    fromColumnId,
+    toColumnId,
     cardId,
+    targetCardId,
   },
 });
 
@@ -32,11 +33,11 @@ export const moveColumn = (columnIdToMove, targetColumnId) => ({
   payload: { columnIdToMove, targetColumnId },
 });
 
-export const deleteCard = (fromColumn, cardId) => ({
+export const deleteCard = (fromColumnId, cardId) => ({
   type: BoardActionTypes.MOVE_CARD,
   payload: {
-    fromColumn,
-    toColumn: null,
+    fromColumnId,
+    toColumnId: null,
     cardId,
   },
 });

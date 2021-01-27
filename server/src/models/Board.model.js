@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const insertIntoArray = require('../utils/insertIntoArray');
 const normalizeTransform = require('../utils/normalizeTransform');
 const Column = require('./Column.model');
 const BoardMember = require('./BoardMember.model');
@@ -57,70 +56,52 @@ BoardSchema.index({ creator: 1, name: 1 }, { unique: true });
 
 BoardSchema.plugin(uniqueValidator, { message: 'Already exists' });
 
-BoardSchema.methods.updateSlug = function () {
-  this.slug = slugify(this.name);
+BoardSchema.path('name').set(function (newName) {
+  if (this.isNew || newName !== this.name) {
+    this.slug = slugify(newName);
+  }
+
+  return newName;
+});
+
+BoardSchema.methods.appendColumn = function (columnId) {
+  this.columns.push(columnId);
 };
 
-BoardSchema.methods.appendColumn = async function (columnId) {
-  await this.updateOne({ $push: { columns: columnId } });
+BoardSchema.methods.removeColumn = function (columnId) {
+  const columnIndex = this.columns.indexOf(columnId);
+  this.columns.splice(columnIndex, 1);
 };
 
-BoardSchema.methods.moveColumn = async function (
-  columnIdToMove,
-  targetColumnId
-) {
+BoardSchema.methods.moveColumn = function (columnIdToMove, targetColumnId) {
   const { columns } = this;
 
   let columnToMoveIndex = columns.indexOf(columnIdToMove);
 
   let targetColumnIndex = columns.indexOf(targetColumnId);
 
-  const newColumns = insertIntoArray(
-    columns,
-    columns.splice(columnToMoveIndex, 1)[0],
-    targetColumnIndex
-  );
+  columns.splice(columnToMoveIndex, 1);
 
-  await this.updateOne({ $set: { columns: newColumns } });
+  columns.splice(targetColumnIndex, 0, columnIdToMove);
 };
 
-BoardSchema.methods.removeColumn = async function (columnId) {
-  this.updateOne({ $pull: { columns: columnId } });
+BoardSchema.methods.addMember = function (userId) {
+  this.members.push(userId);
 };
 
-BoardSchema.methods.addMember = async function (userId) {
-  await this.updateOne({ $push: { members: userId } });
+BoardSchema.methods.deleteMember = function (userId) {
+  const memberIndex = this.members.indexOf(userId);
 
-  const boardMember = new BoardMember({ board: this._id, member: userId });
-
-  await boardMember.save();
+  this.members.splice(memberIndex, 1);
 };
 
-BoardSchema.methods.deleteMember = async function (userId) {
-  await this.updateOne({ $pull: { members: userId } });
-
-  await BoardMember.findOneAndDelete({ board: this._id, member: userId });
-};
-
-BoardSchema.methods.addRequest = async function (userId) {
-  const boardRequest = new BoardRequest({ board: this._id, sender: userId });
-
-  await this.updateOne({ $push: { requests: boardRequest._id } });
-
-  await boardRequest.save();
-};
-
-BoardSchema.methods.populateData = async function () {
+BoardSchema.methods.populateFullBoard = async function () {
   return await this.populate({
     path: 'columns',
     populate: {
       path: 'cards',
     },
   }).execPopulate();
-};
-
-BoardSchema.methods.updateName = async function (name) {
-  await this.updateOne({ name, slug: slugify(name) });
 };
 
 BoardSchema.pre(/delete/i, { document: true }, async function (next) {
@@ -132,21 +113,6 @@ BoardSchema.pre(/delete/i, { document: true }, async function (next) {
     { _id: this.creator },
     { $pull: { boardsOwned: this._id } }
   );
-
-  next();
-});
-
-BoardSchema.pre(/save/i, { document: true }, async function (next) {
-  await User.updateOne(
-    { _id: this.creator },
-    { $push: { boardsOwned: this._id } }
-  );
-
-  next();
-});
-
-BoardSchema.pre('validate', { document: true }, function (next) {
-  this.updateSlug();
 
   next();
 });

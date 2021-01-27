@@ -27,15 +27,16 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   // all member actions
   switch (type) {
     case 'ADD_CARD': {
-      const { toColumn, card } = payload;
+      const { toColumnId, card } = payload;
       emitToSender = true;
 
-      const newCard = new Card({ ...card, columnId: toColumn });
+      const newCard = new Card({ ...card, columnId: toColumnId });
 
-      const column = await Column.findById(toColumn);
+      const column = await Column.findById(toColumnId);
 
-      await column.appendCard(newCard._id);
+      column.appendCard(newCard._id);
 
+      await column.save();
       await newCard.save();
 
       payload.card = newCard;
@@ -51,52 +52,65 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
       await board.appendColumn(newColumn._id);
 
       await newColumn.save();
+      await board.save();
 
       payload.column = newColumn;
 
       break;
     }
     case 'MOVE_CARD': {
-      const { fromColumn, toColumn, cardId } = payload;
+      const { fromColumnId, toColumnId, cardId, targetCardId } = payload;
 
       const card = await Card.findById(cardId);
-
-      const column = await Column.findById(fromColumn);
-
-      await column.removeCard(card._id);
+      const fromColumn = await Column.findById(fromColumnId);
 
       // no 'to' means delete
-      if (toColumn) {
-        const column = await Column.findById(toColumn);
-
-        await column.appendCard(card._id);
-
-        await card.updateOne({ columnId: toColumn });
-      } else {
+      if (!toColumnId) {
+        fromColumn.removeCard(card._id);
+        fromColumn.save();
         await card.deleteOne();
+        break;
       }
+
+      const toColumn = await Column.findById(toColumnId);
+
+      if (toColumnId !== fromColumnId) {
+        fromColumn.removeCard(card._id);
+        toColumn.appendCard(card._id);
+
+        await fromColumn.save();
+        await card.updateOne({ columnId: toColumnId });
+      }
+
+      if (targetCardId) {
+        toColumn.moveCard(cardId, targetCardId);
+      }
+
+      await toColumn.save();
 
       break;
     }
     case 'MOVE_COLUMN': {
       const { columnIdToMove, targetColumnId } = payload;
 
-      // delete column
-      if (targetColumnId === undefined) {
-        const column = await Column.findById(columnIdToMove);
-
-        await board.removeColumn(column._id);
-
-        await column.deleteOne();
-
-        break;
-      }
-
       if (columnIdToMove === targetColumnId) {
         return;
       }
 
-      await board.moveColumn(columnIdToMove, targetColumnId);
+      // delete column
+      if (targetColumnId === undefined) {
+        const column = await Column.findById(columnIdToMove);
+
+        board.removeColumn(column._id);
+
+        await column.deleteOne();
+        await board.save();
+
+        break;
+      }
+
+      board.moveColumn(columnIdToMove, targetColumnId);
+      await board.save();
 
       break;
     }
@@ -116,7 +130,9 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   if (isBoardAdmin) {
     switch (type) {
       case 'RENAME': {
-        await board.updateName(payload);
+        board.name = payload;
+
+        await board.save();
 
         break;
       }

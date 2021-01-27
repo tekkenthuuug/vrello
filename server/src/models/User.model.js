@@ -53,21 +53,22 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.plugin(uniqueValidator, { message: 'Is already taken' });
 
-UserSchema.methods.updateShortUsername = function () {
-  const { username } = this;
-  const usernameSplit = username.split(' ');
+UserSchema.path('username').set(function (newUsername) {
+  if (this.isNew || newUsername !== this.newUsername) {
+    this.slug = slugify(newUsername);
 
-  this.shortUsername =
-    usernameSplit.length >= 2
-      ? usernameSplit[0][0] + usernameSplit[1][0]
-      : username.slice(0, 2);
+    const usernameSplit = newUsername.split(' ');
 
-  this.shortUsername = this.shortUsername.toUpperCase();
-};
+    this.shortUsername =
+      usernameSplit.length >= 2
+        ? usernameSplit[0][0] + usernameSplit[1][0]
+        : newUsername.slice(0, 2);
 
-UserSchema.methods.updateSlug = function () {
-  this.slug = slugify(this.username);
-};
+    this.shortUsername = this.shortUsername.toUpperCase();
+  }
+
+  return newUsername;
+});
 
 UserSchema.methods.setPassword = async function (password) {
   this.password = await argon2.hash(password);
@@ -76,12 +77,5 @@ UserSchema.methods.setPassword = async function (password) {
 UserSchema.methods.isPasswordValid = async function (password) {
   return await argon2.verify(this.password, password);
 };
-
-UserSchema.pre('validate', { document: true }, function (next) {
-  this.updateShortUsername();
-  this.updateSlug();
-
-  next();
-});
 
 module.exports = mongoose.model('User', UserSchema);

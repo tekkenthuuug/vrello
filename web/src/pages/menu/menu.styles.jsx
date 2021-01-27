@@ -53,6 +53,7 @@ export const AddIcon = styled(MdAdd)`
 
 export const UpdateIcon = styled(MdUpdate)`
   font-size: 26px;
+  margin-left: 12px;
 
   ${ClickableIconCss}
 `;
@@ -64,7 +65,6 @@ export const Section = styled.section`
 export const SectionHeader = styled.header`
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
   h1 {
     font-family: 'Roboto';

@@ -1,8 +1,8 @@
 import BoardActionTypes from './board.types';
 
-export const initializeBoard = boardData => ({
+export const initializeBoard = (boardData, currentUser) => ({
   type: BoardActionTypes.INIT,
-  payload: boardData,
+  payload: { boardData, currentUser },
 });
 
 export const addCard = (toColumnId, card) => ({

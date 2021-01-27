@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import useUserContext from '../../hooks/useUserContext';
-import Board from '../board/board';
+import Board from '../board/board.container';
 import Menu from '../menu/menu';
 
 const Application = ({ match, location }) => {

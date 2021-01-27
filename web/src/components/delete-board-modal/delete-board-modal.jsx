@@ -18,14 +18,14 @@ const DeleteBoardModal = ({ onClose }) => {
 
   const dispatch = useDispatch();
 
-  const emitBoardChange = useBoardEventsEmitter();
+  const { emitAdminBoardChange } = useBoardEventsEmitter();
 
   const handleBoardDelete = () => {
     const name = currentBoardName;
 
     const action = deleteBoard();
 
-    emitBoardChange(action);
+    emitAdminBoardChange(action);
 
     history.push('/app');
 

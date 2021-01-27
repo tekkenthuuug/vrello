@@ -17,7 +17,7 @@ import {
 
 const BoardColumn = ({ columnId, onDragOver }) => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmitter();
+  const { emitMemberBoardChange } = useBoardEventsEmitter();
 
   const columnData = useSelector(selectColumn(columnId));
 
@@ -49,7 +49,7 @@ const BoardColumn = ({ columnId, onDragOver }) => {
 
     dispatch(action);
 
-    emitBoardChange(action);
+    emitMemberBoardChange(action);
   };
 
   const handleDragOver = e => {
@@ -66,9 +66,9 @@ const BoardColumn = ({ columnId, onDragOver }) => {
 
       dispatch(action);
 
-      emitBoardChange(action);
+      emitMemberBoardChange(action);
     },
-    [dispatch, emitBoardChange]
+    [dispatch, emitMemberBoardChange]
   );
 
   const handleCardAdd = ({ text, color }) => {
@@ -78,7 +78,7 @@ const BoardColumn = ({ columnId, onDragOver }) => {
 
     const action = addCard(columnData.id, { description: text, color });
 
-    emitBoardChange(action);
+    emitMemberBoardChange(action);
 
     setIsAddingCard(false);
   };

@@ -16,7 +16,7 @@ import BoardMembersModal from '../board-members-modal/board-members-modal';
 const BoardDropdownMenu = ({ onItemClick }) => {
   const dispatch = useDispatch();
 
-  const emitBoardChange = useBoardEventsEmitter();
+  const { emitAdminBoardChange } = useBoardEventsEmitter();
 
   const [selectedModal, setSelectedModal] = useState(null);
 
@@ -50,7 +50,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
 
       dispatch(action);
 
-      emitBoardChange(action);
+      emitAdminBoardChange(action);
     }
 
     if (values.name !== currentBoardName) {
@@ -58,7 +58,7 @@ const BoardDropdownMenu = ({ onItemClick }) => {
 
       dispatch(action);
 
-      emitBoardChange(action);
+      emitAdminBoardChange(action);
     }
 
     setSelectedModal(null);

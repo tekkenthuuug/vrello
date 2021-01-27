@@ -14,17 +14,21 @@ const initialState = {
   creator: null,
   isLoading: true,
   hasAccess: true,
+  isDeleted: false,
+  isOwner: false,
 };
 
 const boardReducer = (state = initialState, { payload, type }) =>
   produce(state, draft => {
     switch (type) {
       case BoardActionTypes.INIT: {
-        draft.backgroundColor = payload.backgroundColor;
-        draft.id = payload.id;
-        draft.name = payload.name;
-        draft.columns = payload.columns;
-        draft.creator = payload.creator;
+        const { boardData, currentUser } = payload;
+        draft.backgroundColor = boardData.backgroundColor;
+        draft.id = boardData.id;
+        draft.name = boardData.name;
+        draft.columns = boardData.columns;
+        draft.creator = boardData.creator;
+        draft.isOwner = boardData.creator.id === currentUser.id;
         draft.isLoading = false;
 
         return;

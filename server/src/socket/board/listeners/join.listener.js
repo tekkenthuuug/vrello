@@ -15,9 +15,9 @@ module.exports = socket => async ({ boardSlug, creatorSlug }) => {
   // check if user has access to this board
   const { session } = socket.request;
 
-  const hasAccess =
-    String(board.creator) === session.userId ||
-    board.members.includes(session.userId);
+  const isOwner = String(board.creator) === session.userId;
+
+  const hasAccess = isOwner || board.members.includes(session.userId);
 
   if (hasAccess) {
     const boardData = await board.populateFullBoard();

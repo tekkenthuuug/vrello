@@ -20,7 +20,7 @@ import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 
 const ColumnHeader = ({ columnId }) => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmitter();
+  const { emitMemberBoardChange } = useBoardEventsEmitter();
 
   const { name: columnName } = useSelector(selectColumn(columnId));
 
@@ -43,7 +43,7 @@ const ColumnHeader = ({ columnId }) => {
     if (columnNameInputText !== columnName) {
       const action = renameColumn(columnId, columnNameInputText);
       dispatch(action);
-      emitBoardChange(action);
+      emitMemberBoardChange(action);
     }
   };
 

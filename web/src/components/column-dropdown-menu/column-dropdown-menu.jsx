@@ -8,14 +8,14 @@ import { StyledDropdownContainer } from './column-dropdown-menu.styles';
 
 const ColumnDropdownMenu = ({ onItemClick, columnId }) => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmitter();
+  const { emitMemberBoardChange } = useBoardEventsEmitter();
 
   const handleDeleteColumn = () => {
     const action = moveColumn(columnId);
 
     dispatch(action);
 
-    emitBoardChange(action);
+    emitMemberBoardChange(action);
   };
 
   return (

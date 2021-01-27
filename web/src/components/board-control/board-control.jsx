@@ -13,7 +13,7 @@ import { selectColumnsIds } from '../../redux/board/board.selectors';
 
 const BoardControl = () => {
   const dispatch = useDispatch();
-  const emitBoardChange = useBoardEventsEmitter();
+  const { emitMemberBoardChange } = useBoardEventsEmitter();
 
   const columnsIds = useSelector(selectColumnsIds);
 
@@ -48,11 +48,11 @@ const BoardControl = () => {
       const action = addColumn({ name: text });
 
       // send changes to server
-      emitBoardChange(action);
+      emitMemberBoardChange(action);
 
       setIsAddColumnFormVisible(false);
     },
-    [emitBoardChange]
+    [emitMemberBoardChange]
   );
 
   const handleColumnDrop = e => {
@@ -70,7 +70,7 @@ const BoardControl = () => {
 
     const action = moveColumn(columnId, dragOverColumnId.current);
 
-    emitBoardChange(action);
+    emitMemberBoardChange(action);
 
     dispatch(action);
 

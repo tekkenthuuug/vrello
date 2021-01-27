@@ -12,15 +12,14 @@ import { useSelector } from 'react-redux';
 import {
   selectBoardCreator,
   selectBoardName,
+  selectIsBoardOwner,
 } from '../../redux/board/board.selectors';
 import AddMemberModal from '../add-member-modal/add-member-modal';
-import useUserContext from '../../hooks/useUserContext';
 
 const BoardHeader = () => {
-  const { user } = useUserContext();
-
   const name = useSelector(selectBoardName);
   const boardCreator = useSelector(selectBoardCreator);
+  const isOwner = useSelector(selectIsBoardOwner);
 
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const [isAddMemberModalOpened, setIsAddMemberModalOpened] = useState(false);
@@ -30,8 +29,6 @@ const BoardHeader = () => {
   useOnClickOutside(dropdownRef, () => {
     setIsMenuOpened(false);
   });
-
-  const isOwner = boardCreator.id === user.id;
 
   return (
     <HeaderContainer>

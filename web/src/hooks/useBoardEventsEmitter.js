@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import BoardEventsEmitterContext from '../contexts/boardEventsEmitterContext';
+import { BoardEventsEmitterContext } from '../contexts/boardEventsEmitterContext';
 
 const useBoardEventsEmitter = () => {
   const context = useContext(BoardEventsEmitterContext);

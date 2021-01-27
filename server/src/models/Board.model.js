@@ -43,12 +43,19 @@ const BoardSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   {
     toJSON: {
       transform: normalizeTransform,
     },
-    timestamps: true,
   }
 );
 
@@ -76,9 +83,9 @@ BoardSchema.methods.removeColumn = function (columnId) {
 BoardSchema.methods.moveColumn = function (columnIdToMove, targetColumnId) {
   const { columns } = this;
 
-  let columnToMoveIndex = columns.indexOf(columnIdToMove);
+  const columnToMoveIndex = columns.indexOf(columnIdToMove);
 
-  let targetColumnIndex = columns.indexOf(targetColumnId);
+  const targetColumnIndex = columns.indexOf(targetColumnId);
 
   columns.splice(columnToMoveIndex, 1);
 
@@ -93,6 +100,14 @@ BoardSchema.methods.deleteMember = function (userId) {
   const memberIndex = this.members.indexOf(userId);
 
   this.members.splice(memberIndex, 1);
+};
+
+BoardSchema.methods.hasMember = function (userId) {
+  return this.members.includes(userId);
+};
+
+BoardSchema.methods.hasAdmin = function (userId) {
+  return String(this.creator) === userId;
 };
 
 BoardSchema.methods.populateFullBoard = async function () {

@@ -2,7 +2,7 @@ const Board = require('../../../models/Board.model');
 const Column = require('../../../models/Column.model');
 const Card = require('../../../models/Card.model');
 
-const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
+const handleMemberBoardChangeEvent = socket => async ({ boardId, action }) => {
   const { type, payload } = action;
   const { session } = socket.request;
 
@@ -10,21 +10,15 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
 
   const board = await Board.findById(boardId);
 
-  const isMember = board.members.includes(session.userId);
+  const hasAccess =
+    board.hasMember(session.userId) || board.hasAdmin(session.userId);
 
-  const isBoardAdmin = session.userId === String(board.creator);
-
-  if (!isBoardAdmin && !isMember) {
+  if (!hasAccess) {
     socket.emit('noAccess', boardId);
 
     return socket.disconnect();
   }
 
-  await board.updateOne({ updatedAt: Date.now() });
-
-  let matchedMemberAction = true;
-
-  // all member actions
   switch (type) {
     case 'ADD_CARD': {
       const { toColumnId, card } = payload;
@@ -122,36 +116,12 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
       break;
     }
     default: {
-      matchedMemberAction = false;
+      socket.disconnect();
+      return;
     }
   }
 
-  // admin actions
-  if (isBoardAdmin) {
-    switch (type) {
-      case 'RENAME': {
-        board.name = payload;
-
-        await board.save();
-
-        break;
-      }
-      case 'CHANGE_BG': {
-        await board.updateOne({ backgroundColor: payload });
-
-        break;
-      }
-      case 'DELETE_BOARD': {
-        await board.deleteOne();
-
-        break;
-      }
-    }
-  } else if (!matchedMemberAction) {
-    // user is not allowed to use this action or sends wrong action
-    socket.disconnect();
-    return;
-  }
+  await board.updateOne({ updatedAt: Date.now() });
 
   // send to all users in this room except sender
   socket.broadcast.to(boardId).emit('boardChange', action);
@@ -162,4 +132,4 @@ const handleBoardChangeEvent = socket => async ({ boardId, action }) => {
   }
 };
 
-module.exports = handleBoardChangeEvent;
+module.exports = handleMemberBoardChangeEvent;

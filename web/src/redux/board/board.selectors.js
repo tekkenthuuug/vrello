@@ -44,3 +44,8 @@ export const selectBoardIsDeleted = createSelector(
   [selectBoard],
   board => board.isDeleted
 );
+
+export const selectIsBoardOwner = createSelector(
+  [selectBoard],
+  board => board.isOwner
+);

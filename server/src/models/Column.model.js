@@ -49,7 +49,7 @@ ColumnSchema.methods.moveCard = async function (cardId, targetTaskId) {
   cards.splice(targetTaskIndex + 1, 0, cardId);
 };
 
-ColumnSchema.pre(/delete/i, async function (next) {
+ColumnSchema.pre(/delete/i, { document: true }, async function (next) {
   await Card.deleteMany({ _id: { $in: this.cards } });
 
   next();

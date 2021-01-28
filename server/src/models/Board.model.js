@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const normalizeTransform = require('../utils/normalizeTransform');
 const Column = require('./Column.model');
-const BoardMember = require('./BoardMember.model');
 const User = require('./User.model');
 const slugify = require('../utils/slugify');
 const uniqueValidator = require('mongoose-unique-validator');
@@ -119,9 +118,8 @@ BoardSchema.methods.populateFullBoard = async function () {
 };
 
 BoardSchema.pre(/delete/i, { document: true }, async function (next) {
-  await Column.deleteMany({ boardId: this._id });
-
-  await BoardMember.deleteMany({ board: this._id });
+  const columns = await Column.find({ boardId: this._id });
+  columns.forEach(col => col.deleteOne());
 
   await User.updateOne(
     { _id: this.creator },

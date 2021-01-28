@@ -12,7 +12,7 @@ const requireBoardAdmin = async (req, res, next) => {
       return next(new ErrorResponse("Board doesn't exist", 404));
     }
 
-    if (String(board.creator) !== userId) {
+    if (!board.hasAdmin(userId)) {
       return next(new ErrorResponse('You are not the owner of the board', 400));
     }
 

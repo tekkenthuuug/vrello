@@ -1,26 +1,23 @@
 const router = require('express').Router();
 const Board = require('../../models/Board.model');
 const User = require('../../models/User.model');
-const BoardMember = require('../../models/BoardMember.model');
 
 router.get('/:uid/boards', async (req, res, next) => {
   const { uid } = req.params;
 
   try {
-    const boards = await Board.find({ creator: uid }, '-members -columns');
+    const boards = await Board.find(
+      { creator: uid },
+      '-members -columns'
+    ).sort({ updatedAt: 'DESC' });
 
-    const boardMemberships = await BoardMember.find({ member: uid }).populate({
-      path: 'board',
-      select: '-members -columns',
-      populate: {
-        path: 'creator',
-        select: 'slug -_id',
-      },
-    });
+    const memberBoards = await Board.find({ members: uid }, '-members -columns')
+      .sort({ updatedAt: 'DESC' })
+      .populate({ path: 'creator', select: 'slug -_id' });
 
     return res.json({
       boards,
-      memberBoards: boardMemberships.map(rel => rel.board),
+      memberBoards,
     });
   } catch (error) {
     next(error);

@@ -12,7 +12,7 @@ const requireBoardMember = async (req, res, next) => {
       return next(new ErrorResponse("Board doesn't exist", 404));
     }
 
-    if (!board.members.includes(userId) && String(board.creator) !== userId) {
+    if (!board.hasMember(userId) && !board.hasAdmin(userId)) {
       return next(
         new ErrorResponse('You are not the member of the board', 400)
       );

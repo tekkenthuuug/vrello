@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Board = require('../../models/Board.model');
 const User = require('../../models/User.model');
-const BoardMember = require('../../models/BoardMember.model');
 const BoardRequest = require('../../models/BoardRequest.model');
 const ErrorResponse = require('../../utils/ErrorResponse');
 const requireBoardAdmin = require('../../middleware/requireBoardAdmin');
@@ -39,31 +38,23 @@ router.delete('/delete-or-leave', async (req, res, next) => {
   const ids = Array.isArray(req.body.ids) ? req.body.ids : [req.body.ids];
 
   try {
-    const boardsToDelete = await Board.find({
+    // find owned boards
+    const boards = await Board.find({
       creator: userId,
       _id: { $in: ids },
     });
 
-    const boardMembershipsToRemove = await BoardMember.find({
-      member: userId,
-      board: { $in: ids },
-    });
-
-    const boardsToRemoveMemberFrom = [];
-
-    boardMembershipsToRemove.forEach(async membership => {
-      boardsToRemoveMemberFrom.push(membership.board);
-      await membership.deleteOne();
-    });
-
+    // remove from member boards
     await Board.updateMany(
-      { _id: { $in: boardsToRemoveMemberFrom } },
+      {
+        _id: { $in: ids },
+        members: userId,
+      },
       { $pull: { members: userId } }
     );
 
-    boardsToDelete.forEach(async board => {
-      await board.deleteOne();
-    });
+    // delete member boards
+    boards.forEach(board => board.deleteOne());
 
     res.sendStatus(200);
   } catch (error) {
@@ -79,19 +70,12 @@ router.post(
     const { board } = res.locals;
 
     try {
-      const conflictingBoardMembership = await BoardMember.findOne({
-        board: board._id,
-        member: userId,
-      });
-
-      if (conflictingBoardMembership) {
+      if (board.hasMember(userId)) {
         return next(new ErrorResponse('User is already a member', 400));
       }
-      const boardMember = new BoardMember({ board: board._id, member: userId });
 
       board.addMember(userId);
 
-      await boardMember.save();
       await board.save();
 
       return res.sendStatus(200);
@@ -164,14 +148,8 @@ router.delete(
     const { userId } = req.params;
 
     try {
-      const boardMember = await BoardMember.findOne({
-        board: board._id,
-        member: userId,
-      });
-
       board.deleteMember(userId);
 
-      await boardMember.delete();
       await board.save();
 
       return res.sendStatus(200);

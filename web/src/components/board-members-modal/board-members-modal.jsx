@@ -11,6 +11,7 @@ import Modal from '../modal/modal';
 import UserProfileCard from '../user-profile-card/user-profile-card';
 import { MembersContainer } from './board-members-modal.styles';
 import deleteBoardMember from '../../react-query/mutations/deleteBoardMember';
+import removeMemberFromBoardMembersCache from '../../react-query/updaters/removeMemberFromBoardMembersCache';
 
 const BoardMembersModal = ({ onClose }) => {
   const queryClient = useQueryClient();
@@ -18,19 +19,18 @@ const BoardMembersModal = ({ onClose }) => {
   const boardId = useSelector(selectBoardId);
   const boardBackgroundColor = useSelector(selectBoardBackgroundColor);
 
+  const boardMembersQueryKey = ['boardMembers', boardId];
   const { data: boardMembersData, isLoading } = useQuery(
-    ['boardMembers', boardId],
+    boardMembersQueryKey,
     getBoardMembers
   );
 
   const deleteBoardMemberMutation = useMutation(deleteBoardMember(boardId), {
     onSuccess: (_, variables) => {
-      queryClient.setQueryData(['boardMembers', boardId], old => {
-        old.data.members = old.data.members.filter(
-          member => member.id !== variables
-        );
-        return old;
-      });
+      queryClient.setQueryData(
+        boardMembersQueryKey,
+        removeMemberFromBoardMembersCache(variables)
+      );
     },
   });
 

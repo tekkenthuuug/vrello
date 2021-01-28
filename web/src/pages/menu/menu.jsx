@@ -75,7 +75,8 @@ const Menu = () => {
       return !value;
     });
   };
-
+  console.log(isLoadingBoards);
+  console.log(boardsData?.data);
   return (
     <MenuPage>
       <MenuContainer>

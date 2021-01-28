@@ -37,10 +37,16 @@ const BoardEventsEmitterProvider = ({ children }) => {
     socket.current.on('noAccess', boardId => {
       dispatch(noAccess(boardId));
 
-      queryClient.setQueryData(
-        ['boards', user.id],
-        removeBoardFromMemberBoardsCache(boardId)
-      );
+      const queryKey = ['boards', user.id];
+
+      const queryData = queryClient.getQueryData(queryKey);
+
+      if (queryData) {
+        queryClient.setQueryData(
+          queryKey,
+          removeBoardFromMemberBoardsCache(boardId)
+        );
+      }
     });
 
     socket.current.on('boardChange', action => {

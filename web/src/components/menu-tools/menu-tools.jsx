@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  DeleteIcon,
+  LeaveIcon,
   EditIcon,
   UpdateIcon,
   ItemsContainer,
@@ -26,7 +26,7 @@ const MenuTools = ({
       {isSelectionMode && (
         <ItemsContainer>
           <SelectedCount>Selected: {selectedBoardCardsCount}</SelectedCount>
-          <DeleteIcon
+          <LeaveIcon
             onClick={onDeleteClick}
             isDisabled={!selectedBoardCardsCount}
           />

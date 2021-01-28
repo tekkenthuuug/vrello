@@ -4,23 +4,34 @@ import InputField from '../input-field/input-field';
 import { Formik } from 'formik';
 import { StyledForm, Description } from './delete-board-modal.styles';
 import { SubmitBtn } from '../../shared-styles/form.styles';
-import { selectBoardName } from '../../redux/board/board.selectors';
+import {
+  selectBoardId,
+  selectBoardName,
+} from '../../redux/board/board.selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBoard } from '../../redux/board/board.actions';
 import useBoardEventsEmitter from '../../hooks/useBoardEventsEmitter';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
+import useUserContext from '../../hooks/useUserContext';
+import removeBoardFromBoardsCache from '../../react-query/updaters/removeBoardFromBoardsCache';
 
 const DeleteBoardModal = ({ onClose }) => {
+  const queryClient = useQueryClient();
+  const { user } = useUserContext();
   const history = useHistory();
-
   const currentBoardName = useSelector(selectBoardName);
-
+  const boardId = useSelector(selectBoardId);
   const dispatch = useDispatch();
-
   const { emitAdminBoardChange } = useBoardEventsEmitter();
 
   const handleBoardDelete = () => {
+    queryClient.setQueryData(
+      ['boards', user.id],
+      removeBoardFromBoardsCache(boardId)
+    );
+
     const name = currentBoardName;
 
     const action = deleteBoard();

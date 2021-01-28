@@ -10,6 +10,12 @@ const handleMemberBoardChangeEvent = socket => async ({ boardId, action }) => {
 
   const board = await Board.findById(boardId);
 
+  if (!board) {
+    socket.emit('boardChange', { type: 'DELETE_BOARD' });
+
+    return socket.disconnect();
+  }
+
   const hasAccess =
     board.hasMember(session.userId) || board.hasAdmin(session.userId);
 

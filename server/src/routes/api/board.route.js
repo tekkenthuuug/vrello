@@ -35,6 +35,43 @@ router.post('/create', async (req, res, next) => {
   }
 });
 
+router.delete('/delete-or-leave', async (req, res, next) => {
+  const { userId } = req.session;
+  const ids = Array.isArray(req.body.ids) ? req.body.ids : [req.body.ids];
+
+  try {
+    const boardsToDelete = await Board.find({
+      creator: userId,
+      _id: { $in: ids },
+    });
+
+    const boardMembershipsToRemove = await BoardMember.find({
+      member: userId,
+      board: { $in: ids },
+    });
+
+    const boardsToRemoveMemberFrom = [];
+
+    boardMembershipsToRemove.forEach(async membership => {
+      boardsToRemoveMemberFrom.push(membership.board);
+      await membership.deleteOne();
+    });
+
+    await Board.updateMany(
+      { _id: { $in: boardsToRemoveMemberFrom } },
+      { $pull: { members: userId } }
+    );
+
+    boardsToDelete.forEach(async board => {
+      await board.deleteOne();
+    });
+
+    res.sendStatus(200);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post(
   '/:boardId/add-member',
   requireBoardAdmin,

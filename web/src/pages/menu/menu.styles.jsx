@@ -7,7 +7,7 @@ export const MenuPage = styled.div`
 export const MenuContainer = styled.div`
   position: relative;
 
-  max-width: 835px;
+  max-width: 847px;
   width: 95%;
   margin: 0 auto;
 `;

@@ -8,6 +8,12 @@ const handleAdminBoardChangeEvent = socket => async ({ boardId, action }) => {
 
   const board = await Board.findById(boardId);
 
+  if (!board) {
+    socket.emit('boardChange', { type: 'DELETE_BOARD' });
+
+    return socket.disconnect();
+  }
+
   const isBoardAdmin = board.hasAdmin(session.userId);
 
   if (!isBoardAdmin) {

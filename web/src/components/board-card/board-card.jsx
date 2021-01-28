@@ -6,13 +6,18 @@ import {
   BoardCardOverlay,
   BoardName,
   CreatedAt,
+  DoneIcon,
 } from './board-card.styles';
 
 const BoardCard = ({ board, isSelected, onClick }) => {
   return (
     <div onClick={() => onClick(board)}>
-      <BoardCardContainer backgroundColor={board.backgroundColor}>
+      <BoardCardContainer
+        isSelected={isSelected}
+        backgroundColor={board.backgroundColor}
+      >
         <BoardCardOverlay isSelected={isSelected} />
+
         <BoardName>{board.name}</BoardName>
         <CreatedAt>
           Updated{' '}
@@ -22,6 +27,7 @@ const BoardCard = ({ board, isSelected, onClick }) => {
             formatFn={humanReadableTime}
           />
         </CreatedAt>
+        {isSelected && <DoneIcon />}
       </BoardCardContainer>
     </div>
   );

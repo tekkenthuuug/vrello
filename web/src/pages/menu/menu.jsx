@@ -1,24 +1,40 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import MenuBoardsSection from '../../components/menu-boards-section/menu-boards-section';
 import MenuTools from '../../components/menu-tools/menu-tools';
 import useUserContext from '../../hooks/useUserContext';
+import deleteOrLeaveBoard from '../../react-query/mutations/deleteOrLeaveBoard';
 import getUserBoards from '../../react-query/queries/getUserBoards';
+import removeLeavedBoardsFromCache from '../../react-query/updaters/removeLeavedBoardsFromCache';
 import { MenuContainer, MenuPage } from './menu.styles';
 
 const Menu = () => {
   const history = useHistory();
+  const queryClient = useQueryClient();
   const { user } = useUserContext();
 
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [selectedBoards, setSelectedBoards] = useState({});
 
+  const queryKey = ['boards', user.id];
+
   const {
     data: boardsData,
     isLoading: isLoadingBoards,
     refetch: refetchBoards,
-  } = useQuery(['boards', user.id], getUserBoards);
+  } = useQuery(queryKey, getUserBoards);
+
+  const deleteOrLeaveBoardMutation = useMutation(deleteOrLeaveBoard, {
+    onSuccess: () => {
+      queryClient.setQueryData(
+        queryKey,
+        removeLeavedBoardsFromCache(selectedBoards)
+      );
+      setIsSelectionMode(false);
+      setSelectedBoards({});
+    },
+  });
 
   const handleBoardCardClick = board => {
     if (isSelectionMode) {
@@ -38,20 +54,23 @@ const Menu = () => {
   };
 
   const handleEditClick = () => {
-    setIsSelectionMode(value => {
-      // if was true, reset selectedBoards
-      if (value) {
-        setSelectedBoards({});
-      }
+    setIsSelectionMode(value => !value);
+    setSelectedBoards({});
+  };
 
-      return !value;
-    });
+  const handleDeleteClick = () => {
+    const boardsIds = Object.keys(selectedBoards);
+
+    if (boardsIds.length) {
+      deleteOrLeaveBoardMutation.mutate(boardsIds);
+    }
   };
 
   return (
     <MenuPage>
       <MenuContainer>
         <MenuTools
+          onDeleteClick={handleDeleteClick}
           onEditClick={handleEditClick}
           onUpdateClick={refetchBoards}
           selectedBoards={selectedBoards}

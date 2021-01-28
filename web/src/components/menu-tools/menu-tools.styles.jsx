@@ -1,4 +1,4 @@
-import { MdDelete, MdEdit, MdUpdate } from 'react-icons/md';
+import { MdAutorenew, MdEdit, MdExitToApp } from 'react-icons/md';
 import styled from 'styled-components';
 import { ClickableIconCss } from '../../shared-styles/util.styles';
 
@@ -8,7 +8,7 @@ export const EditIcon = styled(MdEdit)`
   ${ClickableIconCss}
 `;
 
-export const DeleteIcon = styled(MdDelete)`
+export const LeaveIcon = styled(MdExitToApp)`
   font-size: 26px;
   margin-left: 12px;
 
@@ -17,7 +17,7 @@ export const DeleteIcon = styled(MdDelete)`
   color: red;
 `;
 
-export const UpdateIcon = styled(MdUpdate)`
+export const UpdateIcon = styled(MdAutorenew)`
   font-size: 26px;
   margin-left: 8px;
 
@@ -37,6 +37,8 @@ export const MenuToolsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding-right: 12px;
 `;
 
 export const SelectedCount = styled.div`

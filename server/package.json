@@ -1,9 +1,11 @@
 {
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "nodemon ./src/index.js"
+    "dev": "nodemon ./src/index.js",
+    "lint": "eslint ."
   },
   "devDependencies": {
+    "eslint": "^7.18.0",
     "nodemon": "^2.0.6"
   },
   "dependencies": {

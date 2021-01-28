@@ -1,6 +1,6 @@
 const ErrorResponse = require('../utils/ErrorResponse');
 
-const responseMiddleware = (errorObj, req, res, next) => {
+const errorMiddleware = (errorObj, req, res) => {
   if (errorObj.name === 'ValidationError') {
     const formattedErrors = Object.keys(errorObj.errors).reduce(
       (errors, key) => {
@@ -21,4 +21,4 @@ const responseMiddleware = (errorObj, req, res, next) => {
   }
 };
 
-module.exports = responseMiddleware;
+module.exports = errorMiddleware;

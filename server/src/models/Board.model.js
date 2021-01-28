@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const normalizeTransform = require('../utils/normalizeTransform');
 const Column = require('./Column.model');
 const BoardMember = require('./BoardMember.model');
-const BoardRequest = require('./BoardRequest.model');
 const User = require('./User.model');
 const slugify = require('../utils/slugify');
 const uniqueValidator = require('mongoose-unique-validator');

@@ -5,7 +5,6 @@ const BoardMember = require('../../models/BoardMember.model');
 const BoardRequest = require('../../models/BoardRequest.model');
 const ErrorResponse = require('../../utils/ErrorResponse');
 const requireBoardAdmin = require('../../middleware/requireBoardAdmin');
-const requireBoardMember = require('../../middleware/requireBoardMember');
 
 router.post('/create', async (req, res, next) => {
   const { name, backgroundColor } = req.body;

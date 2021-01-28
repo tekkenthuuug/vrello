@@ -22,6 +22,7 @@ const Menu = () => {
   const {
     data: boardsData,
     isLoading: isLoadingBoards,
+    isFetching: isFetchingBoards,
     refetch: refetchBoards,
   } = useQuery(queryKey, getUserBoards);
 
@@ -70,6 +71,7 @@ const Menu = () => {
     <MenuPage>
       <MenuContainer>
         <MenuTools
+          isUpdating={isFetchingBoards}
           onDeleteClick={handleDeleteClick}
           onEditClick={handleEditClick}
           onUpdateClick={refetchBoards}
@@ -77,7 +79,7 @@ const Menu = () => {
           isSelectionMode={isSelectionMode}
         />
         <MenuBoardsSection
-          label='Boards you own'
+          label='Personal boards'
           isLoading={isLoadingBoards}
           boards={boardsData?.data.boards}
           onBoardCardClick={handleBoardCardClick}
@@ -85,7 +87,7 @@ const Menu = () => {
           withAddBoard
         />
         <MenuBoardsSection
-          label='Boards you are member in'
+          label='Boards shared with you'
           isLoading={isLoadingBoards}
           boards={boardsData?.data.memberBoards}
           onBoardCardClick={handleBoardCardClick}

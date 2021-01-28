@@ -1,5 +1,5 @@
 import { MdAutorenew, MdEdit, MdExitToApp } from 'react-icons/md';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ClickableIconCss } from '../../shared-styles/util.styles';
 
 export const EditIcon = styled(MdEdit)`
@@ -22,26 +22,58 @@ export const UpdateIcon = styled(MdAutorenew)`
   margin-left: 8px;
 
   ${ClickableIconCss}
+
+  ${props =>
+    props.isSpinning &&
+    css`
+      animation: updateIconAnimation 1s linear infinite;
+      &:hover {
+        background-color: transparent;
+      }
+      @keyframes updateIconAnimation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    `}
 `;
 
 export const ItemsContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-
-  margin-top: 24px;
-  margin-bottom: -14px;
 `;
 
 export const MenuToolsContainer = styled.div`
   display: flex;
+
+  margin-top: 24px;
+`;
+
+export const ToolsBox = styled.div`
+  display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding-right: 12px;
+  border-bottom: 2px solid #cccccc;
+  width: 100%;
+
+  padding-bottom: 8px;
 `;
 
 export const SelectedCount = styled.div`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
+  color: #949292;
+
+  & > span {
+    color: #026aa7;
+  }
+`;
+
+export const Spacer = styled.div`
+  min-width: 14px;
 `;

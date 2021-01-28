@@ -41,7 +41,7 @@ export const SkeletonLoadingCss = css`
 
 export const ClickableIconCss = css`
   padding: 2px;
-  color: #b3bac5;
+  color: #949292;
   cursor: pointer;
   border-radius: 4px;
 

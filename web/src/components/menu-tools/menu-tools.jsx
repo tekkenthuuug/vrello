@@ -6,6 +6,8 @@ import {
   ItemsContainer,
   MenuToolsContainer,
   SelectedCount,
+  Spacer,
+  ToolsBox,
 } from './menu-tools.styles';
 
 const MenuTools = ({
@@ -14,24 +16,34 @@ const MenuTools = ({
   onDeleteClick,
   selectedBoards,
   isSelectionMode,
+  isUpdating,
 }) => {
   const selectedBoardCardsCount = Object.keys(selectedBoards).length;
 
   return (
     <MenuToolsContainer>
-      <ItemsContainer>
-        <EditIcon onClick={onEditClick} isHighlighted={isSelectionMode} />
-        <UpdateIcon onClick={onUpdateClick} />
-      </ItemsContainer>
-      {isSelectionMode && (
+      <ToolsBox>
         <ItemsContainer>
-          <SelectedCount>Selected: {selectedBoardCardsCount}</SelectedCount>
-          <LeaveIcon
-            onClick={onDeleteClick}
-            isDisabled={!selectedBoardCardsCount}
+          <EditIcon
+            onClick={onEditClick}
+            isDisabled={isUpdating}
+            isHighlighted={isSelectionMode}
           />
+          <UpdateIcon onClick={onUpdateClick} isSpinning={isUpdating} />
         </ItemsContainer>
-      )}
+        {isSelectionMode && (
+          <ItemsContainer>
+            <SelectedCount>
+              Selected: <span>{selectedBoardCardsCount}</span>
+            </SelectedCount>
+            <LeaveIcon
+              onClick={onDeleteClick}
+              isDisabled={!selectedBoardCardsCount}
+            />
+          </ItemsContainer>
+        )}
+      </ToolsBox>
+      <Spacer />
     </MenuToolsContainer>
   );
 };

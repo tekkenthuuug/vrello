@@ -27,10 +27,11 @@ const DeleteBoardModal = ({ onClose }) => {
   const { emitAdminBoardChange } = useBoardEventsEmitter();
 
   const handleBoardDelete = () => {
-    queryClient.setQueryData(
-      ['boards', user.id],
-      removeBoardFromBoardsCache(boardId)
-    );
+    const queryKey = ['boards', user.id];
+
+    if (queryClient.getQueryData(queryKey)) {
+      queryClient.setQueryData(queryKey, removeBoardFromBoardsCache(boardId));
+    }
 
     const name = currentBoardName;
 

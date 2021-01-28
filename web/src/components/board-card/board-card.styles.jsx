@@ -56,22 +56,24 @@ export const BoardCardContainer = styled.div`
 `;
 
 export const DoneIcon = styled(MdDone)`
-  border: 2px solid #fff;
+  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 4px;
   font-size: 26px;
   position: absolute;
   right: 12px;
+  bottom: 8px;
 
   animation: appearDoneIcon 0.2s ease forwards;
 
   @keyframes appearDoneIcon {
     from {
       opacity: 0;
-      bottom: -26px;
+      transform: scale(0);
     }
     to {
       opacity: 1;
-      bottom: 8px;
+      transform: scale(1);
     }
   }
 `;

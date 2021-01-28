@@ -1,6 +1,9 @@
 import { MdAdd } from 'react-icons/md';
 import styled from 'styled-components';
-import { BoardCardShapeCss } from '../../shared-styles/board-card.styles';
+import {
+  BoardCardShapeCss,
+  BoardCardSpacingCss,
+} from '../../shared-styles/board-card.styles';
 import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const MenuBoardsContainer = styled.section`
@@ -33,6 +36,7 @@ export const CreateBoardBtn = styled.button`
   font-weight: 600;
 
   ${BoardCardShapeCss}
+  ${BoardCardSpacingCss}
   font-size: 18px;
 
   transition: background-color 0.3s ease;

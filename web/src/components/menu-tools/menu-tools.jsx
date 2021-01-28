@@ -15,18 +15,21 @@ const MenuTools = ({
   selectedBoards,
   isSelectionMode,
 }) => {
+  const selectedBoardCardsCount = Object.keys(selectedBoards).length;
+
   return (
     <MenuToolsContainer>
       <ItemsContainer>
-        <EditIcon onClick={onEditClick} isActive={isSelectionMode} />
+        <EditIcon onClick={onEditClick} isHighlighted={isSelectionMode} />
         <UpdateIcon onClick={onUpdateClick} />
       </ItemsContainer>
       {isSelectionMode && (
         <ItemsContainer>
-          <SelectedCount>
-            Selected: {Object.keys(selectedBoards).length}
-          </SelectedCount>
-          <DeleteIcon onClick={onDeleteClick} />
+          <SelectedCount>Selected: {selectedBoardCardsCount}</SelectedCount>
+          <DeleteIcon
+            onClick={onDeleteClick}
+            isDisabled={!selectedBoardCardsCount}
+          />
         </ItemsContainer>
       )}
     </MenuToolsContainer>

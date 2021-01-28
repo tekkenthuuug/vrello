@@ -1,7 +1,7 @@
 import axios from '../../utils/axiosInstance';
 
-const postUserBoards = async newBoard => {
+const postUserBoard = async newBoard => {
   return await axios.post(`/board/create`, newBoard);
 };
 
-export default postUserBoards;
+export default postUserBoard;

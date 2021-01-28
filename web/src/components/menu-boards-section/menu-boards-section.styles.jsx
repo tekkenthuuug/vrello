@@ -1,4 +1,7 @@
+import { MdAdd } from 'react-icons/md';
 import styled from 'styled-components';
+import { BoardCardShapeCss } from '../../shared-styles/board-card.styles';
+import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const MenuBoardsContainer = styled.section`
   margin-top: 24px;
@@ -20,4 +23,25 @@ export const BoardsContainer = styled.div`
       text-decoration: none;
     }
   }
+`;
+
+export const CreateBoardBtn = styled.button`
+  background-color: rgba(9, 30, 66, 0.04);
+
+  ${FlexCenterCenterCss}
+
+  font-weight: 600;
+
+  ${BoardCardShapeCss}
+  font-size: 18px;
+
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(9, 30, 66, 0.08);
+  }
+`;
+
+export const AddIcon = styled(MdAdd)`
+  margin-right: 8px;
 `;

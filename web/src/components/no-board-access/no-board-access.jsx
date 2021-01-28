@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
-import {
-  NoBoardAccessContainer,
-  MessageContainer,
-  RequestAccessBtn,
-  Separator,
-  HomeLink,
-  OptionsContainer,
-} from './no-board-access.styles';
-import { ReactComponent as RestrictedIllustration } from '../../assets/pending_approval.svg';
+import React from 'react';
+import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
-import { selectBoardId } from '../../redux/board/board.selectors';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useMutation } from 'react-query';
+import { ReactComponent as RestrictedIllustration } from '../../assets/pending_approval.svg';
 import postRequestBoardAccess from '../../react-query/mutations/postRequestBoardAccess';
+import { selectBoardId } from '../../redux/board/board.selectors';
+import {
+  HomeLink,
+  MessageContainer,
+  NoBoardAccessContainer,
+  OptionsContainer,
+  RequestAccessBtn,
+  Separator,
+} from './no-board-access.styles';
 
 const NoBoardAccess = () => {
   const history = useHistory();

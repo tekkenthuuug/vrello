@@ -13,11 +13,13 @@ export const DeleteIcon = styled(MdDelete)`
   margin-left: 12px;
 
   ${ClickableIconCss}
+
+  color: red;
 `;
 
 export const UpdateIcon = styled(MdUpdate)`
   font-size: 26px;
-  margin-left: 12px;
+  margin-left: 8px;
 
   ${ClickableIconCss}
 `;

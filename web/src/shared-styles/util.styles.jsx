@@ -51,7 +51,14 @@ export const ClickableIconCss = css`
   }
 
   ${props =>
-    props.isActive &&
+    props.isDisabled &&
+    css`
+      opacity: 0.5;
+      cursor: not-allowed;
+    `}
+
+  ${props =>
+    props.isHighlighted &&
     css`
       color: #fff;
       background-color: #027bc2;

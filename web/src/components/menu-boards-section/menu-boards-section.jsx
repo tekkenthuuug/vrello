@@ -21,6 +21,7 @@ const MenuBoardsSection = ({
   boards,
   selectedBoards,
   onBoardCardClick,
+  isSelectionMode,
   withAddBoard,
 }) => {
   const queryClient = useQueryClient();
@@ -49,14 +50,18 @@ const MenuBoardsSection = ({
   const boardCards = isLoading ? (
     <SkeletonBoardCards numberOfCards={3} />
   ) : (
-    boards.map(board => (
-      <BoardCard
-        key={board.id}
-        board={board}
-        isSelected={selectedBoards[board.id]}
-        onClick={onBoardCardClick}
-      />
-    ))
+    boards.map(board => {
+      const isSelected = !!selectedBoards[board.id];
+      return (
+        <BoardCard
+          key={board.id}
+          board={board}
+          isSelected={isSelected}
+          onClick={onBoardCardClick}
+          grayscale={isSelectionMode && !isSelected}
+        />
+      );
+    })
   );
 
   return (

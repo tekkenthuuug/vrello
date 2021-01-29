@@ -9,10 +9,11 @@ import {
   DoneIcon,
 } from './board-card.styles';
 
-const BoardCard = ({ board, isSelected, onClick }) => {
+const BoardCard = ({ board, isSelected, onClick, grayscale }) => {
   return (
     <div onClick={() => onClick(board)}>
       <BoardCardContainer
+        grayscale={grayscale}
         isSelected={isSelected}
         backgroundColor={board.backgroundColor}
       >

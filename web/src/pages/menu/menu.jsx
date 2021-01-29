@@ -84,6 +84,7 @@ const Menu = () => {
           boards={boardsData?.data.boards}
           onBoardCardClick={handleBoardCardClick}
           selectedBoards={selectedBoards}
+          isSelectionMode={isSelectionMode}
           withAddBoard
         />
         <MenuBoardsSection
@@ -92,6 +93,7 @@ const Menu = () => {
           boards={boardsData?.data.memberBoards}
           onBoardCardClick={handleBoardCardClick}
           selectedBoards={selectedBoards}
+          isSelectionMode={isSelectionMode}
         />
       </MenuContainer>
     </MenuPage>

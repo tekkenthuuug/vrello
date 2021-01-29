@@ -33,11 +33,15 @@ export const BoardCardContainer = styled.div`
   transition: transform 0.2s ease;
   overflow: hidden;
   color: #fff;
-
   ${props =>
     props.isSelected &&
     css`
       transform: translateY(-6px);
+    `}
+  ${props =>
+    props.grayscale &&
+    css`
+      filter: grayscale(100);
     `}
 
   ${BoardCardDisplayCss}
@@ -56,13 +60,13 @@ export const BoardCardContainer = styled.div`
 `;
 
 export const DoneIcon = styled(MdDone)`
-  color: rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 4px;
-  font-size: 26px;
+  color: rgba(255, 255, 255, 0.2);
   position: absolute;
-  right: 12px;
-  bottom: 8px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 
   animation: appearDoneIcon 0.2s ease forwards;
 

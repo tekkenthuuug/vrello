@@ -55,6 +55,8 @@ const Menu = () => {
   };
 
   const handleEditClick = () => {
+    if (isFetchingBoards) return;
+
     setIsSelectionMode(value => !value);
     setSelectedBoards({});
   };

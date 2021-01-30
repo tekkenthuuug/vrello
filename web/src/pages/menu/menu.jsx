@@ -15,6 +15,9 @@ const Menu = () => {
   const { user } = useUserContext();
 
   const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [displayAsList, setDisplayAsList] = useState(
+    localStorage.getItem('asList') === String(true)
+  );
   const [selectedBoards, setSelectedBoards] = useState({});
 
   const queryKey = ['boards', user.id];
@@ -69,16 +72,26 @@ const Menu = () => {
     }
   };
 
+  const handleChangeViewClick = () => {
+    setDisplayAsList(display => {
+      localStorage.setItem('asList', String(!display));
+
+      return !display;
+    });
+  };
+
   return (
     <MenuPage>
       <MenuContainer>
         <MenuTools
           isUpdating={isFetchingBoards}
+          isSelectionMode={isSelectionMode}
+          displayAsList={displayAsList}
           onDeleteClick={handleDeleteClick}
           onEditClick={handleEditClick}
           onUpdateClick={refetchBoards}
+          onChangeViewClick={handleChangeViewClick}
           selectedBoards={selectedBoards}
-          isSelectionMode={isSelectionMode}
         />
         <MenuBoardsSection
           label='Personal boards'
@@ -88,6 +101,7 @@ const Menu = () => {
           selectedBoards={selectedBoards}
           isSelectionMode={isSelectionMode}
           withAddBoard
+          asList={displayAsList}
         />
         <MenuBoardsSection
           label='Boards shared with you'
@@ -96,6 +110,7 @@ const Menu = () => {
           onBoardCardClick={handleBoardCardClick}
           selectedBoards={selectedBoards}
           isSelectionMode={isSelectionMode}
+          asList={displayAsList}
         />
       </MenuContainer>
     </MenuPage>

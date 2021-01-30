@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const DateUpdater = ({ value, interval, formatFn }) => {
+const DateUpdater = ({ value, interval = 10000, formatFn }) => {
   const [date, setDate] = useState(null);
 
   useEffect(() => {

@@ -8,6 +8,8 @@ import {
   SelectedCount,
   Spacer,
   ToolsBox,
+  ListIcon,
+  GridIcon,
 } from './menu-tools.styles';
 
 const MenuTools = ({
@@ -17,6 +19,8 @@ const MenuTools = ({
   selectedBoards,
   isSelectionMode,
   isUpdating,
+  displayAsList,
+  onChangeViewClick,
 }) => {
   const selectedBoardCardsCount = Object.keys(selectedBoards).length;
 
@@ -31,17 +35,23 @@ const MenuTools = ({
           />
           <UpdateIcon onClick={onUpdateClick} isSpinning={isUpdating} />
         </ItemsContainer>
-        {isSelectionMode && (
-          <ItemsContainer>
-            <SelectedCount>
-              Selected: <span>{selectedBoardCardsCount}</span>
-            </SelectedCount>
-            <LeaveIcon
-              onClick={onDeleteClick}
-              isDisabled={!selectedBoardCardsCount}
-            />
-          </ItemsContainer>
-        )}
+        <ItemsContainer>
+          {isSelectionMode ? (
+            <>
+              <SelectedCount>
+                Selected: <span>{selectedBoardCardsCount}</span>
+              </SelectedCount>
+              <LeaveIcon
+                onClick={onDeleteClick}
+                isDisabled={!selectedBoardCardsCount}
+              />
+            </>
+          ) : displayAsList ? (
+            <GridIcon onClick={onChangeViewClick} />
+          ) : (
+            <ListIcon onClick={onChangeViewClick} />
+          )}
+        </ItemsContainer>
       </ToolsBox>
       <Spacer />
     </MenuToolsContainer>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import BoardCard from '../board-card/board-card';
 import CreateOrEditBoardModal from '../../components/create-or-edit-board-modal/create-or-edit-board-modal';
-import SkeletonBoardCards from '../skeleton-board-cards/skeleton-board-cards';
+import SkeletonBoardCard from '../skeleton-board-card/skeleton-board-card';
+import BoardListItem from '../board-list-item/board-list-item';
 import {
   BoardsContainer,
   SectionHeading,
@@ -13,6 +14,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import postUserBoard from '../../react-query/mutations/postUserBoard';
 import useUserContext from '../../hooks/useUserContext';
 import { useHistory } from 'react-router-dom';
+import Duplicator from '../duplicator/duplicator';
+import SkeletonBoardListItem from '../skeleton-board-list-item/skeleton-board-list-item';
 
 const MenuBoardsSection = ({
   children,
@@ -23,6 +26,7 @@ const MenuBoardsSection = ({
   onBoardCardClick,
   isSelectionMode,
   withAddBoard,
+  asList,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useUserContext();
@@ -47,13 +51,16 @@ const MenuBoardsSection = ({
     }
   };
 
+  const BoardComponent = asList ? BoardListItem : BoardCard;
+  const SkeletonComponent = asList ? SkeletonBoardListItem : SkeletonBoardCard;
+
   const boardCards = isLoading ? (
-    <SkeletonBoardCards numberOfCards={3} />
+    <Duplicator numberOfDuplicates={3} Component={SkeletonComponent} />
   ) : (
     boards.map(board => {
       const isSelected = !!selectedBoards[board.id];
       return (
-        <BoardCard
+        <BoardComponent
           key={board.id}
           board={board}
           isSelected={isSelected}
@@ -71,7 +78,10 @@ const MenuBoardsSection = ({
         {boardCards}
         {children}
         {withAddBoard && (
-          <CreateBoardBtn onClick={() => setIsModalOpened(value => !value)}>
+          <CreateBoardBtn
+            onClick={() => setIsModalOpened(value => !value)}
+            asList={asList}
+          >
             <AddIcon />
             Create board
           </CreateBoardBtn>

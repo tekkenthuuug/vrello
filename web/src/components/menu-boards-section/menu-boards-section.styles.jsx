@@ -1,9 +1,13 @@
 import { MdAdd } from 'react-icons/md';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   BoardCardShapeCss,
   BoardCardSpacingCss,
 } from '../../shared-styles/board-card.styles';
+import {
+  BoardListItemSpacingCss,
+  BoardListItemShapeCss,
+} from '../../shared-styles/board-list-item.styles';
 import { FlexCenterCenterCss } from '../../shared-styles/util.styles';
 
 export const MenuBoardsContainer = styled.section`
@@ -19,6 +23,7 @@ export const SectionHeading = styled.h1`
 export const BoardsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+
   margin-top: 12px;
 
   & > a {
@@ -40,6 +45,13 @@ export const CreateBoardBtn = styled.button`
   font-size: 18px;
 
   transition: background-color 0.3s ease;
+
+  ${props =>
+    props.asList &&
+    css`
+      ${BoardListItemShapeCss}
+      ${BoardListItemSpacingCss}
+    `}
 
   &:hover {
     background-color: rgba(9, 30, 66, 0.08);

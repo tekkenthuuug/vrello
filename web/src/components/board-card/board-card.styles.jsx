@@ -21,6 +21,8 @@ export const BoardCardOverlay = styled.div`
 export const BoardName = styled.div`
   font-weight: 800;
   font-size: 18px;
+
+  word-wrap: break-word;
 `;
 
 export const CreatedAt = styled.div`

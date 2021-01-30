@@ -11,26 +11,21 @@ import {
 
 const BoardCard = ({ board, isSelected, onClick, grayscale }) => {
   return (
-    <div onClick={() => onClick(board)}>
-      <BoardCardContainer
-        grayscale={grayscale}
-        isSelected={isSelected}
-        backgroundColor={board.backgroundColor}
-      >
-        <BoardCardOverlay isSelected={isSelected} />
+    <BoardCardContainer
+      grayscale={grayscale}
+      isSelected={isSelected}
+      backgroundColor={board.backgroundColor}
+      onClick={() => onClick(board)}
+    >
+      <BoardCardOverlay isSelected={isSelected} />
 
-        <BoardName>{board.name}</BoardName>
-        <CreatedAt>
-          Updated{' '}
-          <DateUpdater
-            value={board.updatedAt}
-            interval={10000}
-            formatFn={humanReadableTime}
-          />
-        </CreatedAt>
-        {isSelected && <DoneIcon />}
-      </BoardCardContainer>
-    </div>
+      <BoardName>{board.name}</BoardName>
+      <CreatedAt>
+        Updated{' '}
+        <DateUpdater value={board.updatedAt} formatFn={humanReadableTime} />
+      </CreatedAt>
+      {isSelected && <DoneIcon />}
+    </BoardCardContainer>
   );
 };
 

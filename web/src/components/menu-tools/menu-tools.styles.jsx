@@ -1,4 +1,10 @@
-import { MdAutorenew, MdEdit, MdExitToApp } from 'react-icons/md';
+import {
+  MdAutorenew,
+  MdEdit,
+  MdExitToApp,
+  MdGridOn,
+  MdList,
+} from 'react-icons/md';
 import styled, { css } from 'styled-components';
 import { ClickableIconCss } from '../../shared-styles/util.styles';
 
@@ -15,6 +21,18 @@ export const LeaveIcon = styled(MdExitToApp)`
   ${ClickableIconCss}
 
   color: red;
+`;
+
+export const ListIcon = styled(MdList)`
+  font-size: 26px;
+
+  ${ClickableIconCss}
+`;
+
+export const GridIcon = styled(MdGridOn)`
+  font-size: 26px;
+
+  ${ClickableIconCss}
 `;
 
 export const UpdateIcon = styled(MdAutorenew)`
